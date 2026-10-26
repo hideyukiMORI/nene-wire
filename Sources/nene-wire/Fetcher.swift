@@ -2,6 +2,7 @@ import NeNeWireCore
 import NeNeWireHost
 
 /// 裏での取得（FR-07・FR-13・ADR 0007）。予定（Core の `FetchSchedule`）に従って 1 本ずつ curl を起動し、表示のループが待つ間に出力を集める。
+/// `--demo` では curl を起動せず、筋書き（`DemoScript`）の結果を同じ経路で記録する（ADR 0008）。
 struct Fetcher {
     /// 取り終えた 1 本。
     struct Arrival {
@@ -14,11 +15,25 @@ struct Fetcher {
     private let environment: [String]
     private(set) var schedule: FetchSchedule
     private var running: (feed: Int, child: RunningChild)?
+    private let demo: DemoScript?
+    private let started: Timestamp
+    private var breakingSent = false
 
     init(feeds: [Feed], environment: [String], now: Timestamp) {
         self.feeds = feeds
         self.environment = environment
         schedule = .starting(feeds: feeds.count, at: now)
+        demo = nil
+        started = now
+    }
+
+    /// `--demo` の取得（ネットを使わない）。
+    init(demo script: DemoScript, now: Timestamp) {
+        feeds = script.feeds
+        environment = []
+        schedule = .starting(feeds: script.feeds.count, at: now)
+        demo = script
+        started = now
     }
 
     /// いま取りに行っているフィード。
@@ -33,8 +48,15 @@ struct Fetcher {
 
     /// 走っていなければ、予定の来たフィードを取りに行く。起動できなかったらその場で結果を返す。
     mutating func startIfDue(at now: Timestamp) -> Arrival? {
+        if let demo, !breakingSent, now >= started.adding(seconds: DemoScript.breakingDelay) {
+            breakingSent = true
+            return record(demo.outcome(feed: 0, late: true), feed: 0, at: now)
+        }
         guard running == nil, let feed = schedule.due(at: now) else {
             return nil
+        }
+        if let demo {
+            return record(demo.outcome(feed: feed, late: false), feed: feed, at: now)
         }
         switch FeedFetch.start(feeds[feed], validators: schedule.statuses[feed].validators, environment: environment) {
         case .running(let child):

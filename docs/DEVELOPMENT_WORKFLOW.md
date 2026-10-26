@@ -146,14 +146,12 @@ Waivers: none | WVR-NNNN
 
 ## 9. リリース
 
-**未実測（Phase 4 で決める）。** いま決まっているのは次の枠だけである。
+[ADR 0008](adr/0008-release-pipeline-and-demo.md) が正本。規則は QLT-014。
 
-- 製品の版の入力は 1 か所だけにする。SwiftPM の manifest には製品の版の欄が無いので、その 1 か所をどこに置くかを Phase 4 の ADR で決める。
-  `--version` の出力・配布物名はビルドがそこから導出し、2 か所目に手で書かない
-- 配布物は 1 本の公開スクリプトで作る。単一ゲートとは別のビルドディレクトリで release 構成を clean build し、規約検査とテストを通し、
-  成果物（Linux x86_64 の実行ファイル・宣言外の動的依存が無いこと・埋め込み版の一致・同梱一覧の完全一致）を検査してから `SHA256SUMS` を作る。
-  **この検査は PR 最終 HEAD で行うフルゲートの代わりではない**
-- 公開は squash 統合後の clean な `main` から同じスクリプトで作り直し、短い実機起動を確認してから `v<version>` の tag と同名 Release に添付し、
-  再ダウンロードして照合する。署名・インストーラ・自動更新は別の焦点 Issue とする
-
-公開スクリプトのコマンド・出力先・同梱一覧は、スクリプトを書いてから本節に書く。
+- 製品の版の入力は `Sources/nene-wire/Version.swift` の `Version.current` の 1 か所だけ。`--version` の出力・配布物名・タグはそこから導出し、2 か所目に手で書かない
+- 配布物は `make release TAG=v<版>`（`eng/package-release.sh`）だけが作る。`.release/build` で release 構成を作り直し、規約検査とテストを通し、
+  成果物（Linux x86_64 の ELF・宣言外の動的依存が無いこと・`--version` とタグが版と一致・同梱物が `nene-wire` `README.txt` `LICENSE` の 3 つ）を検査してから
+  `.release/out/` に `nene-wire-<版>-linux-x86_64.tar.gz` と `SHA256SUMS` を作る。**この検査は PR 最終 HEAD で行うフルゲートの代わりではない**
+- 公開は squash 統合後の clean な `main` から同じスクリプトで作り直し、短い実機起動を確認してから `v<版>` の tag と同名 Release に添付し、
+  再ダウンロードして照合する。🔴 **公開は施主の確認を取ってから行う**（Q7）。署名・自動更新は別の焦点 Issue とする
+- 利用者は `install.sh`（`SHA256SUMS` で照合してから `~/.local/bin` に入れる）か、Release の配布物を手で落として使う

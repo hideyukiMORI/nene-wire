@@ -116,6 +116,15 @@ Ready の後の push は `synchronize` でフルゲートが回る。必須 chec
 
 - 機械強制: **planned**
 
+### QLT-014 — 配布物は 1 本の経路で作り、検査してから梱包する
+
+配布物は `eng/package-release.sh`（`make release TAG=v<版>`）だけが作る。単一ゲートとは別のビルドディレクトリで規約検査・release 構成のテスト・
+標準ライブラリを静的にリンクしたビルドを通し、成果物を検査（x86-64 の ELF・宣言外の動的依存が無い・`--version` が版と一致・タグが版と一致・
+同梱物が固定の 3 つと完全一致）してから、再現可能な tar.gz と `SHA256SUMS` を作る。版の入力は `Sources/nene-wire/Version.swift` の 1 か所（ADR 0008）。
+**この検査は PR の最終 HEAD で回すフルゲートの代わりではない。** GitHub Release の公開は施主の確認を取ってから行う。
+
+- 機械強制: **active** → `eng/package-release.sh`（証明 P67〜P70）
+
 ---
 
 ## 2. 規約検査の規則（CNF-0xx）— `eng/conformance.py`
@@ -213,6 +222,7 @@ CNF-006 が「本文に定義があるのにここに行が無い」「本文と
 | QLT-011 | active | CNF-009＋lock の SHA-256 照合 |
 | QLT-012 | active | CNF-018（`if:` の禁止）＋`eng/ci-require-ready.sh`＋ruleset の必須 check と strict |
 | QLT-013 | planned | レビュー事項 |
+| QLT-014 | active | `eng/package-release.sh` |
 | CNF-001 | active | `eng/conformance.py` |
 | CNF-002 | active | `eng/conformance.py` |
 | CNF-003 | active | `eng/conformance.py` |
