@@ -1,0 +1,30 @@
+# CI はツールチェーンを入れてゲートを 1 行呼ぶだけ（QLT-001 / QLT-005）。品質判断のロジックはここに書かない（CNF-018）。
+# draft の間はフルゲートを回さない。Ready にした時点と、Ready 後の push・編集で回す（QLT-012）。
+# draft のときはジョブを「スキップ」せず失敗させる。スキップされた必須 check は成功として数えられ、ゲートを通っていない head がマージ可能になった（NeNe Gambit の PR #2）。
+# 合成マージではなく PR の head を検査する。BASE はコミットの形の検査（GIT-003）の起点。
+name: CI
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize, edited]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - run: eng/ci-require-ready.sh ${{ github.event.pull_request.draft }}
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/swift-toolchain
+          key: swift-toolchain-${{ hashFiles('.swift-version', 'eng/swift.lock') }}
+      - run: eng/install-swift.sh
+      - run: make check BASE=${{ github.event.pull_request.base.sha }}

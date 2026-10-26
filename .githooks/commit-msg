@@ -1,0 +1,4 @@
+#!/bin/sh
+# GIT-003。`make bootstrap` が core.hooksPath=.githooks を設定する。`--no-verify` で迂回できるので、
+# `make check` が PR の全コミットを同じ検証器で見る。
+exec python3 eng/validate-commit-message.py --file "$1"

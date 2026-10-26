@@ -1,0 +1,39 @@
+# SwiftLint の設定の正本（CODING_RULES 第 2〜3 節）。規則は 1 つずつ名指しし、行末に規則 ID を書く（CNF-007）。
+# 除外・baseline・既定規則の一括有効化は使わない（CNF-005）。ゲートは --config .swiftlint.yml で明示的に渡す。
+strict: true
+only_rules:
+  - cyclomatic_complexity # SWF-012
+  - function_body_length # SWF-012
+  - function_parameter_count # SWF-012
+  - nesting # SWF-012
+  - file_length # SWF-012
+  - type_body_length # SWF-012
+  - force_unwrapping # SWF-004
+  - implicitly_unwrapped_optional # SWF-004
+  - discouraged_optional_boolean # SWF-004
+  - discouraged_optional_collection # SWF-004
+  - force_cast # SWF-004
+  - force_try # SWF-005
+  - large_tuple # SWF-006
+  - fallthrough # SWF-002
+  - superfluous_disable_command # SWF-015
+  - blanket_disable_command # SWF-015
+
+cyclomatic_complexity:
+  warning: 10
+  ignores_case_statements: false
+function_body_length:
+  warning: 60
+function_parameter_count:
+  warning: 4
+  ignores_default_parameters: false
+nesting:
+  type_level: 1
+  function_level: 2
+file_length:
+  warning: 400
+  ignore_comment_only_lines: true
+type_body_length:
+  warning: 300
+large_tuple:
+  warning: 2
