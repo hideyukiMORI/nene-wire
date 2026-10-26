@@ -1,0 +1,1322 @@
+{
+  "measured_on": "2026-10-26",
+  "environment": {
+    "swift": "Swift version 6.4.1 (swift-6.4.1-RELEASE)",
+    "swift_format": "6.4.1",
+    "swiftlint": "0.65.1",
+    "os": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "glibc": "glibc 2.35"
+  },
+  "note": "outcome は終了コードだけで決まる（rejected = 非 0）。判定は ADR 0001 に書く。",
+  "results": [
+    {
+      "id": "M1-a",
+      "m": "M-1",
+      "question": "ケースを網羅しない switch はコンパイルエラーか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "a.swift:3:5: error: switch must be exhaustive"
+      ],
+      "stdout_tail": "5 |     case .b: return 2",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "enum Shape { case a, b, c }\nfunc f(_ s: Shape) -> Int {\n    switch s {\n    case .a: return 1\n    case .b: return 2\n    }\n}\n"
+      }
+    },
+    {
+      "id": "M1-b",
+      "m": "M-1",
+      "question": "default: は網羅性検査を殺すか（診断が出るか）",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "enum Shape { case a, b, c }\nfunc f(_ s: Shape) -> Int {\n    switch s {\n    case .a: return 1\n    default: return 0\n    }\n}\n"
+      }
+    },
+    {
+      "id": "M1-c",
+      "m": "M-1",
+      "question": "case _: は網羅性検査を殺すか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "enum Shape { case a, b, c }\nfunc f(_ s: Shape) -> Int {\n    switch s {\n    case .a: return 1\n    case _: return 0\n    }\n}\n"
+      }
+    },
+    {
+      "id": "M1-d",
+      "m": "M-1",
+      "question": "case let x: （束縛する全捕捉）は網羅性検査を殺すか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "enum Shape { case a, b, c }\nfunc f(_ s: Shape) -> Int {\n    switch s {\n    case .a: return 1\n    case let other: return other == .b ? 2 : 0\n    }\n}\n"
+      }
+    },
+    {
+      "id": "M1-e",
+      "m": "M-1",
+      "question": "@unknown default で既知ケースを漏らすと -warnings-as-errors で落ちるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [
+        "a.swift:3:5: warning: switch must be exhaustive"
+      ],
+      "stdout_tail": "5 |     case .b: return 2",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "enum Shape { case a, b, c }\nfunc f(_ s: Shape) -> Int {\n    switch s {\n    case .a: return 1\n    case .b: return 2\n    @unknown default: return 0\n    }\n}\n"
+      }
+    },
+    {
+      "id": "M1-f",
+      "m": "M-1",
+      "question": "@unknown default で既知ケースを漏らす（-warnings-as-errors 無し）",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [
+        "a.swift:3:5: warning: switch must be exhaustive"
+      ],
+      "stdout_tail": "5 |     case .b: return 2",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "enum Shape { case a, b, c }\nfunc f(_ s: Shape) -> Int {\n    switch s {\n    case .a: return 1\n    case .b: return 2\n    @unknown default: return 0\n    }\n}\n"
+      }
+    },
+    {
+      "id": "M1-h",
+      "m": "M-1",
+      "question": "SwiftPM の treatAllWarnings(as: .error) でも @unknown default の既知ケース漏れは通るか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [
+        "Sources/Core/Core.swift:3:5: warning: switch must be exhaustive"
+      ],
+      "stdout_tail": "5 |     case .b: return 2",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Core.swift": "public enum Shape { case a, b, c }\npublic func f(_ s: Shape) -> Int {\n    switch s {\n    case .a: return 1\n    case .b: return 2\n    @unknown default: return 0\n    }\n}\n"
+      }
+    },
+    {
+      "id": "M1-g",
+      "m": "M-1",
+      "question": "タプルの中の _ は網羅性検査を部分的に殺すか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "enum Shape { case a, b, c }\nfunc f(_ s: Shape, _ t: Shape) -> Int {\n    switch (s, t) {\n    case (.a, _): return 1\n    case (.b, _): return 2\n    case (.c, _): return 3\n    }\n}\n"
+      }
+    },
+    {
+      "id": "M1-i",
+      "m": "M-1",
+      "question": "閉じた enum を == と else で分岐すると、ケースを足しても診断は出ないか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "enum Shape { case a, b, c }\nfunc f(_ s: Shape) -> Int {\n    if s == .a {\n        return 1\n    } else {\n        return 0\n    }\n}\n"
+      }
+    },
+    {
+      "id": "M1-j",
+      "m": "M-1",
+      "question": "case (let other): （括弧で包んだ束縛）は網羅性検査を殺すか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "enum Shape { case a, b, c }\nfunc f(_ s: Shape) -> Int {\n    switch s {\n    case .a: return 1\n    case (let other): return other == .b ? 2 : 0\n    }\n}\n"
+      }
+    },
+    {
+      "id": "M1-k",
+      "m": "M-1",
+      "question": "case .a, _: （並べた選択肢の中の _）は網羅性検査を殺すか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "enum Shape { case a, b, c }\nfunc f(_ s: Shape) -> Int {\n    switch s {\n    case .b: return 2\n    case .a, _: return 1\n    }\n}\n"
+      }
+    },
+    {
+      "id": "M1-l",
+      "m": "M-1",
+      "question": "case let other as Shape: （型が同じ as パターン）は網羅性検査を殺すか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "a.swift:5:20: error: 'as' test is always true"
+      ],
+      "stdout_tail": "7 | }",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "enum Shape { case a, b, c }\nfunc f(_ s: Shape) -> Int {\n    switch s {\n    case .a: return 1\n    case let other as Shape: return other == .b ? 2 : 0\n    }\n}\n"
+      }
+    },
+    {
+      "id": "M1-m",
+      "m": "M-1",
+      "question": "タプルの全位置を _ にした case (_, _): は網羅性検査を殺すか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "enum Shape { case a, b, c }\nfunc f(_ s: Shape, _ t: Shape) -> Int {\n    switch (s, t) {\n    case (.a, .a): return 1\n    case (_, _): return 0\n    }\n}\n"
+      }
+    },
+    {
+      "id": "M2-a",
+      "m": "M-2",
+      "question": "他モジュールから public let に代入できるか",
+      "kind": "xmod",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Client -I wire-M2-a-vnvvsldn -c -o client.o client.swift",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "client.swift:4:7: error: cannot assign to property: 'size' is a 'let' constant"
+      ],
+      "stdout_tail": "6 | }",
+      "prior_steps": [
+        {
+          "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Lib -emit-module -emit-module-path Lib.swiftmodule lib.swift",
+          "exit": 0
+        }
+      ],
+      "sources": {
+        "client.swift": "import Lib\nfunc f() {\n    var b = Board()\n    b.size = 9\n    _ = b\n}\n",
+        "lib/lib.swift": "public struct Board {\n    public let size: Int\n    public private(set) var moves: Int\n    public var loose: Int\n    public init() { size = 8; moves = 0; loose = 0 }\n}\n"
+      }
+    },
+    {
+      "id": "M2-b",
+      "m": "M-2",
+      "question": "他モジュールから public private(set) var に代入できるか",
+      "kind": "xmod",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Client -I wire-M2-b-siivlj4p -c -o client.o client.swift",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "client.swift:4:7: error: cannot assign to property: 'moves' setter is inaccessible"
+      ],
+      "stdout_tail": "6 | }",
+      "prior_steps": [
+        {
+          "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Lib -emit-module -emit-module-path Lib.swiftmodule lib.swift",
+          "exit": 0
+        }
+      ],
+      "sources": {
+        "client.swift": "import Lib\nfunc f() {\n    var b = Board()\n    b.moves = 3\n    _ = b\n}\n",
+        "lib/lib.swift": "public struct Board {\n    public let size: Int\n    public private(set) var moves: Int\n    public var loose: Int\n    public init() { size = 8; moves = 0; loose = 0 }\n}\n"
+      }
+    },
+    {
+      "id": "M2-c",
+      "m": "M-2",
+      "question": "他モジュールから public var に代入できるか",
+      "kind": "xmod",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Client -I wire-M2-c-hn2lr23c -c -o client.o client.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [
+        {
+          "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Lib -emit-module -emit-module-path Lib.swiftmodule lib.swift",
+          "exit": 0
+        }
+      ],
+      "sources": {
+        "client.swift": "import Lib\nfunc f() {\n    var b = Board()\n    b.loose = 3\n    _ = b\n}\n",
+        "lib/lib.swift": "public struct Board {\n    public let size: Int\n    public private(set) var moves: Int\n    public var loose: Int\n    public init() { size = 8; moves = 0; loose = 0 }\n}\n"
+      }
+    },
+    {
+      "id": "M2-d",
+      "m": "M-2",
+      "question": "返した配列に追加すると持ち主が変わるか（値の意味）",
+      "kind": "swiftc-run",
+      "command": "./probe",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "owner=1 copy=2",
+      "prior_steps": [
+        {
+          "command": "swiftc -swift-version 6 -o probe main.swift",
+          "exit": 0
+        }
+      ],
+      "sources": {
+        "main.swift": "final class Ledger {\n    private(set) var items: [Int] = [1]\n    func snapshot() -> [Int] { items }\n}\nlet l = Ledger()\nvar s = l.snapshot()\ns.append(2)\nprint(\"owner=\\(l.items.count) copy=\\(s.count)\")\n"
+      }
+    },
+    {
+      "id": "M2-e",
+      "m": "M-2",
+      "question": "let で持ったクラス参照の中身は変更できるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "final class Cell { var v = 0 }\nfunc f() -> Int {\n    let c = Cell()\n    c.v = 1\n    return c.v\n}\n"
+      }
+    },
+    {
+      "id": "M3-a",
+      "m": "M-3",
+      "question": "未初期化の let を返すと -typecheck で落ちるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -typecheck -module-name Probe -parse-as-library a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "func f(_ flag: Bool) -> Int {\n    let x: Int\n    if flag { x = 1 }\n    return x\n}\n"
+      }
+    },
+    {
+      "id": "M3-b",
+      "m": "M-3",
+      "question": "未初期化の let を返すと本コンパイルで落ちるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "a.swift:4:12: error: constant 'x' used before being initialized"
+      ],
+      "stdout_tail": "6 |",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "func f(_ flag: Bool) -> Int {\n    let x: Int\n    if flag { x = 1 }\n    return x\n}\n"
+      }
+    },
+    {
+      "id": "M3-c",
+      "m": "M-3",
+      "question": "暗黙アンラップ Optional（IUO）は書けるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "func f() -> Int {\n    var cache: Int! = nil\n    cache = 3\n    let y: Int = cache\n    return y\n}\n"
+      }
+    },
+    {
+      "id": "M3-d",
+      "m": "M-3",
+      "question": "強制アンラップ ! は書けるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "func f(_ v: Int?) -> Int {\n    v!\n}\n"
+      }
+    },
+    {
+      "id": "M3-e",
+      "m": "M-3",
+      "question": "全プロパティに既定値がある struct は引数なしで作れるか（ゼロ値相当）",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "struct Marker {}\nstruct Score { var value = 0 }\nfunc f() -> Int {\n    _ = Marker()\n    return Score().value\n}\n"
+      }
+    },
+    {
+      "id": "M3-f",
+      "m": "M-3",
+      "question": "宣言だけの var を読むと落ちるか（暗黙のゼロ値は無いか）",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "a.swift:3:7: error: variable 'x' passed by reference before being initialized"
+      ],
+      "stdout_tail": "5 | }",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "func f() -> Int {\n    var x: Int\n    x += 1\n    return x\n}\n"
+      }
+    },
+    {
+      "id": "M4-a",
+      "m": "M-4",
+      "question": "private init を同一モジュールの別ファイルから呼べるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -wmo -o probe.o square.swift use.swift",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "use.swift:1:22: error: 'Square' initializer is inaccessible due to 'private' protection level"
+      ],
+      "stdout_tail": "5 | }",
+      "prior_steps": [],
+      "sources": {
+        "square.swift": "struct Square {\n    let index: Int\n    private init(index: Int) { self.index = index }\n    static func make(_ i: Int) -> Square? { (0..<64).contains(i) ? Square(index: i) : nil }\n}\n",
+        "use.swift": "func f() -> Square { Square(index: 99) }\n"
+      }
+    },
+    {
+      "id": "M4-b",
+      "m": "M-4",
+      "question": "明示 init の無い public struct の memberwise init を他モジュールから呼べるか",
+      "kind": "xmod",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Client -I wire-M4-b-q5ullmba -c -o client.o client.swift",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "client.swift:2:22: error: 'Square' initializer is inaccessible due to 'internal' protection level"
+      ],
+      "stdout_tail": "3 |",
+      "prior_steps": [
+        {
+          "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Lib -emit-module -emit-module-path Lib.swiftmodule lib.swift",
+          "exit": 0
+        }
+      ],
+      "sources": {
+        "client.swift": "import Lib\nfunc f() -> Square { Square(index: 99) }\n",
+        "lib/lib.swift": "public struct Square {\n    public let index: Int\n}\n"
+      }
+    },
+    {
+      "id": "M4-c",
+      "m": "M-4",
+      "question": "明示 init の無い struct の memberwise init を同一モジュールの別ファイルから呼べるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -wmo -o probe.o square.swift use.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "square.swift": "struct Square {\n    let index: Int\n}\n",
+        "use.swift": "func f() -> Square { Square(index: 99) }\n"
+      }
+    },
+    {
+      "id": "M4-d",
+      "m": "M-4",
+      "question": "unsafeBitCast で private init を迂回できるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -wmo -o probe.o square.swift use.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "square.swift": "struct Square {\n    let index: Int\n    private init(index: Int) { self.index = index }\n}\n",
+        "use.swift": "func f() -> Square { unsafeBitCast(99, to: Square.self) }\n"
+      }
+    },
+    {
+      "id": "M4-e",
+      "m": "M-4",
+      "question": "Decodable の合成 init(from:) は private init を迂回するか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -wmo -o probe.o square.swift use.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "square.swift": "struct Square: Decodable {\n    let index: Int\n    private init(index: Int) { self.index = index }\n}\n",
+        "use.swift": "func f(_ d: any Decoder) throws -> Square { try Square(from: d) }\n"
+      }
+    },
+    {
+      "id": "M4-f",
+      "m": "M-4",
+      "question": "同一モジュールの別ファイルの extension に init を足し、格納プロパティへ直接代入して private init を迂回できるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -wmo -o probe.o square.swift use.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "square.swift": "struct Square {\n    let index: Int\n    private init(index: Int) { self.index = index }\n}\n",
+        "use.swift": "extension Square {\n    init(bypass: Int) { index = bypass }\n}\nfunc f() -> Square { Square(bypass: 99) }\n"
+      }
+    },
+    {
+      "id": "M4-g",
+      "m": "M-4",
+      "question": "他モジュールの extension に init を足し、格納プロパティへ直接代入できるか",
+      "kind": "xmod",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Client -I wire-M4-g-pxog2upk -c -o client.o client.swift",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "client.swift:3:25: error: 'let' property 'index' may not be initialized directly; use \"self.init(...)\" or \"self = ...\" instead"
+      ],
+      "stdout_tail": "4 |     public static func make(_ i: Int) -> Square? { (0..<64).contains(i) ? Square(index: i) : nil }",
+      "prior_steps": [
+        {
+          "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Lib -emit-module -emit-module-path Lib.swiftmodule lib.swift",
+          "exit": 0
+        }
+      ],
+      "sources": {
+        "client.swift": "import Lib\nextension Square {\n    init(bypass: Int) { index = bypass }\n}\n",
+        "lib/lib.swift": "public struct Square {\n    public let index: Int\n    private init(index: Int) { self.index = index }\n    public static func make(_ i: Int) -> Square? { (0..<64).contains(i) ? Square(index: i) : nil }\n}\n"
+      }
+    },
+    {
+      "id": "M5-a",
+      "m": "M-5",
+      "question": "依存を宣言しない target から Foundation の Date() を読めるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (4.27 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Probe.swift": "import Foundation\npublic func probe() -> Double { Date().timeIntervalSince1970 }\n"
+      }
+    },
+    {
+      "id": "M5-b",
+      "m": "M-5",
+      "question": "依存を宣言しない target から Glibc の time() を読めるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (3.07 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Probe.swift": "import Glibc\npublic func probe() -> Int { time(nil) }\n"
+      }
+    },
+    {
+      "id": "M5-c",
+      "m": "M-5",
+      "question": "import なしで Int.random を呼べるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (2.39 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Probe.swift": "public func probe() -> Int { Int.random(in: 0..<10) }\n"
+      }
+    },
+    {
+      "id": "M5-d",
+      "m": "M-5",
+      "question": "import なしで SystemRandomNumberGenerator を使えるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (2.41 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Probe.swift": "public func probe() -> UInt64 {\n    var g = SystemRandomNumberGenerator()\n    return g.next()\n}\n"
+      }
+    },
+    {
+      "id": "M5-e",
+      "m": "M-5",
+      "question": "import なしで ContinuousClock.now を読めるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (2.39 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Probe.swift": "public func probe() -> ContinuousClock.Instant { ContinuousClock.now }\n"
+      }
+    },
+    {
+      "id": "M5-f",
+      "m": "M-5",
+      "question": "import なしで CommandLine.arguments（プロセス状態）を読めるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (2.41 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Probe.swift": "public func probe() -> Int { CommandLine.arguments.count }\n"
+      }
+    },
+    {
+      "id": "M5-g",
+      "m": "M-5",
+      "question": "依存を宣言しない target から Dispatch を import できるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (2.50 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Probe.swift": "import Dispatch\npublic func probe() -> UInt64 { DispatchTime.now().uptimeNanoseconds }\n"
+      }
+    },
+    {
+      "id": "M5-h",
+      "m": "M-5",
+      "question": "--explicit-target-dependency-import-check error は Foundation の import を拒むか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build --explicit-target-dependency-import-check error",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (4.15 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Probe.swift": "import Foundation\npublic func probe() -> Double { Date().timeIntervalSince1970 }\n"
+      }
+    },
+    {
+      "id": "M5-i",
+      "m": "M-5",
+      "question": "import なしで Task.sleep（時計を暗に読む待ち）を書けるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (2.50 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Probe.swift": "public func probe() async -> Int {\n    _ = try? await Task.sleep(for: .milliseconds(1))\n    return 1\n}\n"
+      }
+    },
+    {
+      "id": "M5-j",
+      "m": "M-5",
+      "question": "依存を宣言しない target から FoundationEssentials の Date() を読めるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (3.94 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Probe.swift": "import FoundationEssentials\npublic func probe() -> Double { Date().timeIntervalSince1970 }\n"
+      }
+    },
+    {
+      "id": "M6-a",
+      "m": "M-6",
+      "question": "宣言していない兄弟 target を import すると落ちるか（両方が同じ実行物の依存）",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "error: SwiftCompile normal x86_64 failed with a nonzero exit code. Command line:     cd /tmp",
+        "Sources/Core/Core.swift:1:8: error: no such module 'Engine'",
+        "error: Build failed"
+      ],
+      "stdout_tail": "error: Build failed",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Engine\", swiftSettings: [.treatAllWarnings(as: .error)]), .target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)]), .executableTarget(name: \"app\", dependencies: [\"Core\", \"Engine\"], swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Engine/Engine.swift": "public func engine() -> Int { 1 }\n",
+        "Sources/Core/Core.swift": "import Engine\npublic func core() -> Int { engine() }\n",
+        "Sources/app/main.swift": "import Core\nprint(core())\n"
+      }
+    },
+    {
+      "id": "M6-b",
+      "m": "M-6",
+      "question": "M6-a に --explicit-target-dependency-import-check error を足すと落ちるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build --explicit-target-dependency-import-check error",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "error: SwiftCompile normal x86_64 failed with a nonzero exit code. Command line:     cd /tmp",
+        "Sources/Core/Core.swift:1:8: error: no such module 'Engine'",
+        "error: Build failed"
+      ],
+      "stdout_tail": "error: Build failed",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Engine\", swiftSettings: [.treatAllWarnings(as: .error)]), .target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)]), .executableTarget(name: \"app\", dependencies: [\"Core\", \"Engine\"], swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Engine/Engine.swift": "public func engine() -> Int { 1 }\n",
+        "Sources/Core/Core.swift": "import Engine\npublic func core() -> Int { engine() }\n",
+        "Sources/app/main.swift": "import Core\nprint(core())\n"
+      }
+    },
+    {
+      "id": "M6-c",
+      "m": "M-6",
+      "question": "宣言していない target を import し、その target だけを build すると落ちるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build --target Core",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "error: SwiftCompile normal x86_64 failed with a nonzero exit code. Command line:     cd /tmp",
+        "Sources/Core/Core.swift:1:8: error: no such module 'Engine'",
+        "error: Build failed"
+      ],
+      "stdout_tail": "error: Build failed",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Engine\", swiftSettings: [.treatAllWarnings(as: .error)]), .target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Engine/Engine.swift": "public func engine() -> Int { 1 }\n",
+        "Sources/Core/Core.swift": "import Engine\npublic func core() -> Int { engine() }\n"
+      }
+    },
+    {
+      "id": "M6-d",
+      "m": "M-6",
+      "question": "target の循環依存を宣言すると落ちるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "error: '<probe>': cyclic dependency declaration found: Core -> Engine -> Core"
+      ],
+      "stdout_tail": "error: '<probe>': cyclic dependency declaration found: Core -> Engine -> Core",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Engine\", dependencies: [\"Core\"], swiftSettings: [.treatAllWarnings(as: .error)]), .target(name: \"Core\", dependencies: [\"Engine\"], swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Engine/Engine.swift": "public func engine() -> Int { 1 }\n",
+        "Sources/Core/Core.swift": "public func core() -> Int { 1 }\n"
+      }
+    },
+    {
+      "id": "M6-e",
+      "m": "M-6",
+      "question": "依存の依存（宣言していない推移的な target）を import すると落ちるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (2.83 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)]), .target(name: \"Engine\", dependencies: [\"Core\"], swiftSettings: [.treatAllWarnings(as: .error)]), .target(name: \"Render\", dependencies: [\"Engine\"], swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Core.swift": "public func core() -> Int { 1 }\n",
+        "Sources/Engine/Engine.swift": "import Core\npublic func engine() -> Int { core() }\n",
+        "Sources/Render/Render.swift": "import Core\nimport Engine\npublic func render() -> Int { core() + engine() }\n"
+      }
+    },
+    {
+      "id": "M6-f",
+      "m": "M-6",
+      "question": "M6-e に --explicit-target-dependency-import-check error を足すと落ちるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build --explicit-target-dependency-import-check error",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (2.75 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)]), .target(name: \"Engine\", dependencies: [\"Core\"], swiftSettings: [.treatAllWarnings(as: .error)]), .target(name: \"Render\", dependencies: [\"Engine\"], swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Core.swift": "public func core() -> Int { 1 }\n",
+        "Sources/Engine/Engine.swift": "import Core\npublic func engine() -> Int { core() }\n",
+        "Sources/Render/Render.swift": "import Core\nimport Engine\npublic func render() -> Int { core() + engine() }\n"
+      }
+    },
+    {
+      "id": "M7-a",
+      "m": "M-7",
+      "question": "@diagnose(..., as: ignored) で -warnings-as-errors 下の警告を消せるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "@available(*, deprecated)\nfunc old() -> Int { 1 }\n@diagnose(DeprecatedDeclaration, as: ignored)\nfunc use() -> Int { old() }\n"
+      }
+    },
+    {
+      "id": "M7-b",
+      "m": "M-7",
+      "question": "対照: @diagnose が無ければ同じ呼び出しは -warnings-as-errors で落ちるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "a.swift:3:21: error: 'old()' is deprecated [#DeprecatedDeclaration]"
+      ],
+      "stdout_tail": "[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "@available(*, deprecated)\nfunc old() -> Int { 1 }\nfunc use() -> Int { old() }\n"
+      }
+    },
+    {
+      "id": "M7-c",
+      "m": "M-7",
+      "question": "呼び出し側を @available(*, deprecated) にすると非推奨の警告が消えるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "@available(*, deprecated)\nfunc old() -> Int { 1 }\n@available(*, deprecated)\nfunc use() -> Int { old() }\n"
+      }
+    },
+    {
+      "id": "M7-d",
+      "m": "M-7",
+      "question": "Package.swift の treatWarning(_:as: .warning) で 1 群だけ警告へ戻せるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [
+        "Sources/Core/Core.swift:3:28: warning: 'old()' is deprecated [#DeprecatedDeclaration]"
+      ],
+      "stdout_tail": "[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error), .treatWarning(\"DeprecatedDeclaration\", as: .warning)])]\n)\n",
+        "Sources/Core/Core.swift": "@available(*, deprecated)\npublic func old() -> Int { 1 }\npublic func use() -> Int { old() }\n"
+      }
+    },
+    {
+      "id": "M7-e",
+      "m": "M-7",
+      "question": "swiftlint:disable:next を理由なしで書くと違反が消えるか",
+      "kind": "swiftlint",
+      "command": "swiftlint lint --quiet a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        ".swiftlint.yml": "only_rules:\n  - force_unwrapping\nstrict: true\n",
+        "a.swift": "func f(_ v: Int?) -> Int {\n    // swiftlint:disable:next force_unwrapping\n    return v!\n}\n"
+      }
+    },
+    {
+      "id": "M7-f",
+      "m": "M-7",
+      "question": "対照: 抑制が無ければ SwiftLint は同じ違反で落ちるか",
+      "kind": "swiftlint",
+      "command": "swiftlint lint --quiet a.swift",
+      "exit": 2,
+      "outcome": "rejected",
+      "diagnostics": [
+        "a.swift:2:13: error: Force Unwrapping Violation: Force unwrapping should be avoided (force_unwrapping)"
+      ],
+      "stdout_tail": "a.swift:2:13: error: Force Unwrapping Violation: Force unwrapping should be avoided (force_unwrapping)",
+      "prior_steps": [],
+      "sources": {
+        ".swiftlint.yml": "only_rules:\n  - force_unwrapping\nstrict: true\n",
+        "a.swift": "func f(_ v: Int?) -> Int {\n    return v!\n}\n"
+      }
+    },
+    {
+      "id": "M7-g",
+      "m": "M-7",
+      "question": "swift-format-ignore を理由なしで書くと lint の指摘が消えるか",
+      "kind": "swift-format",
+      "command": "swift-format lint --strict a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "// swift-format-ignore\nlet Bad_name = 1\n"
+      }
+    },
+    {
+      "id": "M7-h",
+      "m": "M-7",
+      "question": "対照: 抑制が無ければ swift-format lint --strict は落ちるか",
+      "kind": "swift-format",
+      "command": "swift-format lint --strict a.swift",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "a.swift:1:5: error: [AlwaysUseLowerCamelCase] rename the constant 'Bad_name' using lowerCamelCase"
+      ],
+      "stdout_tail": "a.swift:1:5: error: [AlwaysUseLowerCamelCase] rename the constant 'Bad_name' using lowerCamelCase",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "let Bad_name = 1\n"
+      }
+    },
+    {
+      "id": "M7-i",
+      "m": "M-7",
+      "question": "@preconcurrency import で、他モジュールの非 Sendable 型の大域変数の診断が消えるか",
+      "kind": "xmod",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Client -I wire-M7-i-py9q0p8z -c -o client.o client.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [
+        "client.swift:2:5: warning: let 'shared' is not concurrency-safe because non-'Sendable' type 'Box' may have shared mutable state [#MutableGlobalVariable]"
+      ],
+      "stdout_tail": "[#MutableGlobalVariable]: <https://docs.swift.org/compiler/documentation/diagnostics/mutable-global-variable>",
+      "prior_steps": [
+        {
+          "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Lib -emit-module -emit-module-path Lib.swiftmodule lib.swift",
+          "exit": 0
+        }
+      ],
+      "sources": {
+        "client.swift": "@preconcurrency import Lib\nlet shared = Box()\nfunc f() -> Int { shared.value }\n",
+        "lib/lib.swift": "public final class Box {\n    public var value = 0\n    public init() {}\n}\n"
+      }
+    },
+    {
+      "id": "M7-j",
+      "m": "M-7",
+      "question": "対照: @preconcurrency が無ければ同じ大域変数は落ちるか",
+      "kind": "xmod",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Client -I wire-M7-j-nec94_b1 -c -o client.o client.swift",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "client.swift:2:5: error: let 'shared' is not concurrency-safe because non-'Sendable' type 'Box' may have shared mutable state [#MutableGlobalVariable]"
+      ],
+      "stdout_tail": "[#MutableGlobalVariable]: <https://docs.swift.org/compiler/documentation/diagnostics/mutable-global-variable>",
+      "prior_steps": [
+        {
+          "command": "swiftc -swift-version 6 -warnings-as-errors -parse-as-library -module-name Lib -emit-module -emit-module-path Lib.swiftmodule lib.swift",
+          "exit": 0
+        }
+      ],
+      "sources": {
+        "client.swift": "import Lib\nlet shared = Box()\nfunc f() -> Int { shared.value }\n",
+        "lib/lib.swift": "public final class Box {\n    public var value = 0\n    public init() {}\n}\n"
+      }
+    },
+    {
+      "id": "M7-k",
+      "m": "M-7",
+      "question": "nonisolated(unsafe) で可変な大域変数の並行性検査を外せるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "nonisolated(unsafe) var counter = 0\nfunc f() -> Int {\n    counter += 1\n    return counter\n}\n"
+      }
+    },
+    {
+      "id": "M7-l",
+      "m": "M-7",
+      "question": "対照: nonisolated(unsafe) が無ければ可変な大域変数は落ちるか",
+      "kind": "swiftc",
+      "command": "swiftc -swift-version 6 -warnings-as-errors -module-name Probe -parse-as-library -c -o probe.o a.swift",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "a.swift:1:5: error: var 'counter' is not concurrency-safe because it is nonisolated global shared mutable state [#MutableGlobalVariable]"
+      ],
+      "stdout_tail": "[#MutableGlobalVariable]: <https://docs.swift.org/compiler/documentation/diagnostics/mutable-global-variable>",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "var counter = 0\nfunc f() -> Int {\n    counter += 1\n    return counter\n}\n"
+      }
+    },
+    {
+      "id": "M8-a",
+      "m": "M-8",
+      "question": "unsafeFlags([\"-suppress-warnings\"]) で target 全体の警告を消せるか（treatAllWarnings(.error) と併用）",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "error: conflicting options '-warnings-as-errors' and '-suppress-warnings'",
+        "error: SwiftDriver Core normal x86_64 com.apple.xcode.tools.swift.compiler failed with a nonzero exit code. Command line:     cd /tmp",
+        "error: Build failed"
+      ],
+      "stdout_tail": "error: Build failed",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error), .unsafeFlags([\"-suppress-warnings\"])])]\n)\n",
+        "Sources/Core/Core.swift": "@available(*, deprecated)\npublic func old() -> Int { 1 }\npublic func use() -> Int { old() }\n"
+      }
+    },
+    {
+      "id": "M8-b",
+      "m": "M-8",
+      "question": "treatAllWarnings(as: .warning) で target 全体を警告に戻せるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [
+        "Sources/Core/Core.swift:3:28: warning: 'old()' is deprecated [#DeprecatedDeclaration]"
+      ],
+      "stdout_tail": "[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .warning)])]\n)\n",
+        "Sources/Core/Core.swift": "@available(*, deprecated)\npublic func old() -> Int { 1 }\npublic func use() -> Int { old() }\n"
+      }
+    },
+    {
+      "id": "M8-c",
+      "m": "M-8",
+      "question": "対照: treatAllWarnings(as: .error) だけなら同じ target は落ちるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "error: SwiftCompile normal x86_64 Sources/Core/Core.swift failed with a nonzero exit code. Command line:     cd /tmp",
+        "Sources/Core/Core.swift:3:28: error: 'old()' is deprecated [#DeprecatedDeclaration]",
+        "error: Build failed"
+      ],
+      "stdout_tail": "error: Build failed",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Core.swift": "@available(*, deprecated)\npublic func old() -> Int { 1 }\npublic func use() -> Int { old() }\n"
+      }
+    },
+    {
+      "id": "M8-g",
+      "m": "M-8",
+      "question": "unsafeFlags([\"-suppress-warnings\"]) だけなら target 全体の警告が消えるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (2.46 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.unsafeFlags([\"-suppress-warnings\"])])]\n)\n",
+        "Sources/Core/Core.swift": "@available(*, deprecated)\npublic func old() -> Int { 1 }\npublic func use() -> Int { old() }\n"
+      }
+    },
+    {
+      "id": "M8-h",
+      "m": "M-8",
+      "question": "ゲートが -Xswiftc -warnings-as-errors を渡しても、manifest の treatAllWarnings(as: .warning) は勝つか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build -Xswiftc -warnings-as-errors",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [
+        "Sources/Core/Core.swift:3:28: warning: 'old()' is deprecated [#DeprecatedDeclaration]"
+      ],
+      "stdout_tail": "[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .warning)])]\n)\n",
+        "Sources/Core/Core.swift": "@available(*, deprecated)\npublic func old() -> Int { 1 }\npublic func use() -> Int { old() }\n"
+      }
+    },
+    {
+      "id": "M8-i",
+      "m": "M-8",
+      "question": "ゲートが -Xswiftc -warnings-as-errors を渡しても、manifest の treatWarning(_:as: .warning) は勝つか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build -Xswiftc -warnings-as-errors",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [
+        "Sources/Core/Core.swift:3:28: warning: 'old()' is deprecated [#DeprecatedDeclaration]"
+      ],
+      "stdout_tail": "[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatWarning(\"DeprecatedDeclaration\", as: .warning)])]\n)\n",
+        "Sources/Core/Core.swift": "@available(*, deprecated)\npublic func old() -> Int { 1 }\npublic func use() -> Int { old() }\n"
+      }
+    },
+    {
+      "id": "M8-d",
+      "m": "M-8",
+      "question": "SwiftLint の baseline で既存違反を凍結できるか",
+      "kind": "swiftlint",
+      "command": "swiftlint lint --quiet --baseline baseline.json a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [
+        {
+          "command": "swiftlint lint --quiet --write-baseline baseline.json a.swift",
+          "exit": 2
+        }
+      ],
+      "sources": {
+        ".swiftlint.yml": "only_rules:\n  - force_unwrapping\nstrict: true\n",
+        "a.swift": "func f(_ v: Int?) -> Int {\n    return v!\n}\n"
+      }
+    },
+    {
+      "id": "M8-e",
+      "m": "M-8",
+      "question": "swiftlint:disable all をファイル先頭に書くとファイル全体の違反が消えるか",
+      "kind": "swiftlint",
+      "command": "swiftlint lint --quiet a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        ".swiftlint.yml": "only_rules:\n  - force_unwrapping\nstrict: true\n",
+        "a.swift": "// swiftlint:disable all\nfunc f(_ v: Int?) -> Int {\n    return v!\n}\n"
+      }
+    },
+    {
+      "id": "M8-f",
+      "m": "M-8",
+      "question": "swift-format-ignore-file でファイル全体の lint を消せるか",
+      "kind": "swift-format",
+      "command": "swift-format lint --strict a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        "a.swift": "// swift-format-ignore-file\nlet Bad_name = 1\n"
+      }
+    },
+    {
+      "id": "M8-j",
+      "m": "M-8",
+      "question": ".swift-format の rules で規則を false にすると、リポジトリ全体の lint の指摘が消えるか",
+      "kind": "swift-format",
+      "command": "swift-format lint --strict a.swift",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "",
+      "prior_steps": [],
+      "sources": {
+        ".swift-format": "{\n  \"version\": 1,\n  \"rules\": {\n    \"AlwaysUseLowerCamelCase\": false\n  }\n}\n",
+        "a.swift": "let Bad_name = 1\n"
+      }
+    },
+    {
+      "id": "X-a",
+      "m": "補足",
+      "question": "裸の protocol 型（any 無し）は Swift 6 と警告エラーで通るか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (2.39 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Core.swift": "public protocol P {}\npublic func f(_ p: P) -> Int { 1 }\n"
+      }
+    },
+    {
+      "id": "X-b",
+      "m": "補足",
+      "question": "ExistentialAny を有効にすると裸の protocol 型は落ちるか",
+      "kind": "spm",
+      "command": "swift build --scratch-path .build",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "error: SwiftCompile normal x86_64 failed with a nonzero exit code. Command line:     cd /tmp",
+        "Sources/Core/Core.swift:2:20: error: use of protocol 'P' as a type must be written 'any P'; this will be an error in a future Swift language mode [#ExistentialAny]",
+        "error: Build failed"
+      ],
+      "stdout_tail": "error: Build failed",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature(\"ExistentialAny\")])]\n)\n",
+        "Sources/Core/Core.swift": "public protocol P {}\npublic func f(_ p: P) -> Int { 1 }\n"
+      }
+    },
+    {
+      "id": "X-c",
+      "m": "補足",
+      "question": "テスト target が無いパッケージで swift test は何を返すか",
+      "kind": "spm",
+      "command": "swift test --scratch-path .build",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "error: no tests found; create a target in the 'Tests' directory"
+      ],
+      "stdout_tail": "error: no tests found; create a target in the 'Tests' directory",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Core.swift": "public func f() -> Int { 1 }\n"
+      }
+    },
+    {
+      "id": "X-d",
+      "m": "補足",
+      "question": "UInt64 を変数の量で 64 以上シフトすると、落ちずに 0 になるか（盤の表現の判断材料）",
+      "kind": "swiftc-run",
+      "command": "./probe",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "shifted=0 masked=1",
+      "prior_steps": [
+        {
+          "command": "swiftc -swift-version 6 -o probe main.swift",
+          "exit": 0
+        }
+      ],
+      "sources": {
+        "main.swift": "let one: UInt64 = 1\nlet shift = Int(CommandLine.arguments.count) + 63\nprint(\"shifted=\\(one << shift) masked=\\(one &<< shift)\")\n"
+      }
+    },
+    {
+      "id": "X-e",
+      "m": "補足",
+      "question": "release 構成の swift test で @testable import は使えるか",
+      "kind": "spm",
+      "command": "swift test --scratch-path .build -c release",
+      "exit": 0,
+      "outcome": "accepted",
+      "diagnostics": [],
+      "stdout_tail": "Build complete! (4.00 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)]), .testTarget(name: \"CoreTests\", dependencies: [\"Core\"], swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Core.swift": "func hidden() -> Int { 1 }\n",
+        "Tests/CoreTests/CoreTests.swift": "@testable import Core\nimport Testing\n\n@Test func hiddenIsOne() {\n    #expect(hidden() == 1)\n}\n"
+      }
+    },
+    {
+      "id": "X-f",
+      "m": "補足",
+      "question": "対照: X-e の期待をわざと外すと落ちるか（release 構成でテストが実際に走っていること）",
+      "kind": "spm",
+      "command": "swift test --scratch-path .build -c release",
+      "exit": 1,
+      "outcome": "rejected",
+      "diagnostics": [
+        "✘ Test hiddenIsOne() recorded an issue at CoreTests.swift:5:5: Expectation failed: hidden() == 2",
+        "✘ Test hiddenIsOne() failed after 0.001 seconds with 1 issue.",
+        "✘ Test run with 1 test in 0 suites failed after 0.001 seconds with 1 issue."
+      ],
+      "stdout_tail": "Build complete! (4.01 secs)",
+      "prior_steps": [],
+      "sources": {
+        "Package.swift": "// swift-tools-version: 6.2\nimport PackageDescription\nlet package = Package(\n    name: \"Probe\",\n    products: [],\n    targets: [.target(name: \"Core\", swiftSettings: [.treatAllWarnings(as: .error)]), .testTarget(name: \"CoreTests\", dependencies: [\"Core\"], swiftSettings: [.treatAllWarnings(as: .error)])]\n)\n",
+        "Sources/Core/Core.swift": "func hidden() -> Int { 1 }\n",
+        "Tests/CoreTests/CoreTests.swift": "@testable import Core\nimport Testing\n\n@Test func hiddenIsOne() {\n    #expect(hidden() == 2)\n}\n"
+      }
+    }
+  ]
+}

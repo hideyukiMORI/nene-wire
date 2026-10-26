@@ -1,0 +1,5 @@
+# SwiftLint の版と配布物の SHA-256 の唯一の正本（QLT-011）。eng/install-tools.sh だけが読む。
+# 動的バイナリは glibc 2.35 で起動しないので、同じ zip の swiftlint-static を使う（ADR 0001）。
+version=0.65.1
+asset=swiftlint_linux_amd64.zip
+sha256=caeed6f4a679c35539ffaf124f6c4ab4a8416917f7d8796279dc52b74026059d

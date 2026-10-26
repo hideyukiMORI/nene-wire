@@ -1,0 +1,5 @@
+# CI が入れる Swift ツールチェーンの tarball の SHA-256（QLT-011）。版の正本は .swift-version で、ここは版ごとの照合値だけ。
+# 6.4.1 の値は 2026-10-25 に download.swift.org の tarball を落とし、同じ場所の .sig を swift.org/keys/all-keys.asc で検証
+# （Good signature from "Swift 6.x Release Signing Key"・RSA key EF80A866B47A981F）してから sha256sum で取った。
+# 形: <版> <配布の platform> <SHA-256>。eng/install-swift.sh が .swift-version の版の行を引く。
+6.4.1 ubuntu22.04 e9ec2ff05ac0fc89bf2e7cecdee5da4d398898a768d7ee2b86a59d2a7f01c44b
