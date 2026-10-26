@@ -85,47 +85,49 @@ struct StripLayout {
             ], column: 0, row: StripRenderer.height - 2, background: theme.ground)
     }
 
-    /// 14 行目: 何件目か・ネット・取得・キー。
+    /// 14 行目: 何件目か・ネット・取得・翻訳・速報・停止中・キー。狭ければ優先度の低いものから落とし、
+    /// 何件目か・速報・停止中・`s 設定`・`q 終了` は必ず残す（#34）。
     func drawStatus(_ state: StripState, into grid: inout Grid) {
         let row = StripRenderer.height - 1
         let online = state.feedsLive > 0
         let failed = state.feeds.filter(\.isFailed).count
-        var segments = [
-            Segment(" [\(Self.counter(state.position, of: state.count, separator: "/"))] ", theme.text),
+        let position = [Segment(" [\(Self.counter(state.position, of: state.count, separator: "/"))] ", theme.text)]
+        let net = [
             Segment(" NET ", theme.faint),
             Segment(online ? glyphs.lamp + " ONLINE" : glyphs.lamp + " OFFLINE", online ? theme.accent : theme.dim),
-            Segment("   FEED ", theme.faint), Segment("\(state.feedsLive)/\(state.feeds.count)", theme.text),
         ]
-        if failed > 0 {
-            segments.append(Segment("  取得失敗 \(failed)", theme.dim))
+        let feed = [Segment("   FEED ", theme.faint), Segment("\(state.feedsLive)/\(state.feeds.count)", theme.text)]
+        let failure = failed > 0 ? [Segment("  取得失敗 \(failed)", theme.dim)] : []
+        let fresh = state.pendingFresh > 0 ? [Segment("   速報 \(state.pendingFresh)", theme.warn)] : []
+        let paused = state.paused ? [Segment("   " + glyphs.marker + "停止中", theme.accent)] : []
+        func key(_ name: String, _ label: String) -> [Segment] {
+            [Segment(name, theme.accent), Segment(" " + label + "  ", theme.dim)]
         }
-        switch state.translator {
-        case .off:
-            segments += [Segment("   TRANS ", theme.faint), Segment("未導入", theme.dim)]
-        case .disabled:
-            segments += [Segment("   TRANS ", theme.faint), Segment("オフ", theme.dim)]
-        case .ready(let route, let pending, let busy):
-            segments += [Segment("   TRANS ", theme.faint), Segment(route, theme.text)]
-            segments.append(Segment(busy ? " " + glyphs.lamp : "", theme.accent))
-            if pending > 0 {
-                segments.append(Segment(" 待ち \(pending)", theme.dim))
-            }
-        }
-        if state.pendingFresh > 0 {
-            segments.append(Segment("   速報 \(state.pendingFresh)", theme.warn))
-        }
-        if state.paused {
-            segments.append(Segment("   " + glyphs.marker + "停止中", theme.accent))
-        }
-        segments += [
-            Segment("   \(glyphs.vertical) ", theme.faint), Segment("SPC", theme.accent),
-            Segment(state.paused ? " 再開  " : " 停止  ", theme.dim), Segment(glyphs.arrows, theme.accent),
-            Segment(" 前後  ", theme.dim), Segment("t", theme.accent), Segment(" 翻訳  ", theme.dim),
-            Segment("s", theme.accent), Segment(" 設定  ", theme.dim), Segment("q", theme.accent),
-            Segment(" 終了", theme.dim),
+        let groups: [[Segment]] = [
+            position, net, feed, failure, translatorSegments(state.translator), fresh, paused,
+            [Segment("   \(glyphs.vertical) ", theme.faint)], key("SPC", state.paused ? "再開" : "停止"),
+            key(glyphs.arrows, "前後"), key("t", "翻訳"), key("s", "設定"),
+            [Segment("q", theme.accent), Segment(" 終了", theme.dim)],
         ]
+        // 落とす順: FEED・NET・取得失敗・TRANS・←→・SPC・t
+        let line = LineFit.fit(groups, dropOrder: [2, 1, 3, 4, 9, 8, 10], width: columns)
         fill(row: row, with: theme.panel, into: &grid)
-        grid.write(segments, column: 0, row: row, background: theme.panel)
+        grid.write(line, column: 0, row: row, background: theme.panel)
+    }
+
+    private func translatorSegments(_ status: TranslatorStatus) -> [Segment] {
+        switch status {
+        case .off:
+            return [Segment("   TRANS ", theme.faint), Segment("未導入", theme.dim)]
+        case .disabled:
+            return [Segment("   TRANS ", theme.faint), Segment("オフ", theme.dim)]
+        case .ready(let route, let pending, let busy):
+            return [
+                Segment("   TRANS ", theme.faint), Segment(route, theme.text),
+                Segment(busy ? " " + glyphs.lamp : "", theme.accent),
+            ]
+                + (pending > 0 ? [Segment(" 待ち \(pending)", theme.dim)] : [])
+        }
     }
 
     /// `042 / 180`。桁数は全部の件数に合わせ、少なくとも 3 桁。
