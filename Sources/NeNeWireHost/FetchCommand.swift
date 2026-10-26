@@ -5,7 +5,7 @@ public enum FetchCommand {
     /// 実行ファイルの名前（`PATH` から探す）。
     public static let executable = "curl"
     /// 名乗る名前。提供元が誰の取得か分かるように、リポジトリの URL を添える。
-    public static let userAgent = "nene-wire/0.1 (+https://github.com/hideyukiMORI/nene-wire)"
+    public static let userAgent = "nene-wire (+https://github.com/hideyukiMORI/nene-wire)"
 
     /// フィードを 1 本取る子プロセス。転送は 5 回まで・20 秒で打ち切る・圧縮を受け取る・http(s) 以外へは転送しない。
     /// 前の応答の手がかりがあれば条件付きで取る（更新が無ければ 304 で中身を取り直さない・FR-07）。
