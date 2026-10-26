@@ -57,14 +57,20 @@ struct Viewer {
     }
 
     /// 取得を進める: 終わった curl の結果を受け取り、予定の来たフィードを取りに行く。
+    /// 結果を受け取ったら、その結果をメッセージの行に残す（すぐ次のフィードを取りに行っても「取得中」で上書きしない。
+    /// 取りに行っている最中であることは DATA の窓の印で分かる）。
     private mutating func fetch(at now: Timestamp) {
+        var received = false
         if let arrival = fetcher.collect(at: now) {
             receive(arrival)
+            received = true
         }
+        let wasFetching = fetcher.fetching
         if let arrival = fetcher.startIfDue(at: now) {
             receive(arrival)
+            received = true
         }
-        if let feed = fetcher.fetching {
+        if !received, wasFetching == nil, let feed = fetcher.fetching {
             message = "\(LocalTime.now().time)  取得中  \(fetcher.feeds[feed].name) …"
         }
     }
