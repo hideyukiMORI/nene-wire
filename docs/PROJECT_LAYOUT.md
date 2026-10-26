@@ -11,7 +11,7 @@
 ## 1. 承認されたモジュール
 
 空の「将来用 target」を作らない。下の一覧は「承認された形」で（ADR 0004）、各 target は最初の具体的な責務が生じた PR で足す。
-**いま `Package.swift` にあるのは `NeNeWireCore`・`NeNeWireHost`・合成ルート `nene-wire` と、Core・Host のテスト target**（Issue #3）。Render と Terminal は手順 2 で足す。
+**承認された 5 つの target とそれぞれのテスト target が、すべて `Package.swift` にある**（Render・Terminal は Issue #5 で足した）。
 
 ```text
 nene-wire (executable)
@@ -42,7 +42,7 @@ NeNeWireCore
 ```text
 NeNeWireCore      -> （無し）
 NeNeWireRender    -> NeNeWireCore
-NeNeWireTerminal  -> NeNeWireRender                        ＋ 標準モジュール Glibc
+NeNeWireTerminal  -> NeNeWireRender                        ＋ 標準モジュール Glibc・Synchronization（シグナルの旗）
 NeNeWireHost      -> NeNeWireCore                          ＋ 標準モジュール Glibc
 nene-wire         -> 上の 4 つすべて（明示的な合成のためだけに） ＋ 標準モジュール Glibc
 ```
@@ -75,7 +75,7 @@ nene-wire         -> 上の 4 つすべて（明示的な合成のためだけ�
 
 ### `NeNeWireTerminal`
 
-alternate screen・カーソル非表示・24bit カラー（無ければ 256 色）・前フレームとの差分・1 フレーム 1 回の `write`・SIGWINCH・
+帯の確保（プロンプトの下・端末を占有しない・ADR 0006）・カーソル非表示・24bit カラー（無ければ 256 色）・前フレームとの差分・1 フレーム 1 回の `write`・SIGWINCH・
 **異常終了でも端末を必ず復元**。キー入力を閉じた enum の意図に変え、設定画面の文字の入力（UTF-8）を読む。可変性の隔離区画（ARC-005）。
 
 ### `NeNeWireHost`

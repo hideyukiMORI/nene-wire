@@ -1,4 +1,4 @@
-/// フィードを取れなかった理由（FR-15 で状態の帯に出す）。
+/// フィードを取れなかった理由（FR-15 で状態の行に出す）。
 public enum FetchFailure: Sendable, Hashable {
     /// curl が失敗した（名前解決・接続・時間切れなど）。curl の終了コードと、標準エラーの 1 行目。
     case transport(code: Int32, message: String)

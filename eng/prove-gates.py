@@ -7,6 +7,8 @@ exit 0 になることも確かめる。作業木そのものには触れない�
 
 違反を仕込むには Swift のソースが要るので、どの証明も同じ「足場」（依存グラフの正本どおりの 5 target・
 規則に沿った最小のソース）を置いてから 1 か所だけ壊す。足場は証明のための一時物で、作業木には入れない。
+作業木にある本物のソースはそのまま使い、足場は名前のぶつからない最小のファイルだけを足す（合成ルートの main.swift だけは置き換える）。
+P09・P27 は本物の `Sources/NeNeWireRender/Cell.swift` の `public let glyph` を壊す。
 
 移植元: NeNe Gambit eng/prove-gates.py（コミット 8c5b8f6 の足場の方式）。複製は git の一覧で作り、
 このリポジトリで足した検査の証明（P55 以降）を足した（ADR 0003）。
@@ -37,8 +39,10 @@ TARGETS = {
     "NeNeWireRender": ("target", '"NeNeWireCore"'),
     "NeNeWireTerminal": ("target", '"NeNeWireRender"'),
     "NeNeWireHost": ("target", '"NeNeWireCore"'),
-    "nene-wire": ("executableTarget", '"NeNeWireCore", "NeNeWireHost"'),
+    "nene-wire": ("executableTarget", '"NeNeWireCore", "NeNeWireRender", "NeNeWireTerminal", "NeNeWireHost"'),
     "NeNeWireCoreTests": ("testTarget", '"NeNeWireCore"'),
+    "NeNeWireRenderTests": ("testTarget", '"NeNeWireCore", "NeNeWireRender"'),
+    "NeNeWireTerminalTests": ("testTarget", '"NeNeWireRender", "NeNeWireTerminal"'),
     "NeNeWireHostTests": ("testTarget", '"NeNeWireCore", "NeNeWireHost"'),
 }
 
@@ -66,17 +70,6 @@ public enum Pick {
     /// 0..<count から 1 つ選ぶ。
     public static func square(count: Int, using generator: inout some RandomNumberGenerator) -> Square? {
         Square.make(Int.random(in: 0..<count, using: &generator))
-    }
-}
-""",
-    "Sources/NeNeWireRender/Cell.swift": """\
-/// 文字セル 1 つ。証明用の最小の型。
-public struct Cell: Sendable {
-    public let glyph: Character
-
-    /// セルを作る。
-    public init(glyph: Character) {
-        self.glyph = glyph
     }
 }
 """,
