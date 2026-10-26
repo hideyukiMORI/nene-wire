@@ -27,3 +27,4 @@ ADR は「なぜそう決めたか」「何を却下したか」を書く。
 | [0009](0009-cyber-effects.md) | 演出は「時計と種」から格子を作る Render の純粋な関数にし、デザインのキャンバスの案をすべて入れる | 受理 |
 | [0010](0010-argos-translate.md) | 翻訳は Argos Translate を torch 抜きで入れ、子プロセスでまとめて訳す。訳せなければ原文で流す | 受理 |
 | [0011](0011-settings-screen.md) | 設定画面は帯と同じ 15 行に描き、編集の規則は Core の状態機械、保存は版付きの文字列にする | 受理 |
+| [0012](0012-powershell-installer.md) | PowerShell からは install.ps1 で WSL の中に入れ、Windows 側には wsl.exe で起動する nene-wire.cmd だけを置く | 受理 |

@@ -35,6 +35,16 @@ curl -fsSL https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install
 - Swift は要らない。標準ライブラリを静的にリンクした 1 ファイルで、動的な依存は libc・libm・libstdc++・libgcc_s だけ
 - アンインストール: `rm ~/.local/bin/nene-wire`
 
+**PowerShell から**（Windows・WSL が入っていること）:
+
+```powershell
+irm https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install.ps1 | iex
+```
+
+既定の WSL のディストリビューションの中で同じインストーラを流し、`%LOCALAPPDATA%\nene-wire\bin` に小さな `nene-wire.cmd` を置いて、そのフォルダをユーザーの PATH に足す。
+これで PowerShell からも cmd からも `nene-wire` で起動できる（中身は `wsl.exe` で WSL の nene-wire を呼ぶだけ）。別のディストリビューションに入れるなら `NENE_WIRE_DISTRO` を設定する。
+スクリプトは [install.ps1](install.ps1)。アンインストール: `%LOCALAPPDATA%\nene-wire` を消して PATH から外し、`wsl rm ~/.local/bin/nene-wire`
+
 <details>
 <summary>手で入れる</summary>
 

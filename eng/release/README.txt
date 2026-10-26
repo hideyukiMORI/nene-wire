@@ -7,6 +7,10 @@ NeNe Wire @VERSION@ (Linux x86_64)
 動作環境: WSL2 の Ubuntu（Windows Terminal）など、x86_64 の Linux で glibc 2.35 以上（Ubuntu 22.04 以降）。
 フィードの取得に curl を使う。Swift は要らない（標準ライブラリを静的にリンクしてある）。
 
+PowerShell から（WSL が入っていること）
+  irm https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install.ps1 | iex
+  WSL の中に入れ、PowerShell と cmd から nene-wire で起動できるようにする。
+
 ダウンロードと確認
 ------------------
 1. GitHub の Release から次の 2 つを同じフォルダに落とす
