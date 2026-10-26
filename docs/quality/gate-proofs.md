@@ -1,6 +1,6 @@
 # ゲート発火の証明 — NeNe Wire
 
-> Status: 記録 / 最終実測 2026-10-26（61 件すべて pass・`python3 eng/prove-gates.py`・結果の正本は [gate-proofs.json](gate-proofs.json)）
+> Status: 記録 / 最終実測 2026-10-26（65 件すべて pass（違反の仕込み 63 件と対照 2 件）・`python3 eng/prove-gates.py`・結果の正本は [gate-proofs.json](gate-proofs.json)）
 > 根拠となる規則: QLT-007（カスタムゲートには negative proof が要る）
 
 **検査は「落ちること」を見るまで信用しない。** 各ゲートについて、最小の違反を仕込んだ状態で
