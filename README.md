@@ -18,7 +18,7 @@ It is the sibling of [NeNe Gambit](https://github.com/hideyukiMORI/nene-gambit) 
 A new story has just arrived on NEON TIMES, and before it cuts the line the strip sounds the intercept alarm: hazard stripes and a crawling `INTERCEPT ■ 緊急傍受 ■ PRIORITY: ALPHA` banner.
 Every feed and story in these screenshots is made up by `--demo`; real articles are never stored in this repository.</sub>
 
-> **Beta.** v0.3.0 adds the settings screen, a translation switch and installing from PowerShell. On `main`: saved articles (it starts with what it had last time).
+> **Beta.** v0.4.0 remembers: saved stories and translations, so it starts at once with what it had last time.
 
 ---
 
@@ -50,7 +50,7 @@ The whole script is [install.ps1](install.ps1). To uninstall: delete `%LOCALAPPD
 <summary>Install by hand</summary>
 
 ```bash
-v=0.3.0
+v=0.4.0
 curl -fsSL -O https://github.com/hideyukiMORI/nene-wire/releases/download/v$v/nene-wire-$v-linux-x86_64.tar.gz \
            -O https://github.com/hideyukiMORI/nene-wire/releases/download/v$v/SHA256SUMS
 sha256sum --check SHA256SUMS
