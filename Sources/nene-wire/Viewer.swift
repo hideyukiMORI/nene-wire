@@ -177,10 +177,29 @@ struct Viewer {
         showtime.begin(leaving: nil, first: true)
     }
 
-    /// いまの記事を、いまある訳で固定して見せる。
+    /// いまの記事を、いまある訳で固定して見せる（翻訳しない設定なら原文のまま）。
     private mutating func present() {
+        guard settings.display.translate else {
+            shown = rotation.current
+            shownUntranslated = false
+            return
+        }
         shown = rotation.current.map(translator.show)
         shownUntranslated = rotation.current.map(translator.isUntranslated) ?? false
+    }
+
+    /// `t`: 翻訳のオン／オフを切り替えて保存し、いまの記事もすぐ出し直す（ADR 0013）。
+    private mutating func toggleTranslation() {
+        let new = Settings(feeds: settings.feeds, display: settings.display.togglingTranslation)
+        if let problem = settingsFile.save(new) {
+            message = "\(LocalTime.now().time)  \(problem)"
+            return
+        }
+        settings = new
+        if !booting {
+            present()
+        }
+        message = "\(LocalTime.now().time)  翻訳を" + (new.display.translate ? "オンにした" : "オフにした（原文で流す）") + "  t で切り替え"
     }
 
     /// 記事を動かし、前の記事を切り替えの演出に渡す。
@@ -193,7 +212,9 @@ struct Viewer {
 
     /// 翻訳を進める: 終わった翻訳の結果を受け取り、訳してよい記事があれば訳しに行く。
     private mutating func translate(at now: Timestamp) {
-        for report in [translator.collect(at: now), translator.startIfDue(at: now)].compactMap({ $0 }) {
+        // 翻訳しない間は新しく訳しに行かない（走っている分は受け取る）
+        let started = settings.display.translate ? translator.startIfDue(at: now) : nil
+        for report in [translator.collect(at: now), started].compactMap({ $0 }) {
             let time = LocalTime.now().time
             switch report.outcome {
             case .translated:
@@ -279,6 +300,8 @@ struct Viewer {
             case .settings:
                 openSettings()
                 return moved
+            case .toggleTranslation:
+                toggleTranslation()
             }
         }
         return moved
@@ -309,7 +332,8 @@ struct Viewer {
             article: booting ? nil : shown, fresh: !booting && rotation.isFresh, position: rotation.position,
             count: rotation.count, paused: paused, feeds: rows, message: message, clock: LocalTime.now(),
             motion: motion, log: booting ? bootLog.lines : [], pendingFresh: rotation.pendingFresh,
-            untranslated: !booting && shownUntranslated, translator: translator.status, rain: settings.display.rain,
+            untranslated: !booting && shownUntranslated,
+            translator: settings.display.translate ? translator.status : .disabled, rain: settings.display.rain,
             showOriginal: settings.display.original)
         let grid = StripRenderer.render(state, size: Console.size(), theme: theme, traits: traits)
         Console.write(FrameEncoder.encode(grid, previous: previous, colors: traits.colors))

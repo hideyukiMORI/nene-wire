@@ -7,6 +7,7 @@
 /// theme PHOSPHOR
 /// rain on
 /// original on
+/// translate on
 /// feed on<TAB>NHK<TAB>https://www.nhk.or.jp/rss/news/cat0.xml
 /// ```
 /// 1 行目が見出しと版。表示の項目は 1 行 1 つで、無ければ既定。フィードは書いた順。空行と `#` で始まる行は読み飛ばす。
@@ -19,7 +20,7 @@ public enum SettingsCodec {
         var lines = [
             "\(header) \(version)", "language \(display.language)", "interval \(display.interval)",
             "theme \(display.theme)", "rain \(display.rain ? "on" : "off")",
-            "original \(display.original ? "on" : "off")",
+            "original \(display.original ? "on" : "off")", "translate \(display.translate ? "on" : "off")",
         ]
         for feed in settings.feeds {
             lines.append("feed \(feed.enabled ? "on" : "off")\t\(feed.name)\t\(feed.url.text)")
@@ -48,7 +49,9 @@ public enum SettingsCodec {
                 continue
             }
             let parts = line.split(separator: " ", maxSplits: 1).map(String.init)
-            guard parts.count == 2, ["language", "interval", "theme", "rain", "original"].contains(parts[0]) else {
+            guard parts.count == 2,
+                ["language", "interval", "theme", "rain", "original", "translate"].contains(parts[0])
+            else {
                 return .rejected(.malformed(line: offset + 1))
             }
             values[parts[0]] = parts[1]
@@ -67,16 +70,17 @@ public enum SettingsCodec {
 
     private static func display(from values: [String: String]) -> DisplaySettings? {
         let base = DisplaySettings.defaults
-        for key in ["rain", "original"] {
+        for key in ["rain", "original", "translate"] {
             if let value = values[key], value != "on", value != "off" {
                 return nil
             }
         }
         let rain = values["rain"].map { $0 == "on" } ?? base.rain
         let original = values["original"].map { $0 == "on" } ?? base.original
+        let translate = values["translate"].map { $0 == "on" } ?? base.translate
         let interval = values["interval"].map { Int($0) ?? -1 } ?? base.interval
         return DisplaySettings.make(
             language: values["language"] ?? base.language, interval: interval, theme: values["theme"] ?? base.theme,
-            switches: (rain, original))
+            switches: DisplaySwitches(rain: rain, original: original, translate: translate))
     }
 }

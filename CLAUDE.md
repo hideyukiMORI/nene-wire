@@ -150,6 +150,7 @@ Waivers: none | WVR-NNNN
 - 配布: `make release TAG=v<版>` の 1 経路（QLT-014・ADR 0008）。`nene-wire --demo` はネットを使わず架空の記事で動く（画面写真用）。公開は施主の確認を取る
 - 演出（ADR 0009）: 復号・くるくる確定・電脳ノイズ・緊急傍受・接続シーケンス・HUD の呼吸・パラパラ落ちる切り替え。どれも Render の `Motion` から決まる純粋な関数
 - 翻訳（ADR 0010）: Argos Translate を `install-translator.sh` で torch 抜きで入れ、英語の記事を日本語で出す。無ければ原文で流す
+- 翻訳のオン／オフ（ADR 0013）: 帯の表示中の `t` か設定画面。保存する
 - 設定画面（ADR 0011）: `s` で開く。フィードの一覧と編集・表示の言語・時間・テーマ・雨・原文。`~/.config/nene-wire/settings.txt` に版付きで保存
 - 動かないもの: 記事と訳の保存
 - 施主の決定は [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) にそろっている。決定を覆したくなった点や、要件に無い機能を足したくなった点は、自分で決めずに施主に聞く

@@ -107,6 +107,7 @@ struct SettingsLayout {
         let display = editor.settings.display
         let values = [
             OptionRow(option: .language, label: "表示する言語", value: SettingsRenderer.languageName(display.language)),
+            OptionRow(option: .translate, label: "翻訳", value: display.translate ? "する" : "しない"),
             OptionRow(option: .interval, label: "1 件の表示時間", value: "\(display.interval) 秒"),
             OptionRow(option: .theme, label: "色のテーマ", value: display.theme),
             OptionRow(option: .rain, label: "文字の雨", value: display.rain ? "オン" : "オフ"),

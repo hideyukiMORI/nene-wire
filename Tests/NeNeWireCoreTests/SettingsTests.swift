@@ -21,7 +21,8 @@ struct SettingsTests {
             feeds: try sample().feeds,
             display: try #require(
                 DisplaySettings.make(
-                    language: "en", interval: 20, theme: "CYAN", switches: (rain: false, original: true))))
+                    language: "en", interval: 20, theme: "CYAN",
+                    switches: DisplaySwitches(rain: false, original: true, translate: false))))
         #expect(SettingsCodec.decode(SettingsCodec.encode(settings)) == .parsed(settings))
     }
 
@@ -44,6 +45,18 @@ struct SettingsTests {
         #expect(settings.feeds.isEmpty)
     }
 
+    @Test func translationCanBeSwitchedOffAndOldFilesKeepItOn() {
+        #expect(!DisplaySettings.defaults.togglingTranslation.translate)
+        #expect(DisplaySettings.defaults.togglingTranslation.togglingTranslation == .defaults)
+        guard case .parsed(let old) = SettingsCodec.decode("nene-wire-settings 1\nrain off\n") else {
+            Issue.record("読めない")
+            return
+        }
+        #expect(old.display.translate)
+        #expect(!old.display.rain)
+        #expect(SettingsCodec.decode("nene-wire-settings 1\ntranslate maybe\n") == .rejected(.malformed(line: 1)))
+    }
+
     @Test func displayOptionsCycleWithinTheirChoices() {
         let base = DisplaySettings.defaults
         #expect(base.stepping(.language, by: -1).language == "es")
@@ -60,6 +73,9 @@ struct SettingsTests {
         #expect(editor.settings.feeds[1].enabled)
         #expect(editor.isDirty)
         _ = editor.handle(.tab)
+        _ = editor.handle(.down)
+        _ = editor.handle(.right)
+        #expect(!editor.settings.display.translate)
         _ = editor.handle(.down)
         _ = editor.handle(.right)
         #expect(editor.settings.display.interval == 15)
