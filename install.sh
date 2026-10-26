@@ -41,5 +41,5 @@ install -Dm755 "$work/$name/nene-wire" "$prefix/nene-wire"
 echo "nene-wire install: installed $prefix/nene-wire ($("$prefix/nene-wire" --version))"
 case ":$PATH:" in
     *":$prefix:"*) echo "nene-wire install: run nene-wire (q quits; try nene-wire --demo to see it without the network)" ;;
-    *) echo "nene-wire install: $prefix is not on your PATH; open a new terminal or run export PATH=\"$prefix:\$PATH\"" ;;
+    *) echo "nene-wire install: $prefix is not on this shell's PATH. Ubuntu adds ~/.local/bin when you log in, so a new terminal usually has it; or run export PATH=\"$prefix:\$PATH\"" ;;
 esac

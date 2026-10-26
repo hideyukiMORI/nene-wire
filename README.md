@@ -36,6 +36,16 @@ The whole script is [install.sh](install.sh), about 45 lines. Reading it before 
 - No Swift needed. It is a single file with the Swift standard library linked statically; the only dynamic dependencies are libc, libm, libstdc++ and libgcc_s
 - To uninstall: `rm ~/.local/bin/nene-wire`
 
+**From PowerShell** (Windows, with WSL):
+
+```powershell
+irm https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install.ps1 | iex
+```
+
+It runs the same installer inside your default WSL distribution, then puts a small `nene-wire.cmd` in `%LOCALAPPDATA%\nene-wire\bin` and adds that folder to your user PATH,
+so `nene-wire` works from PowerShell and cmd too (it starts the WSL one through `wsl.exe`). Set `NENE_WIRE_DISTRO` to use another distribution.
+The whole script is [install.ps1](install.ps1). To uninstall: delete `%LOCALAPPDATA%\nene-wire`, remove it from your PATH, and run `wsl rm ~/.local/bin/nene-wire`
+
 <details>
 <summary>Install by hand</summary>
 

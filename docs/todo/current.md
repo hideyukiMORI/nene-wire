@@ -33,6 +33,8 @@
 - v0.2.0（ベータ・2026-10-26・演出と翻訳）: タグ `v0.2.0` は `edebf35`。配布物 `nene-wire-0.2.0-linux-x86_64.tar.gz` の SHA-256 は `abd8d63daa84b312aa8405a2daea7911e195f943b244e3532b71938630b61e43`。
   再ダウンロードして照合し、`install.sh` を `curl … | bash` で通した。https://github.com/hideyukiMORI/nene-wire/releases/tag/v0.2.0
 
+- `install.ps1`: PowerShell から WSL の中に入れ、`nene-wire.cmd` で PowerShell・cmd から起動（ADR 0012）
+
 ## 動かないもの
 
 - 記事と訳の保存（起動し直すと一から取り直して訳し直す）
