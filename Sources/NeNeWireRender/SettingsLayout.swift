@@ -170,10 +170,11 @@ struct SettingsLayout {
         case .browse:
             keys = [("↑↓", "選ぶ"), ("←→", "値を変える"), ("Tab", "フィードへ"), ("w", "保存"), ("Esc", "閉じる")]
         }
+        // 狭ければ前から落とす（w 保存・Esc 閉じる・Enter 決める など、最後の 2 つは必ず残す・#34）
+        let groups = keys.map { [Segment(" " + $0.0, theme.accent), Segment(" " + $0.1 + " ", theme.dim)] }
+        let line = LineFit.fit(groups, dropOrder: Array(0..<max(groups.count - 2, 0)), width: columns)
         fill(row: StripRenderer.height - 1, with: theme.panel, into: &grid)
-        grid.write(
-            keys.flatMap { [Segment(" " + $0.0, theme.accent), Segment(" " + $0.1 + " ", theme.dim)] }, column: 0,
-            row: StripRenderer.height - 1, background: theme.panel)
+        grid.write(line, column: 0, row: StripRenderer.height - 1, background: theme.panel)
     }
 
     /// 枠 1 つの置き場と見出し。
