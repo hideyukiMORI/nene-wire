@@ -1,5 +1,5 @@
 // 合成ルート（ARC-006）。時計・環境・起動オプションを読み（ARC-007）、Core・Render・Terminal・Host を組み立てる。
-// 起動するとフィードを取り（手順 2 では起動時に 1 回だけ・ADR 0006）、端末の幅いっぱい・高さ 15 行の帯に記事を一件ずつ出す。
+// 起動すると端末の幅いっぱい・高さ 15 行の帯に常駐し、裏でフィードを定期的に取り直しながら記事を一件ずつ流し続ける（ADR 0006・0007）。
 // `--list` は取った記事を素のまま一覧で出す（ADR 0005）。
 
 import Glibc
@@ -54,30 +54,8 @@ let colors: ColorMode = {
 /// 罫線の文字が 1 桁で描かれる端末だけ罫線の枠を使い、それ以外（2 桁・答えが無い）は ASCII の枠へ落とす（ADR 0006）。
 let traits = TerminalTraits(frame: Console.columnsAdvanced(by: "─") == 1 ? .boxDrawing : .ascii, colors: colors)
 
-// 取得の間はふつうの行として進み具合を出す。帯の上にシェルの履歴と一緒に残る
-var groups: [[Article]] = []
-for feed in feeds {
-    Console.write(Array("  取得中  \(feed.name) …".utf8))
-    let line: String
-    switch FeedFetch.outcome(feed, environment: environment) {
-    case .fetched(let document, _):
-        let articles = document.items.compactMap { Article.from($0, feed: feed) }
-        groups.append(articles)
-        line = " \(articles.count) 件"
-    case .notModified:
-        line = " 更新なし"
-    case .failed(let failure):
-        line = " " + FeedFetch.describe(failure)
-    }
-    Console.writeLine(line)
-    if Console.takeSignals().interrupted {
-        Console.close()
-        exit(130)
-    }
-}
-
 var viewer = Viewer(
-    articles: Lineup.interleaved(groups), feedsFetched: groups.count, feedsTotal: feeds.count, traits: traits)
+    fetcher: Fetcher(feeds: feeds, environment: environment, now: LocalTime.timestamp()), traits: traits)
 viewer.run()
 Console.close()
 exit(0)

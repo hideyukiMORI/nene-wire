@@ -9,6 +9,20 @@ import Glibc
 public enum ChildProcess {
     /// 子プロセスを走らせ、終わるまで待つ。
     public static func run(_ command: ChildCommand) -> ChildOutcome {
+        switch start(command) {
+        case .failedToStart(let code):
+            return .failedToStart(code)
+        case .running(var child):
+            while true {
+                if let result = child.pump(waiting: -1) {
+                    return .finished(result)
+                }
+            }
+        }
+    }
+
+    /// 子プロセスを起動して、待たずに返す（表示のループが、キー入力と一緒に出力を待つため・ADR 0007）。
+    public static func start(_ command: ChildCommand) -> ChildStart {
         var output: [Int32] = [-1, -1]
         var errorOutput: [Int32] = [-1, -1]
         guard pipe(&output) == 0 else {
@@ -25,8 +39,7 @@ public enum ChildProcess {
             closeAll([output[0], errorOutput[0]])
             return .failedToStart(started.failure)
         }
-        let (stdout, stderr) = drain(output[0], errorOutput[0])
-        return .finished(ChildResult(termination: wait(for: pid), output: stdout, errorOutput: stderr))
+        return .running(RunningChild(pid: pid, output: output[0], errorOutput: errorOutput[0]))
     }
 
     private enum Spawned {
@@ -81,39 +94,6 @@ public enum ChildProcess {
     /// C の文字列の配列（最後は nil）。呼んだ側が `free` する。
     private static func cStrings(_ values: [String]) -> [UnsafeMutablePointer<CChar>?] {
         values.map { strdup($0) } + [nil]
-    }
-
-    /// 2 つの読み口を、どちらも閉じられるまで読む。
-    private static func drain(_ first: Int32, _ second: Int32) -> ([UInt8], [UInt8]) {
-        var collected: [[UInt8]] = [[], []]
-        var open = [first, second]
-        var buffer = [UInt8](repeating: 0, count: 65_536)
-        while open.contains(where: { $0 >= 0 }) {
-            var requests = open.map { pollfd(fd: $0, events: Int16(POLLIN), revents: 0) }
-            guard poll(&requests, nfds_t(requests.count), -1) >= 0 || errno == EINTR else {
-                break
-            }
-            for slot in 0..<2 where open[slot] >= 0 && requests[slot].revents != 0 {
-                let count = buffer.withUnsafeMutableBytes { read(open[slot], $0.baseAddress, $0.count) }
-                if count > 0 {
-                    collected[slot] += buffer.prefix(count)
-                } else if count == 0 || errno != EINTR {
-                    close(open[slot])
-                    open[slot] = -1
-                }
-            }
-        }
-        return (collected[0], collected[1])
-    }
-
-    private static func wait(for pid: pid_t) -> ChildTermination {
-        var status: Int32 = 0
-        while waitpid(pid, &status, 0) < 0, errno == EINTR {
-            continue
-        }
-        // WIFEXITED / WEXITSTATUS / WTERMSIG のマクロは Swift から使えないので、同じビットの読み方を書く
-        let signal = status & 0x7F
-        return signal == 0 ? .exited((status >> 8) & 0xFF) : .signaled(signal)
     }
 
     private static func closeAll(_ descriptors: [Int32]) {

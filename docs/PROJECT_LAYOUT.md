@@ -20,7 +20,7 @@ nene-wire (executable)
 
 NeNeWireHost
     外の世界との境目。子プロセス（フィードの取得・翻訳の手段）の起動と入出力・ファイル（記事と設定の保存）。
-    外から読んだものはバイト列のまま返し、解釈は Core に任せる。unsafe 系 API を許す区画（SWF-009）
+    外から読んだものはバイト列のまま返し、解釈は Core に任せる。子プロセスは待って終わらせる形と、待たずに起動して表示のループと一緒に待つ形（`RunningChild`・ADR 0007）がある。unsafe 系 API を許す区画（SWF-009）
 
 NeNeWireTerminal
     セル格子 → ANSI の差分出力・termios・SIGWINCH・キーと文字の入力の解析。unsafe 系 API を許す区画（SWF-009）
@@ -75,7 +75,7 @@ nene-wire         -> 上の 4 つすべて（明示的な合成のためだけ�
 
 ### `NeNeWireTerminal`
 
-帯の確保（プロンプトの下・端末を占有しない・ADR 0006）・カーソル非表示・24bit カラー（無ければ 256 色）・前フレームとの差分・1 フレーム 1 回の `write`・SIGWINCH・
+alternate screen を消して帯を最上部に描く（ADR 0007）・カーソル非表示・24bit カラー（無ければ 256 色）・前フレームとの差分・1 フレーム 1 回の `write`・SIGWINCH・
 **異常終了でも端末を必ず復元**。キー入力を閉じた enum の意図に変え、設定画面の文字の入力（UTF-8）を読む。可変性の隔離区画（ARC-005）。
 
 ### `NeNeWireHost`

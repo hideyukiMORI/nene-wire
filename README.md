@@ -4,7 +4,7 @@ A terminal news screensaver: world and Japanese headlines and ledes, one at a ti
 Foreign-language items are translated into the language you choose (Japanese by default), with a translator that needs no account and runs offline where possible.
 Written in Swift for Ubuntu on WSL2 and Windows Terminal. A sibling of [NeNe Gambit](https://github.com/hideyukiMORI/nene-gambit) and [NeNe Reversi](https://github.com/hideyukiMORI/nene-reversi).
 
-🚧 **Early.** `nene-wire` fetches the default feeds (NHK, BBC World, NPR News, The Guardian World) once at startup and shows one article at a time in a full-width, 15-row strip below your prompt (no effects yet). `q` quits, space pauses, ←/→ move between articles. `nene-wire --list` prints headlines and ledes as plain text.
+🚧 **Early.** `nene-wire` clears the screen and stays resident in a full-width, 15-row strip at the top, and keeps cycling headlines from the default feeds (NHK, BBC World, NPR News, The Guardian World), refetching each feed every 15 minutes in the background and cutting in newly arrived stories (no effects yet). `q` quits, space pauses, ←/→ move between articles. `nene-wire --list` prints headlines and ledes as plain text.
 The screen comes next.
 
 ## Development

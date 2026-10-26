@@ -2,8 +2,7 @@ import NeNeWireRender
 
 /// 格子を ANSI のバイト列にする（1 フレーム 1 回の `write` 用・ADR 0006）。
 ///
-/// 帯は画面の決まった位置に無い（プロンプトの下）ので、位置は帯の左上（`ESC 7` で覚えた位置）からの相対で指す。
-/// 前の格子と違う行だけを、行の頭から丸ごと書き直す（全角の文字の半分だけを書き換えない）。書き終えたら左上へ戻る。
+/// 帯は画面の最上部にある。前の格子と違う行だけを、行の頭から丸ごと書き直す（全角の文字の半分だけを書き換えない）。
 /// 移植元: NeNe Reversi `Sources/NeNeReversiTerminal/FrameEncoder.swift`（コミット dc418eb）。
 public enum FrameEncoder {
     /// `previous` が無いか大きさが違えば、全部の行を書く。
@@ -15,14 +14,11 @@ public enum FrameEncoder {
             if !full, previous?.row(row) == cells {
                 continue
             }
-            out += Array("\u{1B}8".utf8)
-            if row > 0 {
-                out += Array("\u{1B}[\(row)B".utf8)
-            }
+            out += Array("\u{1B}[\(row + 1);1H".utf8)
             out += encode(cells, colors: colors)
         }
         if !out.isEmpty {
-            out += Array("\u{1B}[0m\u{1B}8".utf8)
+            out += Array("\u{1B}[0m".utf8)
         }
         return out
     }

@@ -22,7 +22,7 @@ struct StripLayout {
     /// 0 行目: 名前・回線の状態・日時。
     func drawHeader(_ state: StripState, into grid: inout Grid) {
         let rule = glyphs.horizontal + glyphs.horizontal
-        let link = state.feedsFetched > 0 ? "LINK ESTABLISHED" : "LINK LOST"
+        let link = state.feedsLive > 0 ? "LINK ESTABLISHED" : state.article == nil ? "LINK PENDING" : "LINK LOST"
         fill(row: 0, with: theme.panel, into: &grid)
         grid.write(
             [
@@ -33,7 +33,7 @@ struct StripLayout {
             ], column: 0, row: 0, background: theme.panel)
     }
 
-    /// 1 行目〜13 行目: 記事の枠と DATA の窓。
+    /// 1 行目〜12 行目: 記事の枠と DATA の窓。
     func drawFrame(_ state: StripState, into grid: inout Grid) {
         let name = " " + TextLayout.fit((state.article?.feedName ?? "NO SIGNAL").uppercased(), width: inner - 20) + " "
         let clock = " " + state.clock.time + " "
@@ -61,16 +61,27 @@ struct StripLayout {
         grid.write(bottom, column: 0, row: 2 + StripRenderer.bodyRows, background: theme.ground)
     }
 
+    /// 13 行目: HUD のメッセージの行（取得の進み具合など）。
+    func drawMessage(_ state: StripState, into grid: inout Grid) {
+        let label = " MSG "
+        let width = columns - CellWidth.of(label) - 3
+        grid.write(
+            [
+                Segment(label, theme.faint), Segment(glyphs.pointer + " ", theme.accent),
+                Segment(TextLayout.fit(state.message, width: width), theme.dim),
+            ], column: 0, row: StripRenderer.height - 2, background: theme.ground)
+    }
+
     /// 14 行目: 何件目か・ネット・取得・キー。
     func drawStatus(_ state: StripState, into grid: inout Grid) {
         let row = StripRenderer.height - 1
-        let online = state.feedsFetched > 0
-        let failed = state.feedsTotal - state.feedsFetched
+        let online = state.feedsLive > 0
+        let failed = state.feeds.filter(\.isFailed).count
         var segments = [
             Segment(" [\(Self.counter(state.position, of: state.count, separator: "/"))] ", theme.text),
             Segment(" NET ", theme.faint),
             Segment(online ? glyphs.lamp + " ONLINE" : glyphs.lamp + " OFFLINE", online ? theme.accent : theme.dim),
-            Segment("   FEED ", theme.faint), Segment("\(state.feedsFetched)/\(state.feedsTotal)", theme.text),
+            Segment("   FEED ", theme.faint), Segment("\(state.feedsLive)/\(state.feeds.count)", theme.text),
         ]
         if failed > 0 {
             segments.append(Segment("  取得失敗 \(failed)", theme.dim))
