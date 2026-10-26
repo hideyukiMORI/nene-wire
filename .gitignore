@@ -2,3 +2,4 @@
 .tools/
 .swiftpm/
 __pycache__/
+.release/

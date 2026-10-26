@@ -1,6 +1,6 @@
 // 合成ルート（ARC-006）。時計・環境・起動オプションを読み（ARC-007）、Core・Render・Terminal・Host を組み立てる。
 // 起動すると端末の幅いっぱい・高さ 15 行の帯に常駐し、裏でフィードを定期的に取り直しながら記事を一件ずつ流し続ける（ADR 0006・0007）。
-// `--list` は取った記事を素のまま一覧で出す（ADR 0005）。
+// `--list` は取った記事を素のまま一覧で出す（ADR 0005）。`--demo` はネットを使わず架空の記事で動き、`--version` は版を出す（ADR 0008）。
 
 import Glibc
 import NeNeWireCore
@@ -8,8 +8,13 @@ import NeNeWireRender
 import NeNeWireTerminal
 
 let arguments = Array(CommandLine.arguments.dropFirst())
-guard arguments.isEmpty || arguments == ["--list"] else {
-    Console.reportFailure("nene-wire: 使い方は `nene-wire`（表示）か `nene-wire --list`（一覧）")
+if arguments == ["--version"] {
+    print("nene-wire \(Version.current)")
+    exit(0)
+}
+guard arguments.isEmpty || arguments == ["--list"] || arguments == ["--demo"] else {
+    Console.reportFailure(
+        "nene-wire: 使い方は `nene-wire`（表示）・`nene-wire --demo`（架空の記事で試す）・`nene-wire --list`（一覧）・`nene-wire --version`")
     exit(2)
 }
 
@@ -54,8 +59,11 @@ let colors: ColorMode = {
 /// 罫線の文字が 1 桁で描かれる端末だけ罫線の枠を使い、それ以外（2 桁・答えが無い）は ASCII の枠へ落とす（ADR 0006）。
 let traits = TerminalTraits(frame: Console.columnsAdvanced(by: "─") == 1 ? .boxDrawing : .ascii, colors: colors)
 
-var viewer = Viewer(
-    fetcher: Fetcher(feeds: feeds, environment: environment, now: LocalTime.timestamp()), traits: traits)
+let fetcher =
+    arguments == ["--demo"]
+    ? Fetcher(demo: DemoScript(), now: LocalTime.timestamp())
+    : Fetcher(feeds: feeds, environment: environment, now: LocalTime.timestamp())
+var viewer = Viewer(fetcher: fetcher, traits: traits)
 viewer.run()
 Console.close()
 exit(0)
