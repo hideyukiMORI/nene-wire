@@ -6,11 +6,16 @@ struct BootLog {
     private(set) var lines: [LogLine]
     private var finished = false
 
-    init(version: String, size: ScreenSize) {
+    init(version: String, size: ScreenSize, translator problem: TranslatorProblem?) {
+        let engine =
+            problem == nil
+            ? "> 翻訳エンジン Argos Translate  en>ja  [ OK ]"
+            : "> 翻訳エンジン  ……  未導入（install-translator.sh で入る）  原文で流す"
         lines = [
             LogLine(text: "> nene-wire \(version)  //  電脳ニュース回線", at: 0),
             LogLine(text: "> 端末を確保  \(size.columns)x\(size.rows)  [ OK ]", at: 300),
-            LogLine(text: "> 回線を確立中 …", at: 700),
+            LogLine(text: engine, at: 600),
+            LogLine(text: "> 回線を確立中 …", at: 900),
         ]
     }
 

@@ -31,7 +31,13 @@ NeNe Wire @VERSION@ (Linux x86_64)
   --version   版を出して終わる
 
 フィード: NHK・BBC World・NPR News・The Guardian World（いまは固定。設定画面は今後の版で入る）。
-翻訳と演出はまだ無い（ベータ版）。端末は 72x15 以上。
+演出（記号から確定する見出し・電脳ノイズ・速報の割り込み・パラパラ落ちる切り替え など）が入っている。
+
+翻訳: 英語の記事を日本語で出すには、翻訳の手段（Argos Translate）を入れる（Python 3 と pip が要る・470 MB ほど）。
+     curl -fsSL https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install-translator.sh | bash
+入れていなければ原文のまま流し、英語の記事に「未翻訳」と出る。
+
+端末は 72x15 以上。
 
 ライセンス: MIT（同梱の LICENSE）
 ソース: https://github.com/hideyukiMORI/nene-wire

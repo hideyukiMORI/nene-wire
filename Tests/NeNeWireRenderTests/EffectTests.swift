@@ -197,4 +197,23 @@ struct EffectTests {
             #expect(text(grid, row: 0).contains("21:47:03"))
         }
     }
+
+    @Test func translatedStoriesShowTheOriginalHeadlineAndTheTranslatorState() throws {
+        let english = try #require(article("Night trains return to the coastal line", "e1"))
+        let shown = english.translated(Translation(headline: "夜行列車が海岸線に戻る", lede: "夜行便が再開する。"))
+        let translated = render(
+            StripState(
+                article: shown, fresh: false, position: 1, count: 6, paused: false, feeds: feeds, message: "m",
+                clock: clock, translator: .ready(route: "en>ja", pending: 7, busy: true)))
+        #expect(body(translated).contains("夜行列車が海岸線に戻る"))
+        #expect(text(translated, row: 10).contains("原文 Night trains return to the coastal line"))
+        #expect(text(translated, row: 14).contains("TRANS en>ja ● 待ち 7"))
+        let raw = render(
+            StripState(
+                article: english, fresh: false, position: 1, count: 6, paused: false, feeds: feeds, message: "m",
+                clock: clock, untranslated: true, translator: .off))
+        #expect(text(raw, row: 2).contains("未翻訳"))
+        #expect(!text(raw, row: 10).contains("原文"))
+        #expect(text(raw, row: 14).contains("TRANS 未導入"))
+    }
 }

@@ -99,6 +99,16 @@ struct StripLayout {
         if failed > 0 {
             segments.append(Segment("  取得失敗 \(failed)", theme.dim))
         }
+        switch state.translator {
+        case .off:
+            segments += [Segment("   TRANS ", theme.faint), Segment("未導入", theme.dim)]
+        case .ready(let route, let pending, let busy):
+            segments += [Segment("   TRANS ", theme.faint), Segment(route, theme.text)]
+            segments.append(Segment(busy ? " " + glyphs.lamp : "", theme.accent))
+            if pending > 0 {
+                segments.append(Segment(" 待ち \(pending)", theme.dim))
+            }
+        }
         if state.pendingFresh > 0 {
             segments.append(Segment("   速報 \(state.pendingFresh)", theme.warn))
         }

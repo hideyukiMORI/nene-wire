@@ -23,11 +23,16 @@ public struct StripState: Sendable, Hashable {
     let log: [LogLine]
     /// 割り込み待ちの速報の件数。
     let pendingFresh: Int
+    /// 表示中の記事が、表示の言語と違うのに訳せていないか（「未翻訳」の印）。
+    let untranslated: Bool
+    /// 翻訳の様子。
+    let translator: TranslatorStatus
 
     /// 状態を作る。
     public init(
         article: Article?, fresh: Bool, position: Int, count: Int, paused: Bool, feeds: [FeedRow], message: String,
-        clock: WallClock, motion: Motion = .still, log: [LogLine] = [], pendingFresh: Int = 0
+        clock: WallClock, motion: Motion = .still, log: [LogLine] = [], pendingFresh: Int = 0,
+        untranslated: Bool = false, translator: TranslatorStatus = .off
     ) {
         self.article = article
         self.fresh = fresh
@@ -40,13 +45,15 @@ public struct StripState: Sendable, Hashable {
         self.motion = motion
         self.log = log
         self.pendingFresh = pendingFresh
+        self.untranslated = untranslated
+        self.translator = translator
     }
 
     /// 記事だけを差し替えた状態（切り替えで消えていく前の記事を描くため）。
     func showing(_ other: Article) -> StripState {
         StripState(
             article: other, fresh: false, position: position, count: count, paused: paused, feeds: feeds,
-            message: message, clock: clock)
+            message: message, clock: clock, translator: translator)
     }
 
     /// 記事を出せるフィードの数。
