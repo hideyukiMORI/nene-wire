@@ -10,8 +10,8 @@
 
 ## 1. 承認されたモジュール
 
-空の「将来用 target」を作らない。**2026-10-26 時点で `Package.swift` の target は 0 本**であり、下の一覧は「承認された形」である（ADR 0004）。
-各 target は最初の具体的な責務が生じた PR で足す（Phase 3 の手順 1 で `NeNeWireCore`・`NeNeWireHost` と合成ルートが最初に入る見込み）。
+空の「将来用 target」を作らない。下の一覧は「承認された形」で（ADR 0004）、各 target は最初の具体的な責務が生じた PR で足す。
+**いま `Package.swift` にあるのは `NeNeWireCore`・`NeNeWireHost`・合成ルート `nene-wire` と、Core・Host のテスト target**（Issue #3）。Render と Terminal は手順 2 で足す。
 
 ```text
 nene-wire (executable)

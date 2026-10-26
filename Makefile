@@ -4,9 +4,9 @@
 BASE ?= origin/main
 SWIFTLINT := .tools/swiftlint
 
-.PHONY: check bootstrap tools build format lint conformance conformance-test commits
+.PHONY: check bootstrap tools build test format lint conformance conformance-test commits
 
-check: tools build format lint conformance conformance-test commits
+check: tools build format lint conformance conformance-test test commits
 	@echo "make check: 緑"
 
 bootstrap: tools
@@ -17,6 +17,9 @@ tools:
 
 build:
 	eng/swift-strict.sh swift build
+
+test:
+	eng/swift-strict.sh swift test
 
 format:
 	eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format

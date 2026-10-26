@@ -3,12 +3,13 @@
 # ここに載っているのは「承認された」target であり、Package.swift に在ることは意味しない。
 # target は最初の具体的な責務が生じた PR で Package.swift に足す（空の将来用 target を作らない）。
 # 行を足す・依存を変えるには docs/PROJECT_LAYOUT.md と ADR を先に変える。
+# nene-wire の依存は、ADR 0004 で承認した 4 つ（Core・Render・Terminal・Host）のうち Package.swift にあるものだけを書く。Render と Terminal は手順 2 で足す（ADR 0005）。
 
 NeNeWireCore          kind=library     deps=
 NeNeWireRender        kind=library     deps=NeNeWireCore
 NeNeWireTerminal      kind=library     deps=NeNeWireRender                                               std=Glibc unsafe=allowed
 NeNeWireHost          kind=library     deps=NeNeWireCore                                                 std=Glibc unsafe=allowed spawn=allowed
-nene-wire             kind=executable  deps=NeNeWireCore,NeNeWireRender,NeNeWireTerminal,NeNeWireHost    std=Glibc role=composition-root
+nene-wire             kind=executable  deps=NeNeWireCore,NeNeWireHost                                    std=Glibc role=composition-root
 
 NeNeWireCoreTests     kind=test        deps=NeNeWireCore                                                 std=Testing
 NeNeWireRenderTests   kind=test        deps=NeNeWireCore,NeNeWireRender                                  std=Testing
