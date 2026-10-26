@@ -3,15 +3,30 @@ import NeNeWireHost
 
 /// フィードを 1 本取って結果を読む（Host の curl ＋ Core の解釈・ADR 0005）。`--list` と表示画面の両方がここを通る。
 enum FeedFetch {
-    /// 取った結果。
+    /// 取り終えるまで待った結果（`--list`）。
     static func outcome(_ feed: Feed, environment: [String]) -> FetchOutcome {
-        switch ChildProcess.run(FetchCommand.command(for: feed.url, environment: environment)) {
+        switch ChildProcess.run(FetchCommand.command(for: feed.url, validators: .none, environment: environment)) {
         case .failedToStart(let code):
-            return .failed(.transport(code: -1, message: "curl を起動できない（errno \(code)）"))
+            return notStarted(code)
         case .finished(let result):
-            return FetchInterpreter.interpret(
-                exitCode: exitCode(result.termination), output: result.output, errorOutput: result.errorOutput)
+            return interpret(result)
         }
+    }
+
+    /// 待たずに取りに行く（表示のループ・ADR 0007）。
+    static func start(_ feed: Feed, validators: Validators, environment: [String]) -> ChildStart {
+        ChildProcess.start(FetchCommand.command(for: feed.url, validators: validators, environment: environment))
+    }
+
+    /// 終わった curl の結果を読む。
+    static func interpret(_ result: ChildResult) -> FetchOutcome {
+        FetchInterpreter.interpret(
+            exitCode: exitCode(result.termination), output: result.output, errorOutput: result.errorOutput)
+    }
+
+    /// curl を起動できなかったとき。
+    static func notStarted(_ code: Int32) -> FetchOutcome {
+        .failed(.transport(code: -1, message: "curl を起動できない（errno \(code)）"))
     }
 
     /// 取れなかった理由（1 行）。

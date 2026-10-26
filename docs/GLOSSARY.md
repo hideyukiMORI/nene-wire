@@ -28,7 +28,10 @@
 | 並べ方（rotation） | 表示の順番。フィードを順に巡回しながら新しいものから並べる。最後まで行ったら最新の内容で並べ直す | `NeNeWireCore` |
 | 記事ブロック | 表示画面の中央の、枠で囲んだ 1 件分の領域 | `NeNeWireRender` |
 | 演出（effect） | 枠・記号から確定する見出し・タイプライター・浮かび上がり・ノイズ・走査線・文字の雨・ブートログ。経過時間と乱数の種から格子を作る | `NeNeWireRender` |
-| 帯（strip） | NeNe Wire が描く場所。端末の幅いっぱい・高さ 15 行で、プロンプトの下に確保する（端末を占有しない・ADR 0006） | `StripRenderer` |
+| 帯（strip） | NeNe Wire が描く場所。端末の幅いっぱい・高さ 15 行で、起動したら画面を消して最上部に描く（ADR 0006・0007） | `StripRenderer` |
+| メッセージの行（message line） | 帯の下から 2 行目。取得の様子（取得中・件数と新着・更新なし・失敗と取り直すまで）を 1 行で出す | `StripLayout.drawMessage` |
+| DATA の窓 | 帯の右の窓。フィードごとの様子を 1 行ずつ出す | `DataWindow` |
+| 速報（breaking） | 取り直して新しく現れた記事。次の 1 件に割り込み、受信の行に印が付く | `Rotation` |
 | 状態の行（status line） | 帯の最下行。何件目か・ネット・翻訳・取得の失敗 | `StripLayout` |
 | 全角の幅（cell width） | 文字が端末で占める桁数。Unicode の East Asian Width の W・F は 2 桁、曖昧（A）は 1 桁 | `CellWidth`・`EastAsianWidth`（生成物） |
 | 表示画面・設定画面 | 画面は 2 つ。表示画面は起動直後から、設定画面は表示画面から開く | `NeNeWireRender` |

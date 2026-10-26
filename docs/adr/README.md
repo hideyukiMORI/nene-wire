@@ -21,4 +21,5 @@ ADR は「なぜそう決めたか」「何を却下したか」を書く。
 | [0003](0003-port-gates-from-reversi.md) | ゲートと規約検査は NeNe Reversi の足場から移植し、証明はこのリポジトリで取り直す | 受理 |
 | [0004](0004-target-split-and-dependency-graph.md) | target は Core・Render・Terminal・Host・合成ルートの 5 つに分け、外の世界に触れるのは Terminal と Host だけにする | 受理 |
 | [0005](0005-reading-feeds.md) | フィードは外部の curl で取り、XML は Core の自前の字句解析で読み、出だしは段落と文で切る | 受理 |
-| [0006](0006-full-width-strip-display.md) | 表示は端末の幅いっぱい・高さ 15 行の帯に描き、端末を占有しない。幅は Unicode の East Asian Width の表で数える | 受理 |
+| [0006](0006-full-width-strip-display.md) | 表示は端末の幅いっぱい・高さ 15 行の帯に描き、端末を占有しない。幅は Unicode の East Asian Width の表で数える | 受理（帯の置き方・割り付け・取得は 0007 で置き換え） |
+| [0007](0007-always-on-ticker.md) | 常駐して裏で取り直し続け、取得の様子は帯の中（メッセージの行と DATA の窓）に出す。新しく現れた記事は速報として割り込む | 受理 |

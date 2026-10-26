@@ -21,7 +21,7 @@ public struct WallClock: Sendable, Hashable {
     }
 
     /// `21:47:03`
-    var time: String {
+    public var time: String {
         "\(Self.two(hour)):\(Self.two(minute)):\(Self.two(second))"
     }
 

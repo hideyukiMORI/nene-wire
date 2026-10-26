@@ -35,10 +35,31 @@ struct StripTests {
         }
     }
 
-    private func state(_ article: Article?, paused: Bool = false) -> StripState {
+    /// 桁の範囲の文字（全角の右半分は飛ばす）。
+    private func text(_ grid: Grid, row: Int, from column: Int, width: Int) -> String {
+        (column..<(column + width)).reduce(into: "") { line, index in
+            switch grid[index, row].glyph {
+            case .narrow(let character), .wide(let character):
+                line.append(character)
+            case .continuation:
+                break
+            }
+        }
+    }
+
+    private static let rows = [
+        FeedRow(name: "NHK", health: .fetched(count: 7), fetching: false),
+        FeedRow(name: "BBC World", health: .unchanged(count: 32), fetching: false),
+        FeedRow(name: "NPR News", health: .failed(.status(503)), fetching: false),
+        FeedRow(name: "The Guardian World", health: .fetched(count: 45), fetching: true),
+    ]
+
+    private func state(
+        _ article: Article?, paused: Bool = false, fresh: Bool = false, feeds: [FeedRow] = Self.rows
+    ) -> StripState {
         StripState(
-            article: article, position: article == nil ? 0 : 42, count: article == nil ? 0 : 180, paused: paused,
-            feedsFetched: article == nil ? 0 : 3, feedsTotal: 4, clock: clock)
+            article: article, fresh: fresh, position: article == nil ? 0 : 42, count: article == nil ? 0 : 180,
+            paused: paused, feeds: feeds, message: "13:25:12  BBC World  32 件  新着 2", clock: clock)
     }
 
     @Test func stripIsFifteenRowsAndTheFrameLinesUpAtEveryWidth() {
@@ -49,9 +70,9 @@ struct StripTests {
             let layout = StripLayout(columns: columns, glyphs: FrameGlyphs.of(.boxDrawing), theme: .phosphor)
             let divider = layout.inner + 1
             #expect(grid[0, 1].glyph == .narrow("┌") && grid[columns - 1, 1].glyph == .narrow("┐"))
-            #expect(grid[divider, 1].glyph == .narrow("┬") && grid[divider, 13].glyph == .narrow("┴"))
-            #expect(grid[0, 13].glyph == .narrow("└") && grid[columns - 1, 13].glyph == .narrow("┘"))
-            for row in 2...12 {
+            #expect(grid[divider, 1].glyph == .narrow("┬") && grid[divider, 12].glyph == .narrow("┴"))
+            #expect(grid[0, 12].glyph == .narrow("└") && grid[columns - 1, 12].glyph == .narrow("┘"))
+            for row in 2...11 {
                 #expect(grid[0, row].glyph == .narrow("│"))
                 #expect(grid[divider, row].glyph == .narrow("│"))
                 #expect(grid[columns - 1, row].glyph == .narrow("│"))
@@ -69,8 +90,9 @@ struct StripTests {
         #expect(text(grid, row: 2).contains("受信 042 · 12:31 UTC"))
         #expect(text(grid, row: 4).contains("北海の洋上風力"))
         #expect(text(grid, row: 6).contains("英国北部の洋上風力発電所で"))
-        #expect(text(grid, row: 12).contains("› https://example.com/news/0001"))
-        #expect(text(grid, row: 13).contains("[ 042 / 180 ]"))
+        #expect(text(grid, row: 11).contains("› https://example.com/news/0001"))
+        #expect(text(grid, row: 12).contains("[ 042 / 180 ]"))
+        #expect(text(grid, row: 13).contains("MSG › 13:25:12  BBC World  32 件  新着 2"))
         #expect(text(grid, row: 14).contains("[042/180]"))
         #expect(text(grid, row: 14).contains("FEED 3/4  取得失敗 1"))
     }
@@ -80,11 +102,28 @@ struct StripTests {
             state(sample(), paused: true), size: ScreenSize(columns: 120, rows: 30), theme: .phosphor, traits: traits)
         #expect(text(paused, row: 14).contains("停止中"))
         #expect(text(paused, row: 14).contains("SPC 再開"))
+        let failing = [FeedRow(name: "NHK", health: .failed(.status(500)), fetching: false)]
         let empty = StripRenderer.render(
-            state(nil), size: ScreenSize(columns: 120, rows: 30), theme: .phosphor, traits: traits)
+            state(nil, feeds: failing), size: ScreenSize(columns: 120, rows: 30), theme: .phosphor, traits: traits)
         #expect(text(empty, row: 2).contains("記事がありません"))
         #expect(text(empty, row: 14).contains("OFFLINE"))
-        #expect(text(empty, row: 0).contains("LINK LOST"))
+        let starting = [FeedRow(name: "NHK", health: .pending, fetching: true)]
+        let booting = StripRenderer.render(
+            state(nil, feeds: starting), size: ScreenSize(columns: 120, rows: 30), theme: .phosphor, traits: traits)
+        #expect(text(booting, row: 2).contains("回線を確立中"))
+        #expect(text(booting, row: 0).contains("LINK PENDING"))
+    }
+
+    @Test func freshArticlesAreMarkedAndTheDataWindowListsEveryFeed() {
+        let grid = StripRenderer.render(
+            state(sample(), fresh: true), size: ScreenSize(columns: 120, rows: 30), theme: .phosphor, traits: traits)
+        #expect(text(grid, row: 2).contains("速報 受信 042"))
+        let layout = StripLayout(columns: 120, glyphs: FrameGlyphs.of(.boxDrawing), theme: .phosphor)
+        let window = (2...5).map { row in text(grid, row: row, from: layout.inner + 2, width: layout.dataWidth) }
+        #expect(window[0].contains("● NHK") && window[0].hasSuffix("7"))
+        #expect(window[1].contains("BBC World") && window[1].hasSuffix("32"))
+        #expect(window[2].contains("! NPR News") && window[2].hasSuffix("ERR"))
+        #expect(window[3].contains("~ The Guardian") && window[3].hasSuffix("..."))
     }
 
     @Test func tooSmallTerminalGetsOnlyTheMessage() {

@@ -8,12 +8,21 @@ public enum FetchCommand {
     public static let userAgent = "nene-wire/0.1 (+https://github.com/hideyukiMORI/nene-wire)"
 
     /// フィードを 1 本取る子プロセス。転送は 5 回まで・20 秒で打ち切る・圧縮を受け取る・http(s) 以外へは転送しない。
-    public static func command(for url: FeedURL, environment: [String]) -> ChildCommand {
-        ChildCommand(executable: executable, arguments: arguments(for: url), environment: environment)
+    /// 前の応答の手がかりがあれば条件付きで取る（更新が無ければ 304 で中身を取り直さない・FR-07）。
+    public static func command(for url: FeedURL, validators: Validators, environment: [String]) -> ChildCommand {
+        ChildCommand(
+            executable: executable, arguments: arguments(for: url, validators: validators), environment: environment)
     }
 
-    static func arguments(for url: FeedURL) -> [String] {
-        [
+    static func arguments(for url: FeedURL, validators: Validators) -> [String] {
+        var conditions: [String] = []
+        if let tag = validators.entityTag {
+            conditions += ["--header", "If-None-Match: \(tag)"]
+        }
+        if let date = validators.lastModified {
+            conditions += ["--header", "If-Modified-Since: \(date)"]
+        }
+        return conditions + [
             "--silent", "--show-error", "--location", "--max-redirs", "5", "--max-time", "20", "--compressed",
             "--proto", "=http,https", "--proto-redir", "=http,https", "--user-agent", userAgent, "--dump-header", "-",
             url.text,

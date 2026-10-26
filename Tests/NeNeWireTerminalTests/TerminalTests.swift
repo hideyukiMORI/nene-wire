@@ -16,15 +16,15 @@ struct TerminalTests {
         #expect(CursorReport.column(in: Array("junk".utf8)) == nil)
     }
 
-    @Test func encoderWritesOnlyChangedRowsRelativeToTheSavedOrigin() {
+    @Test func encoderWritesOnlyChangedRowsFromTheTopOfTheScreen() {
         let first = grid("ab", "cd")
         let full = String(decoding: FrameEncoder.encode(first, previous: nil, colors: .trueColor), as: UTF8.self)
-        #expect(full.hasPrefix("\u{1B}8"))
-        #expect(full.contains("\u{1B}[1B"))
-        #expect(full.hasSuffix("\u{1B}[0m\u{1B}8"))
+        #expect(full.hasPrefix("\u{1B}[1;1H"))
+        #expect(full.contains("\u{1B}[2;1H"))
+        #expect(full.hasSuffix("\u{1B}[0m"))
         let second = grid("ab", "cX")
         let diff = String(decoding: FrameEncoder.encode(second, previous: first, colors: .trueColor), as: UTF8.self)
-        #expect(diff.contains("cX") && !diff.contains("ab"))
+        #expect(diff.contains("cX") && !diff.contains("ab") && !diff.contains("\u{1B}[1;1H"))
         #expect(FrameEncoder.encode(second, previous: second, colors: .trueColor).isEmpty)
     }
 

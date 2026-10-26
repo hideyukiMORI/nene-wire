@@ -4,13 +4,12 @@ import Synchronization
 
 /// 端末そのもの（termios・帯の確保・シグナル・キー入力・大きさ）。可変性の隔離区画（ARC-005）で、
 /// `unsafe` 系 API を使ってよい target の中にある（SWF-009）。
-/// 移植元: NeNe Reversi `Sources/NeNeReversiTerminal/Console.swift`（コミット dc418eb）。alternate screen をやめ、
-/// プロンプトの下に帯を確保して描く形にした（ADR 0006）。
+/// 移植元: NeNe Reversi `Sources/NeNeReversiTerminal/Console.swift`（コミット dc418eb）。alternate screen を消して、帯を最上部に描く（ADR 0007）。
 ///
 /// 並行の形は 1 つ: 合成ルートの 1 本のループが `waitForInput` で待ち、シグナルハンドラは原子的な旗を立てるだけ。
 /// 例外は「異常終了のシグナル」で、ハンドラがその場で端末を戻してから既定の動作で死ぬ（FR-03）。
 public enum Console {
-    /// 端末を帯の表示にする（生の入力・エコーなし・カーソル非表示）。帯の確保は `reserve` で行う。
+    /// 端末を帯の表示にする（生の入力・エコーなし・alternate screen を消す・カーソル非表示）。
     public static func open() -> ConsoleOpening {
         guard isatty(STDIN_FILENO) == 1, isatty(STDOUT_FILENO) == 1 else {
             return .notATerminal
@@ -26,29 +25,16 @@ public enum Console {
         }
         consoleState.active = true
         installHandlers()
-        // 戻す位置（`ESC 8`）を最初から持っておく。帯を確保する前に終わっても、画面の左上へ飛んで消さない
-        write(Array("\u{1B}[?25l\u{1B}7".utf8))
+        write(Array("\u{1B}[?1049h\u{1B}[?25l\u{1B}[0m\u{1B}[2J\u{1B}[H".utf8))
         return .opened
     }
 
-    /// カーソルのある行から下に `rows` 行の帯を確保し、その左上を覚える（`ESC 7`）。
-    /// 下に余地が無ければ改行で画面を送り上げる。2 回目からは、前の帯を消してから確保し直す（大きさが変わったとき）。
-    public static func reserve(rows: Int, again: Bool) {
-        let lines = max(rows - 1, 0)
-        var sequence = again ? "\u{1B}8\u{1B}[0m\u{1B}[J" : "\r"
-        sequence += String(repeating: "\n", count: lines)
-        if lines > 0 {
-            sequence += "\u{1B}[\(lines)A"
-        }
-        write(Array((sequence + "\u{1B}7").utf8))
+    /// 画面を全部消す（大きさが変わったとき。消したあと全部を描き直す）。
+    public static func clear() {
+        write(Array("\u{1B}[0m\u{1B}[2J".utf8))
     }
 
-    /// ふつうの 1 行を書いて改行し、戻す位置をその下へ動かす（帯を確保する前の進み具合の表示）。
-    public static func writeLine(_ text: String) {
-        write(Array((text + "\r\n\u{1B}7").utf8))
-    }
-
-    /// 端末を元に戻す（帯を消して、帯の左上にカーソルを置く）。何度呼んでもよい。
+    /// 端末を元に戻す（起動前の画面に戻る）。何度呼んでもよい。
     public static func close() {
         guard consoleState.active else {
             return
@@ -89,9 +75,10 @@ public enum Console {
     }
 
     /// キー入力を最大 `milliseconds` だけ待ち、届いたバイトを返す。シグナルで起きたら空で返る。
-    public static func waitForInput(milliseconds: Int32) -> [UInt8] {
-        var request = pollfd(fd: STDIN_FILENO, events: Int16(POLLIN), revents: 0)
-        guard poll(&request, 1, max(milliseconds, 0)) > 0 else {
+    /// `watching` の読み口（取得の子プロセスの出力）に読めるものが来ても、空で返って起きる（ADR 0007）。
+    public static func waitForInput(milliseconds: Int32, watching descriptors: [Int32] = []) -> [UInt8] {
+        var requests = ([STDIN_FILENO] + descriptors).map { pollfd(fd: $0, events: Int16(POLLIN), revents: 0) }
+        guard poll(&requests, nfds_t(requests.count), max(milliseconds, 0)) > 0, requests[0].revents != 0 else {
             return []
         }
         var buffer = [UInt8](repeating: 0, count: 64)

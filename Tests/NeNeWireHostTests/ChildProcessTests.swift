@@ -53,11 +53,51 @@ struct ChildProcessTests {
 
     @Test func fetchCommandNamesItselfAndAsksForHeaders() throws {
         let url = try #require(FeedURL.parse("https://example.com/feed"))
-        let command = FetchCommand.command(for: url, environment: ["A=b"])
+        let command = FetchCommand.command(for: url, validators: .none, environment: ["A=b"])
         #expect(command.executable == "curl")
         #expect(command.arguments.last == "https://example.com/feed")
         #expect(command.arguments.contains("--dump-header"))
         #expect(command.arguments.contains(FetchCommand.userAgent))
         #expect(command.environment == ["A=b"])
+        #expect(!command.arguments.contains("--header"))
+    }
+
+    @Test func fetchCommandAsksConditionallyWhenItHasValidators() throws {
+        let url = try #require(FeedURL.parse("https://example.com/feed"))
+        let raw = "HTTP/1.1 200 OK\r\nETag: \"abc\"\r\nLast-Modified: Mon, 26 Oct 2026 04:00:00 GMT\r\n\r\n"
+        guard case .parsed(let response) = HTTPResponse.parse(Array(raw.utf8)) else {
+            Issue.record("応答を読めない")
+            return
+        }
+        let headers = response.headers
+        let arguments = FetchCommand.command(for: url, validators: Validators.from(headers), environment: []).arguments
+        #expect(arguments.contains("If-None-Match: \"abc\""))
+        #expect(arguments.contains("If-Modified-Since: Mon, 26 Oct 2026 04:00:00 GMT"))
+    }
+
+    @Test func runningChildCanBePumpedWithoutWaitingAndStopped() throws {
+        guard
+            case .running(var child) = ChildProcess.start(
+                ChildCommand(executable: "/bin/sh", arguments: ["-c", "printf hi; sleep 0.2"], environment: []))
+        else {
+            Issue.record("起動できない")
+            return
+        }
+        #expect(!child.descriptors.isEmpty)
+        var result: ChildResult?
+        #expect(child.pump() == nil)
+        for _ in 0..<100 where result == nil {
+            result = child.pump(waiting: 50)
+        }
+        #expect(result?.output == Array("hi".utf8))
+        #expect(result?.termination == .exited(0))
+        guard
+            case .running(let sleeper) = ChildProcess.start(
+                ChildCommand(executable: "/bin/sleep", arguments: ["30"], environment: []))
+        else {
+            Issue.record("起動できない")
+            return
+        }
+        sleeper.stop()
     }
 }
