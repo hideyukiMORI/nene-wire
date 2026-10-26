@@ -63,7 +63,7 @@ let fetcher =
     arguments == ["--demo"]
     ? Fetcher(demo: DemoScript(), now: LocalTime.timestamp())
     : Fetcher(feeds: feeds, environment: environment, now: LocalTime.timestamp())
-var viewer = Viewer(fetcher: fetcher, traits: traits)
+var viewer = Viewer(fetcher: fetcher, traits: traits, version: Version.current)
 viewer.run()
 Console.close()
 exit(0)
