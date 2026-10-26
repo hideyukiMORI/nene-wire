@@ -8,6 +8,31 @@ import PackageDescription
 
 let package = Package(
     name: "NeNeWire",
-    targets: [],
+    targets: [
+        .target(
+            name: "NeNeWireCore",
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .target(
+            name: "NeNeWireHost",
+            dependencies: ["NeNeWireCore"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .executableTarget(
+            name: "nene-wire",
+            dependencies: ["NeNeWireCore", "NeNeWireHost"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .testTarget(
+            name: "NeNeWireCoreTests",
+            dependencies: ["NeNeWireCore"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .testTarget(
+            name: "NeNeWireHostTests",
+            dependencies: ["NeNeWireCore", "NeNeWireHost"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+    ],
     swiftLanguageModes: [.v6]
 )

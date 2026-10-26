@@ -145,6 +145,6 @@ Waivers: none | WVR-NNNN
 
 現在のタスクは [docs/todo/current.md](docs/todo/current.md)。GitHub Issue が正で、そこは要約。
 
-- 動くもの: `make check`（target は 0 本・製品コードは無い）
-- 動かないもの: 製品そのもの。Phase 3 の最初は「フィードを取って、見出しと出だしを素のまま一覧で出す」
+- 動くもの: `make check`。`nene-wire --list` が最初の 4 本のフィードを取り、見出し・出だし・リンク・公開時刻を素のまま出す（ADR 0005）
+- 動かないもの: 表示画面・演出・裏での取得と保存・翻訳・設定画面。Phase 3 の次は「表示画面で一件ずつ（端末の復元を確実に）」
 - 施主の決定は [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) にそろっている。決定を覆したくなった点や、要件に無い機能を足したくなった点は、自分で決めずに施主に聞く

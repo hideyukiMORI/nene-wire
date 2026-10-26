@@ -37,8 +37,9 @@ TARGETS = {
     "NeNeWireRender": ("target", '"NeNeWireCore"'),
     "NeNeWireTerminal": ("target", '"NeNeWireRender"'),
     "NeNeWireHost": ("target", '"NeNeWireCore"'),
-    "nene-wire": ("executableTarget",
-                  '"NeNeWireCore", "NeNeWireRender", "NeNeWireTerminal", "NeNeWireHost"'),
+    "nene-wire": ("executableTarget", '"NeNeWireCore", "NeNeWireHost"'),
+    "NeNeWireCoreTests": ("testTarget", '"NeNeWireCore"'),
+    "NeNeWireHostTests": ("testTarget", '"NeNeWireCore", "NeNeWireHost"'),
 }
 
 SOURCES = {
@@ -113,16 +114,15 @@ public enum Child {
 """,
     "Sources/nene-wire/main.swift": """\
 import Glibc
+import NeNeWireCore
 import NeNeWireHost
-import NeNeWireRender
-import NeNeWireTerminal
 
 let start = ContinuousClock.now
 var generator = SystemRandomNumberGenerator()
-let square = Pick.square(count: 64, using: &generator)
+let square = Square.make(Int.random(in: 0..<64, using: &generator))
 let arguments = CommandLine.arguments.count
 let home = getenv("HOME") != nil
-print(square?.index ?? -1, Screen.columns(), arguments, home, Child.start(), ContinuousClock.now - start >= .zero)
+print(square?.index ?? -1, arguments, home, Child.start(), ContinuousClock.now - start >= .zero)
 """,
 }
 
@@ -245,7 +245,7 @@ def every_lint_rule() -> str:
 
 
 PROOFS: list[Proof] = [
-    Proof("P00", [], "対照: 足場だけ（違反なし）。合成ルートが時計・乱数・CommandLine・getenv・print を使い、Terminal が withUnsafe、Host が posix_spawn を使う",
+    Proof("P00", [], "対照: 足場だけ（違反なし）。合成ルートが時計・乱数・CommandLine・getenv・print を使い、Host が posix_spawn、Terminal が withUnsafe を使う",
           nothing, r"make check: 緑", expect_exit_zero=True),
     Proof("P00b", [], "対照: 足場を置かない作業木そのまま", nothing, r"make check: 緑", scaffold=False, expect_exit_zero=True),
     Proof("P01", ["ARC-002"], "Core が宣言していない Render を import する",
@@ -389,9 +389,12 @@ PROOFS: list[Proof] = [
           expect_all=[rf"\({rule}\)" for rule in LINT_RULES]),
     Proof("P47", ["QLT-002"], "ソースの無いテスト target を manifest に足す（SwiftPM 自身が警告を出し、コンパイラの警告エラーの外にある）",
           lambda r: (edit(r, "Package.swift", "    targets: [",
-                          f'    targets: [\n        .testTarget(name: "NeNeWireCoreTests", dependencies: ["NeNeWireCore"], {SETTINGS}),'),
-                     (r / "Tests/NeNeWireCoreTests").mkdir(parents=True)),
+                          f'    targets: [\n        .testTarget(name: "NeNeWireProbeTests", dependencies: ["NeNeWireCore"], {SETTINGS}),'),
+                     (r / "Tests/NeNeWireProbeTests").mkdir(parents=True)),
           r"swift-strict: SwiftPM かコンパイラが警告を出した"),
+    Proof("P48", ["QLT-001"], "テストの期待値を 1 つ変える（make check の中で swift test が実際に回って落ちること）",
+          lambda r: edit(r, "Tests/NeNeWireCoreTests/FetchTests.swift", '"2026-10-26T01:07:05Z"', '"2026-10-26T01:07:06Z"'),
+          r"✘ Test datesInBothFormats"),
     Proof("P50", ["SWF-002"], "文字列の switch の全捕捉を case _ where true: と書く（CNF-013 の字句の外の書き方。コンパイラが網羅に数えないこと）",
           core_file("Probe.swift", "/// 証明用。\nenum Probe {\n    /// 証明用。\n    static func code(_ s: String) -> Int {\n"
                     "        switch s {\n        case \"a\":\n            return 1\n        case _ where true:\n            return 0\n        }\n    }\n}\n"),

@@ -20,3 +20,4 @@ ADR は「なぜそう決めたか」「何を却下したか」を書く。
 | [0002](0002-swift-testing-only.md) | テスト枠組みは Swift Testing だけにする | 受理 |
 | [0003](0003-port-gates-from-reversi.md) | ゲートと規約検査は NeNe Reversi の足場から移植し、証明はこのリポジトリで取り直す | 受理 |
 | [0004](0004-target-split-and-dependency-graph.md) | target は Core・Render・Terminal・Host・合成ルートの 5 つに分け、外の世界に触れるのは Terminal と Host だけにする | 受理 |
+| [0005](0005-reading-feeds.md) | フィードは外部の curl で取り、XML は Core の自前の字句解析で読み、出だしは段落と文で切る | 受理 |

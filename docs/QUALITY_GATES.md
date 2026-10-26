@@ -200,7 +200,7 @@ CNF-006 が「本文に定義があるのにここに行が無い」「本文と
 | GIT-003 | active | `.githooks/commit-msg`＋`make commits`（PR の全コミット） |
 | GIT-004 | active | ruleset（PR 必須・squash のみ・必須 check） |
 | GIT-005 | planned | PR タイトルの検査は無い |
-| QLT-001 | active | CNF-018＋`eng/install-tools.sh` |
+| QLT-001 | active | CNF-018＋`eng/install-tools.sh`＋`test` 段が `make check` の中で実際に回ること（P48） |
 | QLT-002 | active | CNF-009＋`eng/swift-strict.sh`＋`swift-format --strict`＋SwiftLint `strict` |
 | QLT-003 | active | CNF-005 |
 | QLT-004 | active | `make format`＋CNF-007＋CNF-005 |
@@ -250,7 +250,7 @@ CNF-006 が「本文に定義があるのにここに行が無い」「本文と
 | `conformance` | NeNe Wire 固有・API 単位の禁止・アーキテクチャ・文書整合 | `python3 eng/conformance.py` |
 | `conformance-test` | 規約検査の正例・反例 | `python3 -m unittest discover -s eng/tests` |
 | `commits` | コミットの形 | `eng/validate-commit-message.py --range $(BASE)..HEAD` |
-| 単体テスト | 振る舞い | **まだ無い**（テスト target が無い木の `swift test` は exit 1・X-c。Phase 3 で結線） |
+| `test` | 振る舞い | `eng/swift-strict.sh swift test`（Swift Testing・ADR 0005） |
 | カバレッジ | 中核の検証密度 | **まだ無い**（QLT-009） |
 | 依存 | 再現性 | 外部依存 0。CNF-009 が許可リスト外を拒否 |
 
