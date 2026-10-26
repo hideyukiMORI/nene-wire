@@ -8,8 +8,8 @@
 | 段階 | 状態 |
 | --- | --- |
 | Phase 0 言語の実測 | ✅ 2026-10-26（75 ケース・NeNe Reversi と全件一致・ADR 0001） |
-| Phase 1 文書とゲートの足場 | 🔄 Issue #1 |
-| Phase 2 negative proof | 🔄 Issue #1 |
+| Phase 1 文書とゲートの足場 | ✅ 2026-10-26（Issue #1・ruleset 25851529） |
+| Phase 2 negative proof | ✅ 2026-10-26（60 件すべて pass・GitHub 側 2 件・docs/quality/gate-proofs.md） |
 | Phase 3-1 フィードを取って見出しと出だしを素のまま一覧 | 🔲 別 Issue |
 | Phase 3-2 表示画面で一件ずつ（端末の復元を確実に） | 🔲 別 Issue |
 | Phase 3-3 演出 | 🔲 別 Issue |

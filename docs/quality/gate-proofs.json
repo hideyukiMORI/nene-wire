@@ -1,12 +1,12 @@
 {
   "measured_on": "2026-10-26",
-  "head": "14cd69b",
+  "head": "1b235b9",
   "note": "verdict=pass は「意図した規則で落ちた」（対照は exit 0）。作業木の未コミットの変更も複製に含む。",
   "results": [
     {
       "id": "P00",
       "rules": [],
-      "violation": "対照: 足場だけ（違反なし）。合成ルートが時計・乱数・CommandLine・print を使い、Terminal が withUnsafe を使う",
+      "violation": "対照: 足場だけ（違反なし）。合成ルートが時計・乱数・CommandLine・getenv・print を使い、Terminal が withUnsafe、Host が posix_spawn を使う",
       "command": "make check",
       "exit": 0,
       "expected": "make check: 緑",
@@ -18,10 +18,10 @@
       "tail": [
         "python3 -m unittest discover -s eng/tests -q",
         "python3 eng/validate-commit-message.py --range \"origin/main..HEAD\"",
-        "commits: 2 件・違反 0 件",
+        "commits: 1 件・違反 0 件",
         "make check: 緑",
         "----------------------------------------------------------------------",
-        "Ran 104 tests in 0.335s",
+        "Ran 105 tests in 0.280s",
         "",
         "OK"
       ]
@@ -41,10 +41,10 @@
       "tail": [
         "python3 -m unittest discover -s eng/tests -q",
         "python3 eng/validate-commit-message.py --range \"origin/main..HEAD\"",
-        "commits: 2 件・違反 0 件",
+        "commits: 1 件・違反 0 件",
         "make check: 緑",
         "----------------------------------------------------------------------",
-        "Ran 104 tests in 0.337s",
+        "Ran 105 tests in 0.287s",
         "",
         "OK"
       ]
@@ -54,23 +54,23 @@
       "rules": [
         "ARC-002"
       ],
-      "violation": "Core が宣言していない Engine を import する",
+      "violation": "Core が宣言していない Render を import する",
       "command": "make check",
       "exit": 2,
-      "expected": "no such module 'NeNeReversiEngine'",
+      "expected": "no such module 'NeNeWireRender'",
       "verdict": "pass",
       "evidence": [
-        "Sources/NeNeReversiCore/Probe.swift:1:8: error: no such module 'NeNeReversiEngine'",
-        "|        `- error: no such module 'NeNeReversiEngine'"
+        "Sources/NeNeWireCore/Probe.swift:1:8: error: no such module 'NeNeWireRender'",
+        "|        `- error: no such module 'NeNeWireRender'"
       ],
       "missing": [],
       "tail": [
-        "1 | import NeNeReversiEngine",
-        "  |        `- error: no such module 'NeNeReversiEngine'",
+        "  |        `- error: no such module 'NeNeWireRender'",
         "2 | ",
         "3 | /// 証明用。",
         "Failed frontend command:",
-        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -emit-module -experimental-skip-non-inlinable-function-bodies-without-types Sources/NeNeReversiCore/Probe.swift Sources/NeNeReversiCore/Square.swift -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/reversi-proof-P01-o_sdlq5g -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/reversi-proof-P01-o_sdlq5g -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeReversiCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/NeNeReversiCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -emit-module-doc-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Modules/NeNeReversiCore.swiftdoc -emit-module-source-info-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Modules/NeNeReversiCore.swiftsourceinfo -emit-objc-header-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/NeNeReversiCore-Swift.h -serialize-diagnostics-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/NeNeReversiCore-primary-emit-module.dia -emit-dependencies-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/NeNeReversiCore-primary-emit-module.d -parse-as-library -o .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Modules/NeNeReversiCore.swiftmodule",
+        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -emit-module -experimental-skip-non-inlinable-function-bodies-without-types Sources/NeNeWireCore/Probe.swift Sources/NeNeWireCore/Square.swift -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/wire-proof-P01-lmzveewo -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/wire-proof-P01-lmzveewo -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeWireCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -emit-module-doc-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Modules/NeNeWireCore.swiftdoc -emit-module-source-info-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Modules/NeNeWireCore.swiftsourceinfo -emit-objc-header-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore-Swift.h -serialize-diagnostics-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore-primary-emit-module.dia -emit-dependencies-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore-primary-emit-module.d -parse-as-library -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Modules/NeNeWir[43 / 75] NeNeWireCore",
+        "eCore.swiftmodule",
         "error: Build failed",
         "make: *** [Makefile:19: build] Error 1"
       ]
@@ -88,16 +88,16 @@
       "expected": "^CNF-010 Package\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-010 Package.swift:17: target NeNeReversiTerminal の依存が正本と違う（余分: NeNeReversiCore / 不足: なし）"
+        "CNF-010 Package.swift:14: target NeNeWireTerminal の依存が正本と違う（余分: NeNeWireCore / 不足: なし）"
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (4.02 secs)",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.30 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-010 Package.swift:17: target NeNeReversiTerminal の依存が正本と違う（余分: NeNeReversiCore / 不足: なし）",
+        "CNF-010 Package.swift:14: target NeNeWireTerminal の依存が正本と違う（余分: NeNeWireCore / 不足: なし）",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -113,19 +113,19 @@
       "violation": "Core が Foundation を import する",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-011 Sources/NeNeReversiCore/Probe\\.swift",
+      "expected": "^CNF-011 Sources/NeNeWireCore/Probe\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-011 Sources/NeNeReversiCore/Probe.swift:1: NeNeReversiCore は Foundation を import できない"
+        "CNF-011 Sources/NeNeWireCore/Probe.swift:1: NeNeWireCore は Foundation を import できない"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (5.22 secs)",
+        "[93 / 93] nene-wire-product",
+        "Build complete! (4.46 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-011 Sources/NeNeReversiCore/Probe.swift:1: NeNeReversiCore は Foundation を import できない",
+        "CNF-011 Sources/NeNeWireCore/Probe.swift:1: NeNeWireCore は Foundation を import できない",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -136,22 +136,22 @@
         "ARC-007",
         "CNF-012"
       ],
-      "violation": "Engine が using: の無い Int.random を呼ぶ",
+      "violation": "Render が using: の無い Int.random を呼ぶ",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-012 Sources/NeNeReversiEngine/Pick\\.swift",
+      "expected": "^CNF-012 Sources/NeNeWireRender/Pick\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-012 Sources/NeNeReversiEngine/Pick.swift:7: random(...) は using: で乱数源を受け取る"
+        "CNF-012 Sources/NeNeWireRender/Pick.swift:7: random(...) は using: で乱数源を受け取る"
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.91 secs)",
+        "[88 / 91] NeNeWireTerminal",
+        "Build complete! (3.42 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-012 Sources/NeNeReversiEngine/Pick.swift:7: random(...) は using: で乱数源を受け取る",
+        "CNF-012 Sources/NeNeWireRender/Pick.swift:7: random(...) は using: で乱数源を受け取る",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -165,19 +165,19 @@
       "violation": "Core のテストが CommandLine.arguments を読む（テストにも禁止がかかる）",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-012 Tests/NeNeReversiCoreTests/ProbeTests\\.swift",
+      "expected": "^CNF-012 Tests/NeNeWireCoreTests/ProbeTests\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-012 Tests/NeNeReversiCoreTests/ProbeTests.swift:3: 時刻・乱数・環境・プロセス状態は合成ルートだけが読む"
+        "CNF-012 Tests/NeNeWireCoreTests/ProbeTests.swift:3: 時刻・乱数・環境・プロセス状態は合成ルートだけが読む"
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.82 secs)",
+        "[91 / 92] NeNeWireHost",
+        "Build complete! (3.44 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-012 Tests/NeNeReversiCoreTests/ProbeTests.swift:3: 時刻・乱数・環境・プロセス状態は合成ルートだけが読む",
+        "CNF-012 Tests/NeNeWireCoreTests/ProbeTests.swift:3: 時刻・乱数・環境・プロセス状態は合成ルートだけが読む",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -193,7 +193,7 @@
       "expected": "error: switch must be exhaustive",
       "verdict": "pass",
       "evidence": [
-        "Sources/NeNeReversiCore/Side.swift:10:5: error: switch must be exhaustive",
+        "Sources/NeNeWireCore/Side.swift:10:5: error: switch must be exhaustive",
         "|     |- error: switch must be exhaustive"
       ],
       "missing": [],
@@ -203,7 +203,7 @@
         "11 |     case .white:",
         "12 |         return 1",
         "Failed frontend command:",
-        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -c -primary-file Sources/NeNeReversiCore/Side.swift Sources/NeNeReversiCore/Square.swift -emit-dependencies-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Side.d -emit-const-values-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Side.swiftconstvalues -emit-reference-dependencies-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Side.swiftdeps -serialize-diagnostics-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Side.dia -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/reversi-proof-P06-dszd57ho -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/reversi-proof-P06-dszd57ho -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeReversiCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/NeNeReversiCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -parse-as-library -o .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Side.o -index-unit-output-path /NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Side.o -index-store-path .build/out -index-system-modules",
+        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -c -primary-file Sources/NeNeWireCore/Side.swift Sources/NeNeWireCore/Square.swift -emit-dependencies-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Side.d -emit-const-values-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Side.swiftconstvalues -emit-reference-dependencies-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Side.swiftdeps -serialize-diagnostics-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Side.dia -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/wire-proof-P06-_qsg8mjp -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/wire-proof-P06-_qsg8mjp -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeWireCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -parse-as-library -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Side.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Side.o -index-store-path .build/out -index-system-modules",
         "error: Build failed",
         "make: *** [Makefile:19: build] Error 1"
       ]
@@ -217,19 +217,19 @@
       "violation": "switch に default: を書く",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-013 Sources/NeNeReversiCore/Side\\.swift",
+      "expected": "^CNF-013 Sources/NeNeWireCore/Side\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-013 Sources/NeNeReversiCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す"
+        "CNF-013 Sources/NeNeWireCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.79 secs)",
+        "[90 / 93] NeNeWireHost",
+        "Build complete! (3.38 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-013 Sources/NeNeReversiCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す",
+        "CNF-013 Sources/NeNeWireCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -242,19 +242,19 @@
       "violation": "switch に case let other: を書く（default とも case _ とも書かない全捕捉）",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-013 Sources/NeNeReversiCore/Side\\.swift",
+      "expected": "^CNF-013 Sources/NeNeWireCore/Side\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-013 Sources/NeNeReversiCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す"
+        "CNF-013 Sources/NeNeWireCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (4.08 secs)",
+        "[93 / 93] nene-wire-product",
+        "Build complete! (3.29 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-013 Sources/NeNeReversiCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す",
+        "CNF-013 Sources/NeNeWireCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -268,19 +268,19 @@
       "violation": "公開の格納 var を置く",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-016 Sources/NeNeReversiRender/Cell\\.swift",
+      "expected": "^CNF-016 Sources/NeNeWireRender/Cell\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-016 Sources/NeNeReversiRender/Cell.swift:3: public の格納 var は外から変更できる（let か private(set) にする）"
+        "CNF-016 Sources/NeNeWireRender/Cell.swift:3: public の格納 var は外から変更できる（let か private(set) にする）"
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.71 secs)",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.34 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-016 Sources/NeNeReversiRender/Cell.swift:3: public の格納 var は外から変更できる（let か private(set) にする）",
+        "CNF-016 Sources/NeNeWireRender/Cell.swift:3: public の格納 var は外から変更できる（let か private(set) にする）",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -296,17 +296,17 @@
       "expected": "\\(force_unwrapping\\)",
       "verdict": "pass",
       "evidence": [
-        "Sources/nene-reversi/main.swift:9:13: error: Force Unwrapping Violation: Force unwrapping should be avoided (force_unwrapping)"
+        "Sources/nene-wire/main.swift:11:13: error: Force Unwrapping Violation: Force unwrapping should be avoided (force_unwrapping)"
       ],
       "missing": [],
       "tail": [
-        "[83 / 89] NeNeReversiEngine",
-        "[87 / 90] NeNeReversiTerminal",
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.93 secs)",
+        "[76 / 87] NeNeWireCore",
+        "[82 / 89] NeNeWireTerminal",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.34 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
-        "Sources/nene-reversi/main.swift:9:13: error: Force Unwrapping Violation: Force unwrapping should be avoided (force_unwrapping)",
+        "Sources/nene-wire/main.swift:11:13: error: Force Unwrapping Violation: Force unwrapping should be avoided (force_unwrapping)",
         "make: *** [Makefile:25: lint] Error 2"
       ]
     },
@@ -319,19 +319,19 @@
       "violation": "製品コードに throws を書く",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-019 Sources/NeNeReversiCore/Probe\\.swift",
+      "expected": "^CNF-019 Sources/NeNeWireCore/Probe\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-019 Sources/NeNeReversiCore/Probe.swift:4: 期待される失敗は閉じた結果型で返す（throw / try / catch は使えない）"
+        "CNF-019 Sources/NeNeWireCore/Probe.swift:4: 期待される失敗は閉じた結果型で返す（throw / try / catch は使えない）"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.67 secs)",
+        "[93 / 93] nene-wire-product",
+        "Build complete! (3.26 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-019 Sources/NeNeReversiCore/Probe.swift:4: 期待される失敗は閉じた結果型で返す（throw / try / catch は使えない）",
+        "CNF-019 Sources/NeNeWireCore/Probe.swift:4: 期待される失敗は閉じた結果型で返す（throw / try / catch は使えない）",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -345,19 +345,19 @@
       "violation": "Any を使う",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-020 Sources/NeNeReversiCore/Probe\\.swift",
+      "expected": "^CNF-020 Sources/NeNeWireCore/Probe\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-020 Sources/NeNeReversiCore/Probe.swift:4: Any / AnyObject / AnyHashable / AnyClass は使えない"
+        "CNF-020 Sources/NeNeWireCore/Probe.swift:4: Any / AnyObject / AnyHashable / AnyClass は使えない"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.92 secs)",
+        "[89 / 92] NeNeWireHost",
+        "Build complete! (3.37 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-020 Sources/NeNeReversiCore/Probe.swift:4: Any / AnyObject / AnyHashable / AnyClass は使えない",
+        "CNF-020 Sources/NeNeWireCore/Probe.swift:4: Any / AnyObject / AnyHashable / AnyClass は使えない",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -373,17 +373,17 @@
       "expected": "\\(large_tuple\\)",
       "verdict": "pass",
       "evidence": [
-        "Sources/NeNeReversiCore/Probe.swift:4:29: error: Large Tuple Violation: Tuples should have at most 2 members (large_tuple)"
+        "Sources/NeNeWireCore/Probe.swift:4:29: error: Large Tuple Violation: Tuples should have at most 2 members (large_tuple)"
       ],
       "missing": [],
       "tail": [
-        "[83 / 90] NeNeReversiCore",
-        "[88 / 91] NeNeReversiTerminal",
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.73 secs)",
+        "[77 / 88] NeNeWireRender",
+        "[83 / 90] NeNeWireTerminal",
+        "[93 / 93] nene-wire-product",
+        "Build complete! (3.64 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
-        "Sources/NeNeReversiCore/Probe.swift:4:29: error: Large Tuple Violation: Tuples should have at most 2 members (large_tuple)",
+        "Sources/NeNeWireCore/Probe.swift:4:29: error: Large Tuple Violation: Tuples should have at most 2 members (large_tuple)",
         "make: *** [Makefile:25: lint] Error 2"
       ]
     },
@@ -396,19 +396,19 @@
       "violation": "Core で unsafeBitCast を使う",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-014 Sources/NeNeReversiCore/Probe\\.swift",
+      "expected": "^CNF-014 Sources/NeNeWireCore/Probe\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-014 Sources/NeNeReversiCore/Probe.swift:3: unsafe 系の API は unsafe=allowed の target だけ"
+        "CNF-014 Sources/NeNeWireCore/Probe.swift:3: unsafe 系の API は unsafe=allowed の target だけ"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.75 secs)",
+        "[93 / 93] nene-wire-product",
+        "Build complete! (3.36 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-014 Sources/NeNeReversiCore/Probe.swift:3: unsafe 系の API は unsafe=allowed の target だけ",
+        "CNF-014 Sources/NeNeWireCore/Probe.swift:3: unsafe 系の API は unsafe=allowed の target だけ",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -422,19 +422,19 @@
       "violation": "型を BoardHelper と名付ける",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-001 Sources/NeNeReversiCore/BoardHelper\\.swift",
+      "expected": "^CNF-001 Sources/NeNeWireCore/BoardHelper\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-001 Sources/NeNeReversiCore/BoardHelper.swift:2: 総称名の型 BoardHelper"
+        "CNF-001 Sources/NeNeWireCore/BoardHelper.swift:2: 総称名の型 BoardHelper"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.89 secs)",
+        "[93 / 93] nene-wire-product",
+        "Build complete! (3.33 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-001 Sources/NeNeReversiCore/BoardHelper.swift:2: 総称名の型 BoardHelper",
+        "CNF-001 Sources/NeNeWireCore/BoardHelper.swift:2: 総称名の型 BoardHelper",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -448,19 +448,19 @@
       "violation": "1 ファイルに最上位の型を 2 つ置く",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-002 Sources/NeNeReversiCore/Probe\\.swift",
+      "expected": "^CNF-002 Sources/NeNeWireCore/Probe\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-002 Sources/NeNeReversiCore/Probe.swift:5: 主要宣言が 2 個ある: Probe, Other"
+        "CNF-002 Sources/NeNeWireCore/Probe.swift:5: 主要宣言が 2 個ある: Probe, Other"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.76 secs)",
+        "[93 / 93] nene-wire-product",
+        "Build complete! (3.38 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-002 Sources/NeNeReversiCore/Probe.swift:5: 主要宣言が 2 個ある: Probe, Other",
+        "CNF-002 Sources/NeNeWireCore/Probe.swift:5: 主要宣言が 2 個ある: Probe, Other",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -476,17 +476,17 @@
       "expected": "\\(function_parameter_count\\)",
       "verdict": "pass",
       "evidence": [
-        "Sources/NeNeReversiCore/Probe.swift:4:12: error: Function Parameter Count Violation: Function should have 4 parameters or less: it currently has 5 (function_parameter_count)"
+        "Sources/NeNeWireCore/Probe.swift:4:12: error: Function Parameter Count Violation: Function should have 4 parameters or less: it currently has 5 (function_parameter_count)"
       ],
       "missing": [],
       "tail": [
-        "[88 / 91] NeNeReversiRender",
-        "[88 / 91] NeNeReversiTerminal",
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.76 secs)",
+        "[80 / 89] NeNeWireRender",
+        "[83 / 90] nene-wire-product",
+        "[89 / 92] NeNeWireHost",
+        "Build complete! (3.61 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
-        "Sources/NeNeReversiCore/Probe.swift:4:12: error: Function Parameter Count Violation: Function should have 4 parameters or less: it currently has 5 (function_parameter_count)",
+        "Sources/NeNeWireCore/Probe.swift:4:12: error: Function Parameter Count Violation: Function should have 4 parameters or less: it currently has 5 (function_parameter_count)",
         "make: *** [Makefile:25: lint] Error 2"
       ]
     },
@@ -501,17 +501,17 @@
       "expected": "\\(cyclomatic_complexity\\)",
       "verdict": "pass",
       "evidence": [
-        "Sources/NeNeReversiCore/Probe.swift:4:5: error: Cyclomatic Complexity Violation: Function should have complexity 10 or less; currently complexity is 11 (cyclomatic_complexity)"
+        "Sources/NeNeWireCore/Probe.swift:4:5: error: Cyclomatic Complexity Violation: Function should have complexity 10 or less; currently complexity is 11 (cyclomatic_complexity)"
       ],
       "missing": [],
       "tail": [
-        "[82 / 89] NeNeReversiEngine",
-        "[88 / 91] NeNeReversiTerminal",
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.99 secs)",
+        "[83 / 90] NeNeWireHost",
+        "[89 / 92] nene-wire-product",
+        "[93 / 93] nene-wire-product",
+        "Build complete! (3.72 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
-        "Sources/NeNeReversiCore/Probe.swift:4:5: error: Cyclomatic Complexity Violation: Function should have complexity 10 or less; currently complexity is 11 (cyclomatic_complexity)",
+        "Sources/NeNeWireCore/Probe.swift:4:5: error: Cyclomatic Complexity Violation: Function should have complexity 10 or less; currently complexity is 11 (cyclomatic_complexity)",
         "make: *** [Makefile:25: lint] Error 2"
       ]
     },
@@ -524,19 +524,19 @@
       "violation": "waiver 無しの swiftlint:disable:next で強制アンラップを抑制する",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-003 Sources/nene-reversi/main\\.swift",
+      "expected": "^CNF-003 Sources/nene-wire/main\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-003 Sources/nene-reversi/main.swift:9: 直前行に有効な // Waiver: WVR-NNNN が無い"
+        "CNF-003 Sources/nene-wire/main.swift:11: 直前行に有効な // Waiver: WVR-NNNN が無い"
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.54 secs)",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.38 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-003 Sources/nene-reversi/main.swift:9: 直前行に有効な // Waiver: WVR-NNNN が無い",
+        "CNF-003 Sources/nene-wire/main.swift:11: 直前行に有効な // Waiver: WVR-NNNN が無い",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -550,20 +550,20 @@
       "violation": "@diagnose で非推奨の警告を消す",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-003 Sources/NeNeReversiCore/Probe\\.swift",
+      "expected": "^CNF-003 Sources/NeNeWireCore/Probe\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-003 Sources/NeNeReversiCore/Probe.swift:3: @available(..., deprecated) は非推奨の警告を隠す",
-        "CNF-003 Sources/NeNeReversiCore/Probe.swift:6: @diagnose / @warn による警告の抑制"
+        "CNF-003 Sources/NeNeWireCore/Probe.swift:3: @available(..., deprecated) は非推奨の警告を隠す",
+        "CNF-003 Sources/NeNeWireCore/Probe.swift:6: @diagnose / @warn による警告の抑制"
       ],
       "missing": [],
       "tail": [
-        "Build complete! (3.97 secs)",
+        "Build complete! (3.31 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-003 Sources/NeNeReversiCore/Probe.swift:3: @available(..., deprecated) は非推奨の警告を隠す",
-        "CNF-003 Sources/NeNeReversiCore/Probe.swift:6: @diagnose / @warn による警告の抑制",
+        "CNF-003 Sources/NeNeWireCore/Probe.swift:3: @available(..., deprecated) は非推奨の警告を隠す",
+        "CNF-003 Sources/NeNeWireCore/Probe.swift:6: @diagnose / @warn による警告の抑制",
         "conformance: 23 規則・違反 2 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -584,8 +584,8 @@
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.74 secs)",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.24 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -603,19 +603,19 @@
       "violation": "テストで XCTest を import する",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-011 Tests/NeNeReversiCoreTests/ProbeTests\\.swift",
+      "expected": "^CNF-011 Tests/NeNeWireCoreTests/ProbeTests\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-011 Tests/NeNeReversiCoreTests/ProbeTests.swift:1: NeNeReversiCoreTests は XCTest を import できない"
+        "CNF-011 Tests/NeNeWireCoreTests/ProbeTests.swift:1: NeNeWireCoreTests は XCTest を import できない"
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (4.18 secs)",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.22 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-011 Tests/NeNeReversiCoreTests/ProbeTests.swift:1: NeNeReversiCoreTests は XCTest を import できない",
+        "CNF-011 Tests/NeNeWireCoreTests/ProbeTests.swift:1: NeNeWireCoreTests は XCTest を import できない",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -632,8 +632,8 @@
       "expected": "^CNF-009 Package\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-009 Package.swift:8: target NeNeReversiCore に .treatAllWarnings(as: .error) が無い",
-        "CNF-009 Package.swift:8: target NeNeReversiCore の使えない swiftSettings: .treatAllWarnings(as: .warning)",
+        "CNF-009 Package.swift:8: target NeNeWireCore に .treatAllWarnings(as: .error) が無い",
+        "CNF-009 Package.swift:8: target NeNeWireCore の使えない swiftSettings: .treatAllWarnings(as: .warning)",
         "CNF-009 Package.swift:10: 使えない manifest の指定: 警告を警告のまま残す指定"
       ],
       "missing": [],
@@ -641,8 +641,8 @@
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-009 Package.swift:8: target NeNeReversiCore に .treatAllWarnings(as: .error) が無い",
-        "CNF-009 Package.swift:8: target NeNeReversiCore の使えない swiftSettings: .treatAllWarnings(as: .warning)",
+        "CNF-009 Package.swift:8: target NeNeWireCore に .treatAllWarnings(as: .error) が無い",
+        "CNF-009 Package.swift:8: target NeNeWireCore の使えない swiftSettings: .treatAllWarnings(as: .warning)",
         "CNF-009 Package.swift:10: 使えない manifest の指定: 警告を警告のまま残す指定",
         "conformance: 23 規則・違反 3 件",
         "make: *** [Makefile:28: conformance] Error 1"
@@ -659,7 +659,7 @@
       "expected": "error: initialization of immutable value 'unused' was never used",
       "verdict": "pass",
       "evidence": [
-        "Sources/NeNeReversiCore/Probe.swift:5:13: error: initialization of immutable value 'unused' was never used; consider replacing with assignment to '_' or removing it [#NoUsage]",
+        "Sources/NeNeWireCore/Probe.swift:5:13: error: initialization of immutable value 'unused' was never used; consider replacing with assignment to '_' or removing it [#NoUsage]",
         "|             `- error: initialization of immutable value 'unused' was never used; consider replacing with assignment to '_' or removing it [#NoUsage]"
       ],
       "missing": [],
@@ -669,7 +669,7 @@
         "",
         "[#NoUsage]: <https://docs.swift.org/compiler/documentation/diagnostics/no-usage>",
         "Failed frontend command:",
-        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -c -primary-file Sources/NeNeReversiCore/Probe.swift Sources/NeNeReversiCore/Square.swift -emit-dependencies-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Probe.d -emit-const-values-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Probe.swiftconstvalues -emit-reference-dependencies-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Probe.swiftdeps -serialize-diagnostics-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Probe.dia -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/reversi-proof-P24-geig1h0v -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/reversi-proof-P24-geig1h0v -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeReversiCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/NeNeReversiCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -parse-as-library -o .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Probe.o -index-unit-output-path /NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Probe.o -index-store-path .build/out -index-system-modules",
+        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -c -primary-file Sources/NeNeWireCore/Probe.swift Sources/NeNeWireCore/Square.swift -emit-dependencies-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.d -emit-const-values-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.swiftconstvalues -emit-reference-dependencies-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.swiftdeps -serialize-diagnostics-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.dia -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/wire-proof-P24-6ajr3yjp -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/wire-proof-P24-6ajr3yjp -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeWireCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -parse-as-library -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.o -index-store-path .build/out -index-system-modules",
         "error: Build failed",
         "make: *** [Makefile:19: build] Error 1"
       ]
@@ -690,8 +690,8 @@
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.84 secs)",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.34 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -712,16 +712,16 @@
       "expected": "^CNF-005 \\.gitignore",
       "verdict": "pass",
       "evidence": [
-        "CNF-005 .gitignore:2: 検査の対象から外れる無視の指定 'Sources/NeNeReversiCore/Hidden.swift'（生成物の置き場だけを無視する）"
+        "CNF-005 .gitignore:2: 検査の対象から外れる無視の指定 'Sources/NeNeWireCore/Hidden.swift'（生成物の置き場だけを無視する）"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.74 secs)",
+        "[93 / 93] nene-wire-product",
+        "Build complete! (3.61 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-005 .gitignore:2: 検査の対象から外れる無視の指定 'Sources/NeNeReversiCore/Hidden.swift'（生成物の置き場だけを無視する）",
+        "CNF-005 .gitignore:2: 検査の対象から外れる無視の指定 'Sources/NeNeWireCore/Hidden.swift'（生成物の置き場だけを無視する）",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -737,17 +737,17 @@
       "expected": "\\[Indentation\\]",
       "verdict": "pass",
       "evidence": [
-        "Sources/NeNeReversiRender/Cell.swift:3:1: error: [Indentation] indent by 2 spaces"
+        "Sources/NeNeWireRender/Cell.swift:3:1: error: [Indentation] indent by 2 spaces"
       ],
       "missing": [],
       "tail": [
-        "[75 / 86] NeNeReversiCore",
-        "[81 / 88] NeNeReversiEngine",
-        "[87 / 90] NeNeReversiTerminal",
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.85 secs)",
+        "[75 / 87] nene-wire-product",
+        "[76 / 87] NeNeWireCore",
+        "[82 / 89] NeNeWireHost",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.28 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
-        "Sources/NeNeReversiRender/Cell.swift:3:1: error: [Indentation] indent by 2 spaces",
+        "Sources/NeNeWireRender/Cell.swift:3:1: error: [Indentation] indent by 2 spaces",
         "make: *** [Makefile:22: format] Error 123"
       ]
     },
@@ -760,19 +760,19 @@
       "violation": "Core のディレクトリに入れ子の .swiftlint.yml を置く",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-007 Sources/NeNeReversiCore/\\.swiftlint\\.yml",
+      "expected": "^CNF-007 Sources/NeNeWireCore/\\.swiftlint\\.yml",
       "verdict": "pass",
       "evidence": [
-        "CNF-007 Sources/NeNeReversiCore/.swiftlint.yml:1: ゲートが読まない場所の検査設定（入れ子の設定は道具が勝手に拾う）"
+        "CNF-007 Sources/NeNeWireCore/.swiftlint.yml:1: ゲートが読まない場所の検査設定（入れ子の設定は道具が勝手に拾う）"
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.75 secs)",
+        "[92 / 92] AllExcludingTests",
+        "Build complete! (3.45 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-007 Sources/NeNeReversiCore/.swiftlint.yml:1: ゲートが読まない場所の検査設定（入れ子の設定は道具が勝手に拾う）",
+        "CNF-007 Sources/NeNeWireCore/.swiftlint.yml:1: ゲートが読まない場所の検査設定（入れ子の設定は道具が勝手に拾う）",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -793,9 +793,9 @@
       ],
       "missing": [],
       "tail": [
-        "[87 / 90] NeNeReversiTerminal",
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.81 secs)",
+        "[79 / 88] NeNeWireRender",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.24 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "warning: Skipping enabled rule 'statement_position' because it requires SourceKit and SourceKit access is prohibited.",
@@ -814,16 +814,16 @@
       "expected": "^CNF-006 docs/todo/current\\.md",
       "verdict": "pass",
       "evidence": [
-        "CNF-006 docs/todo/current.md:25: 未定義の規則 ID ARC-099"
+        "CNF-006 docs/todo/current.md:29: 未定義の規則 ID ARC-099"
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (4.33 secs)",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.49 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-006 docs/todo/current.md:25: 未定義の規則 ID ARC-099",
+        "CNF-006 docs/todo/current.md:29: 未定義の規則 ID ARC-099",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -843,8 +843,8 @@
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.77 secs)",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.29 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -868,8 +868,8 @@
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.93 secs)",
+        "[91 / 92] nene-wire-product",
+        "Build complete! (3.36 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -886,19 +886,19 @@
       "violation": "Issue 番号の無い作業メモ（TODO）を書く",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-008 Sources/NeNeReversiCore/Square\\.swift",
+      "expected": "^CNF-008 Sources/NeNeWireCore/Square\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-008 Sources/NeNeReversiCore/Square.swift:1: TODO / FIXME の直後に (#Issue番号) が無い"
+        "CNF-008 Sources/NeNeWireCore/Square.swift:1: TODO / FIXME の直後に (#Issue番号) が無い"
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (4.08 secs)",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.72 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-008 Sources/NeNeReversiCore/Square.swift:1: TODO / FIXME の直後に (#Issue番号) が無い",
+        "CNF-008 Sources/NeNeWireCore/Square.swift:1: TODO / FIXME の直後に (#Issue番号) が無い",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -936,13 +936,13 @@
       "expected": "(FAILED|did NOT match)",
       "verdict": "pass",
       "evidence": [
-        "/tmp/tmp.GcdA18BC73/swiftlint_linux_amd64.zip: FAILED",
+        "/tmp/tmp.xRYkexXhc4/swiftlint_linux_amd64.zip: FAILED",
         "sha256sum: WARNING: 1 computed checksum did NOT match"
       ],
       "missing": [],
       "tail": [
         "eng/install-tools.sh",
-        "/tmp/tmp.GcdA18BC73/swiftlint_linux_amd64.zip: FAILED",
+        "/tmp/tmp.xRYkexXhc4/swiftlint_linux_amd64.zip: FAILED",
         "sha256sum: WARNING: 1 computed checksum did NOT match",
         "make: *** [Makefile:16: tools] Error 1"
       ]
@@ -964,8 +964,8 @@
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (4.15 secs)",
+        "[92 / 92]",
+        "Build complete! (3.50 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -989,8 +989,8 @@
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (4.02 secs)",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.26 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1015,8 +1015,8 @@
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.77 secs)",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.36 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1064,7 +1064,7 @@
         "AssertionError: 'CNF-013' not found in [] : CNF-013 が Sources/Core/Board.swift で発火しない",
         "",
         "----------------------------------------------------------------------",
-        "Ran 104 tests in 0.323s",
+        "Ran 105 tests in 0.281s",
         "",
         "FAILED (failures=1)",
         "make: *** [Makefile:31: conformance-test] Error 1"
@@ -1078,19 +1078,19 @@
       "violation": "Decodable を使う",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-015 Sources/NeNeReversiCore/Probe\\.swift",
+      "expected": "^CNF-015 Sources/NeNeWireCore/Probe\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-015 Sources/NeNeReversiCore/Probe.swift:2: Codable / Decodable / Encodable は使えない"
+        "CNF-015 Sources/NeNeWireCore/Probe.swift:2: Codable / Decodable / Encodable は使えない"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.71 secs)",
+        "[93 / 93] nene-wire-product",
+        "Build complete! (3.46 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-015 Sources/NeNeReversiCore/Probe.swift:2: Codable / Decodable / Encodable は使えない",
+        "CNF-015 Sources/NeNeWireCore/Probe.swift:2: Codable / Decodable / Encodable は使えない",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -1104,19 +1104,19 @@
       "violation": "Core で print を呼ぶ",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-017 Sources/NeNeReversiCore/Probe\\.swift",
+      "expected": "^CNF-017 Sources/NeNeWireCore/Probe\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-017 Sources/NeNeReversiCore/Probe.swift:5: print / readLine / exit 等は合成ルートだけ"
+        "CNF-017 Sources/NeNeWireCore/Probe.swift:5: print / readLine / exit 等は合成ルートだけ"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.90 secs)",
+        "[89 / 92] NeNeWireTerminal",
+        "Build complete! (3.48 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-017 Sources/NeNeReversiCore/Probe.swift:5: print / readLine / exit 等は合成ルートだけ",
+        "CNF-017 Sources/NeNeWireCore/Probe.swift:5: print / readLine / exit 等は合成ルートだけ",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -1132,17 +1132,17 @@
       "expected": "GIT-003 [0-9a-f]{7}: 件名は",
       "verdict": "pass",
       "evidence": [
-        "GIT-003 3570367: 件名は `<type>(<scope>): <日本語の説明> (#<issue番号>)` の形（type は feat / fix / docs / refactor / test / build / ci / chore）"
+        "GIT-003 3347cc7: 件名は `<type>(<scope>): <日本語の説明> (#<issue番号>)` の形（type は feat / fix / docs / refactor / test / build / ci / chore）"
       ],
       "missing": [],
       "tail": [
         "python3 eng/validate-commit-message.py --range \"origin/main..HEAD\"",
-        "commits: 3 件・違反 1 件",
+        "commits: 2 件・違反 1 件",
         "----------------------------------------------------------------------",
-        "Ran 104 tests in 0.319s",
+        "Ran 105 tests in 0.284s",
         "",
         "OK",
-        "GIT-003 3570367: 件名は `<type>(<scope>): <日本語の説明> (#<issue番号>)` の形（type は feat / fix / docs / refactor / test / build / ci / chore）",
+        "GIT-003 3347cc7: 件名は `<type>(<scope>): <日本語の説明> (#<issue番号>)` の形（type は feat / fix / docs / refactor / test / build / ci / chore）",
         "make: *** [Makefile:34: commits] Error 1"
       ]
     },
@@ -1162,32 +1162,32 @@
       "expected": "\\((?:cyclomatic_complexity|function_body_length|function_parameter_count|nesting|file_length|type_body_length|force_unwrapping|implicitly_unwrapped_optional|discouraged_optional_boolean|discouraged_optional_collection|force_cast|force_try|large_tuple|fallthrough|superfluous_disable_command|blanket_disable_command)\\)$",
       "verdict": "pass",
       "evidence": [
-        "Sources/NeNeReversiCore/Probe.swift:584:22: error: Blanket Disable Command Violation: Use 'next', 'this' or 'previous' instead to disable the 'force_unwrapping' rule once, or re-enable it as soon as possible` (blanket_disable_command)",
-        "Sources/NeNeReversiCore/Probe.swift:415:5: error: Cyclomatic Complexity Violation: Function should have complexity 10 or less; currently complexity is 11 (cyclomatic_complexity)",
-        "Sources/NeNeReversiCore/Probe.swift:529:22: error: Discouraged Optional Boolean Violation: Prefer non-optional booleans over optional booleans (discouraged_optional_boolean)",
-        "Sources/NeNeReversiCore/Probe.swift:530:22: error: Discouraged Optional Collection Violation: Prefer empty collection over optional collection (discouraged_optional_collection)",
-        "Sources/NeNeReversiCore/Probe.swift:558:13: error: Fallthrough Violation: Fallthrough should be avoided (fallthrough)",
-        "Sources/NeNeReversiCore/Probe.swift:584:1: error: File Length Violation: File should contain 400 lines or less excluding comments and whitespaces: currently contains 554 (file_length)",
-        "Sources/NeNeReversiCore/Probe.swift:534:20: error: Force Cast Violation: Force casts should be avoided (force_cast)",
-        "Sources/NeNeReversiCore/Probe.swift:582:1: error: Superfluous Disable Command Violation: SwiftLint rule 'force_cast' did not trigger a violation in the disabled region; remove the disable command (superfluous_disable_command)",
-        "Sources/NeNeReversiCore/Probe.swift:544:9: error: Force Try Violation: Force tries should be avoided (force_try)",
-        "Sources/NeNeReversiCore/Probe.swift:526:10: error: Force Unwrapping Violation: Force unwrapping should be avoided (force_unwrapping)",
-        "Sources/NeNeReversiCore/Probe.swift:584:38: error: Superfluous Disable Command Violation: SwiftLint rule 'force_unwrapping' did not trigger a violation in the disabled region; remove the disable command (superfluous_disable_command)",
-        "Sources/NeNeReversiCore/Probe.swift:453:12: error: Function Body Length Violation: Function body should span 60 lines or less excluding comments and whitespace: currently spans 63 lines (function_body_length)",
-        "Sources/NeNeReversiCore/Probe.swift:520:12: error: Function Parameter Count Violation: Function should have 4 parameters or less: it currently has 5 (function_parameter_count)",
-        "Sources/NeNeReversiCore/Probe.swift:575:20: error: Implicitly Unwrapped Optional Violation: Implicitly unwrapped optionals should be avoided when possible (implicitly_unwrapped_optional)",
-        "Sources/NeNeReversiCore/Probe.swift:548:29: error: Large Tuple Violation: Tuples should have at most 2 members (large_tuple)",
-        "Sources/NeNeReversiCore/Probe.swift:570:9: error: Nesting Violation: Types should be nested at most 1 level deep (nesting)"
+        "Sources/NeNeWireCore/Probe.swift:584:22: error: Blanket Disable Command Violation: Use 'next', 'this' or 'previous' instead to disable the 'force_unwrapping' rule once, or re-enable it as soon as possible` (blanket_disable_command)",
+        "Sources/NeNeWireCore/Probe.swift:415:5: error: Cyclomatic Complexity Violation: Function should have complexity 10 or less; currently complexity is 11 (cyclomatic_complexity)",
+        "Sources/NeNeWireCore/Probe.swift:529:22: error: Discouraged Optional Boolean Violation: Prefer non-optional booleans over optional booleans (discouraged_optional_boolean)",
+        "Sources/NeNeWireCore/Probe.swift:530:22: error: Discouraged Optional Collection Violation: Prefer empty collection over optional collection (discouraged_optional_collection)",
+        "Sources/NeNeWireCore/Probe.swift:558:13: error: Fallthrough Violation: Fallthrough should be avoided (fallthrough)",
+        "Sources/NeNeWireCore/Probe.swift:584:1: error: File Length Violation: File should contain 400 lines or less excluding comments and whitespaces: currently contains 554 (file_length)",
+        "Sources/NeNeWireCore/Probe.swift:534:20: error: Force Cast Violation: Force casts should be avoided (force_cast)",
+        "Sources/NeNeWireCore/Probe.swift:582:1: error: Superfluous Disable Command Violation: SwiftLint rule 'force_cast' did not trigger a violation in the disabled region; remove the disable command (superfluous_disable_command)",
+        "Sources/NeNeWireCore/Probe.swift:544:9: error: Force Try Violation: Force tries should be avoided (force_try)",
+        "Sources/NeNeWireCore/Probe.swift:526:10: error: Force Unwrapping Violation: Force unwrapping should be avoided (force_unwrapping)",
+        "Sources/NeNeWireCore/Probe.swift:584:38: error: Superfluous Disable Command Violation: SwiftLint rule 'force_unwrapping' did not trigger a violation in the disabled region; remove the disable command (superfluous_disable_command)",
+        "Sources/NeNeWireCore/Probe.swift:453:12: error: Function Body Length Violation: Function body should span 60 lines or less excluding comments and whitespace: currently spans 63 lines (function_body_length)",
+        "Sources/NeNeWireCore/Probe.swift:520:12: error: Function Parameter Count Violation: Function should have 4 parameters or less: it currently has 5 (function_parameter_count)",
+        "Sources/NeNeWireCore/Probe.swift:575:20: error: Implicitly Unwrapped Optional Violation: Implicitly unwrapped optionals should be avoided when possible (implicitly_unwrapped_optional)",
+        "Sources/NeNeWireCore/Probe.swift:548:29: error: Large Tuple Violation: Tuples should have at most 2 members (large_tuple)",
+        "Sources/NeNeWireCore/Probe.swift:570:9: error: Nesting Violation: Types should be nested at most 1 level deep (nesting)"
       ],
       "missing": [],
       "tail": [
-        "Sources/NeNeReversiCore/Probe.swift:584:38: error: Superfluous Disable Command Violation: SwiftLint rule 'force_unwrapping' did not trigger a violation in the disabled region; remove the disable command (superfluous_disable_command)",
-        "Sources/NeNeReversiCore/Probe.swift:453:12: error: Function Body Length Violation: Function body should span 60 lines or less excluding comments and whitespace: currently spans 63 lines (function_body_length)",
-        "Sources/NeNeReversiCore/Probe.swift:520:12: error: Function Parameter Count Violation: Function should have 4 parameters or less: it currently has 5 (function_parameter_count)",
-        "Sources/NeNeReversiCore/Probe.swift:575:20: error: Implicitly Unwrapped Optional Violation: Implicitly unwrapped optionals should be avoided when possible (implicitly_unwrapped_optional)",
-        "Sources/NeNeReversiCore/Probe.swift:548:29: error: Large Tuple Violation: Tuples should have at most 2 members (large_tuple)",
-        "Sources/NeNeReversiCore/Probe.swift:570:9: error: Nesting Violation: Types should be nested at most 1 level deep (nesting)",
-        "Sources/NeNeReversiCore/Probe.swift:2:1: error: Type Body Length Violation: Enum body should span 300 lines or less excluding comments and whitespace: currently spans 550 lines (type_body_length)",
+        "Sources/NeNeWireCore/Probe.swift:584:38: error: Superfluous Disable Command Violation: SwiftLint rule 'force_unwrapping' did not trigger a violation in the disabled region; remove the disable command (superfluous_disable_command)",
+        "Sources/NeNeWireCore/Probe.swift:453:12: error: Function Body Length Violation: Function body should span 60 lines or less excluding comments and whitespace: currently spans 63 lines (function_body_length)",
+        "Sources/NeNeWireCore/Probe.swift:520:12: error: Function Parameter Count Violation: Function should have 4 parameters or less: it currently has 5 (function_parameter_count)",
+        "Sources/NeNeWireCore/Probe.swift:575:20: error: Implicitly Unwrapped Optional Violation: Implicitly unwrapped optionals should be avoided when possible (implicitly_unwrapped_optional)",
+        "Sources/NeNeWireCore/Probe.swift:548:29: error: Large Tuple Violation: Tuples should have at most 2 members (large_tuple)",
+        "Sources/NeNeWireCore/Probe.swift:570:9: error: Nesting Violation: Types should be nested at most 1 level deep (nesting)",
+        "Sources/NeNeWireCore/Probe.swift:2:1: error: Type Body Length Violation: Enum body should span 300 lines or less excluding comments and whitespace: currently spans 550 lines (type_body_length)",
         "make: *** [Makefile:25: lint] Error 2"
       ]
     },
@@ -1206,12 +1206,12 @@
       ],
       "missing": [],
       "tail": [
-        "[75 / 86] NeNeReversiCore",
-        "[84 / 89] NeNeReversiEngine",
-        "[85 / 90] NeNeReversiRender",
-        "[87 / 90] NeNeReversiTerminal",
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.89 secs)",
+        "[67 / 84] NeNeWireHost",
+        "[76 / 87] NeNeWireCore",
+        "[79 / 88] NeNeWireRender",
+        "[82 / 89] NeNeWireTerminal",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.27 secs)",
         "swift-strict: SwiftPM かコンパイラが警告を出した（QLT-002）",
         "make: *** [Makefile:19: build] Error 1"
       ]
@@ -1227,7 +1227,7 @@
       "expected": "error: switch must be exhaustive",
       "verdict": "pass",
       "evidence": [
-        "Sources/NeNeReversiCore/Probe.swift:5:9: error: switch must be exhaustive",
+        "Sources/NeNeWireCore/Probe.swift:5:9: error: switch must be exhaustive",
         "|         |- error: switch must be exhaustive"
       ],
       "missing": [],
@@ -1237,7 +1237,7 @@
         " 6 |         case \"a\":",
         " 7 |             return 1",
         "Failed frontend command:",
-        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -c -primary-file Sources/NeNeReversiCore/Probe.swift Sources/NeNeReversiCore/Square.swift -emit-dependencies-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Probe.d -emit-const-values-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Probe.swiftconstvalues -emit-reference-dependencies-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Probe.swiftdeps -serialize-diagnostics-path .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Probe.dia -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/reversi-proof-P50-u9agvd93 -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/reversi-proof-P50-u9agvd93 -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeReversiCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/NeNeReversiCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -parse-as-library -o .build/out/Intermediates.noindex/NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Probe.o -index-unit-output-path /NeNeReversi.build/Debug-linux-x86_64/NeNeReversiCore-t.build/Objects-normal/x86_64/Probe.o -index-store-path .build/out -index-system-modules",
+        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -c -primary-file Sources/NeNeWireCore/Probe.swift Sources/NeNeWireCore/Square.swift -emit-dependencies-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.d -emit-const-values-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.swiftconstvalues -emit-reference-dependencies-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.swiftdeps -serialize-diagnostics-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.dia -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/wire-proof-P50-yv0z4kh5 -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/wire-proof-P50-yv0z4kh5 -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeWireCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -parse-as-library -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.o -index-store-path .build/out -index-system-modules",
         "error: Build failed",
         "make: *** [Makefile:19: build] Error 1"
       ]
@@ -1251,19 +1251,19 @@
       "violation": "switch に case (let other): を書く（括弧で包んだ束縛・M1-j）",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-013 Sources/NeNeReversiCore/Side\\.swift",
+      "expected": "^CNF-013 Sources/NeNeWireCore/Side\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-013 Sources/NeNeReversiCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す"
+        "CNF-013 Sources/NeNeWireCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.79 secs)",
+        "[93 / 93]",
+        "Build complete! (3.50 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-013 Sources/NeNeReversiCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す",
+        "CNF-013 Sources/NeNeWireCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -1277,19 +1277,19 @@
       "violation": "switch に case .none, _: を書く（並べた選択肢の中の _・M1-k）",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-013 Sources/NeNeReversiCore/Side\\.swift",
+      "expected": "^CNF-013 Sources/NeNeWireCore/Side\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-013 Sources/NeNeReversiCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す"
+        "CNF-013 Sources/NeNeWireCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.95 secs)",
+        "[89 / 92] NeNeWireTerminal",
+        "Build complete! (3.45 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-013 Sources/NeNeReversiCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す",
+        "CNF-013 Sources/NeNeWireCore/Side.swift:15: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -1303,19 +1303,19 @@
       "violation": "タプルの switch に case (_, _): を書く（全位置が _ のタプル・M1-m）",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-013 Sources/NeNeReversiCore/Pair\\.swift",
+      "expected": "^CNF-013 Sources/NeNeWireCore/Pair\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-013 Sources/NeNeReversiCore/Pair.swift:11: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す"
+        "CNF-013 Sources/NeNeWireCore/Pair.swift:11: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.88 secs)",
+        "[92 / 93] nene-wire-product",
+        "Build complete! (3.36 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-013 Sources/NeNeReversiCore/Pair.swift:11: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す",
+        "CNF-013 Sources/NeNeWireCore/Pair.swift:11: 全捕捉（default / @unknown default / case _ / case let x / 括弧や並びに隠れた _ と束縛）は網羅性検査を殺す",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -1329,19 +1329,19 @@
       "violation": "別ファイルの extension に init を足し、private init を経ずに Square を作る（M4-f）",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-021 Sources/NeNeReversiCore/Square\\+Bypass\\.swift",
+      "expected": "^CNF-021 Sources/NeNeWireCore/Square\\+Bypass\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-021 Sources/NeNeReversiCore/Square+Bypass.swift:3: extension に init を書かない（型の本体の唯一のファクトリを迂回できる）"
+        "CNF-021 Sources/NeNeWireCore/Square+Bypass.swift:3: extension に init を書かない（型の本体の唯一のファクトリを迂回できる）"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (3.86 secs)",
+        "[93 / 93] nene-wire-product",
+        "Build complete! (3.27 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-021 Sources/NeNeReversiCore/Square+Bypass.swift:3: extension に init を書かない（型の本体の唯一のファクトリを迂回できる）",
+        "CNF-021 Sources/NeNeWireCore/Square+Bypass.swift:3: extension に init を書かない（型の本体の唯一のファクトリを迂回できる）",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -1355,19 +1355,19 @@
       "violation": "Core に async の関数を書く",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-022 Sources/NeNeReversiCore/Probe\\.swift",
+      "expected": "^CNF-022 Sources/NeNeWireCore/Probe\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-022 Sources/NeNeReversiCore/Probe.swift:4: async / await / Task / actor / Thread / Dispatch は使えない（並行の形は合成ルートの 1 本のループだけ）"
+        "CNF-022 Sources/NeNeWireCore/Probe.swift:4: async / await / Task / actor / Thread / Dispatch は使えない（並行の形は合成ルートの 1 本のループだけ）"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (4.01 secs)",
+        "[89 / 92] NeNeWireHost",
+        "Build complete! (3.74 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-022 Sources/NeNeReversiCore/Probe.swift:4: async / await / Task / actor / Thread / Dispatch は使えない（並行の形は合成ルートの 1 本のループだけ）",
+        "CNF-022 Sources/NeNeWireCore/Probe.swift:4: async / await / Task / actor / Thread / Dispatch は使えない（並行の形は合成ルートの 1 本のループだけ）",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -1382,15 +1382,15 @@
       "violation": "Terminal で @preconcurrency import を書く（並行性の error を戻らない warning に下げる・M7-i）",
       "command": "make conformance",
       "exit": 2,
-      "expected": "^CNF-014 Sources/NeNeReversiTerminal/Screen\\.swift",
+      "expected": "^CNF-014 Sources/NeNeWireTerminal/Screen\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-014 Sources/NeNeReversiTerminal/Screen.swift:1: リフレクション・下線付き属性・@preconcurrency・マクロ・動的呼び出しは使えない"
+        "CNF-014 Sources/NeNeWireTerminal/Screen.swift:1: リフレクション・下線付き属性・@preconcurrency・マクロ・動的呼び出しは使えない"
       ],
       "missing": [],
       "tail": [
         "python3 eng/conformance.py",
-        "CNF-014 Sources/NeNeReversiTerminal/Screen.swift:1: リフレクション・下線付き属性・@preconcurrency・マクロ・動的呼び出しは使えない",
+        "CNF-014 Sources/NeNeWireTerminal/Screen.swift:1: リフレクション・下線付き属性・@preconcurrency・マクロ・動的呼び出しは使えない",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -1412,8 +1412,8 @@
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.96 secs)",
+        "[92 / 92] nene-wire-product",
+        "Build complete! (3.36 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1425,24 +1425,21 @@
     {
       "id": "P62",
       "rules": [
-        "CNF-023"
+        "CNF-023",
+        "ARC-002"
       ],
-      "violation": "README に登録商標のゲーム名を書く",
-      "command": "make check",
+      "violation": "Core で posix_spawn を呼んで子プロセスを起動する（外部プロセスは Host だけ）",
+      "command": "make conformance",
       "exit": 2,
-      "expected": "^CNF-023 README\\.md",
+      "expected": "^CNF-023 Sources/NeNeWireCore/Probe\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-023 README.md:3: 登録商標のゲーム名は書かない。Reversi / リバーシと書く"
+        "CNF-023 Sources/NeNeWireCore/Probe.swift:5: 外部プロセスの起動（posix_spawn / fork / exec / system / popen）は spawn=allowed の target だけ"
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (4.19 secs)",
-        "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
-        "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-023 README.md:3: 登録商標のゲーム名は書かない。Reversi / リバーシと書く",
+        "CNF-023 Sources/NeNeWireCore/Probe.swift:5: 外部プロセスの起動（posix_spawn / fork / exec / system / popen）は spawn=allowed の target だけ",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -1457,19 +1454,19 @@
       "violation": "Terminal が宣言していない推移的な依存の Core を import する（SwiftPM は拒まない・M6-e）",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-011 Sources/NeNeReversiTerminal/Screen\\.swift",
+      "expected": "^CNF-011 Sources/NeNeWireTerminal/Screen\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-011 Sources/NeNeReversiTerminal/Screen.swift:2: NeNeReversiTerminal は NeNeReversiCore を import できない"
+        "CNF-011 Sources/NeNeWireTerminal/Screen.swift:2: NeNeWireTerminal は NeNeWireCore を import できない"
       ],
       "missing": [],
       "tail": [
-        "[91 / 91] nene-reversi-product",
-        "Build complete! (3.89 secs)",
+        "[88 / 91] NeNeWireTerminal",
+        "Build complete! (3.66 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-011 Sources/NeNeReversiTerminal/Screen.swift:2: NeNeReversiTerminal は NeNeReversiCore を import できない",
+        "CNF-011 Sources/NeNeWireTerminal/Screen.swift:2: NeNeWireTerminal は NeNeWireCore を import できない",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -1485,19 +1482,19 @@
       "violation": "Core が FoundationEssentials を import する（Foundation とは別の名前で Date が読める・M5-j）",
       "command": "make check",
       "exit": 2,
-      "expected": "^CNF-011 Sources/NeNeReversiCore/Probe\\.swift",
+      "expected": "^CNF-011 Sources/NeNeWireCore/Probe\\.swift",
       "verdict": "pass",
       "evidence": [
-        "CNF-011 Sources/NeNeReversiCore/Probe.swift:1: NeNeReversiCore は FoundationEssentials を import できない"
+        "CNF-011 Sources/NeNeWireCore/Probe.swift:1: NeNeWireCore は FoundationEssentials を import できない"
       ],
       "missing": [],
       "tail": [
-        "[92 / 92] nene-reversi-product",
-        "Build complete! (4.83 secs)",
+        "[93 / 93] nene-wire-product",
+        "Build complete! (4.21 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
-        "CNF-011 Sources/NeNeReversiCore/Probe.swift:1: NeNeReversiCore は FoundationEssentials を import できない",
+        "CNF-011 Sources/NeNeWireCore/Probe.swift:1: NeNeWireCore は FoundationEssentials を import できない",
         "conformance: 23 規則・違反 1 件",
         "make: *** [Makefile:28: conformance] Error 1"
       ]
@@ -1521,7 +1518,7 @@
         "AssertionError: 'CNF-013' not found in [] : CNF-013 が Sources/Core/Board.swift で発火しない",
         "",
         "----------------------------------------------------------------------",
-        "Ran 104 tests in 0.326s",
+        "Ran 105 tests in 0.281s",
         "",
         "FAILED (failures=8)",
         "make: *** [Makefile:31: conformance-test] Error 1"

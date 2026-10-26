@@ -102,17 +102,17 @@ public enum Child {
     /// `/bin/true` を起動して pid を返す。起動できなければ -1。
     public static func start() -> Int32 {
         var pid: pid_t = 0
-        let path = "/bin/true"
-        let status = path.withCString { file in
-            var argv: [UnsafeMutablePointer<CChar>?] = [strdup(file), nil]
-            defer { argv.forEach { free($0) } }
-            return posix_spawn(&pid, file, nil, nil, &argv, nil)
+        guard let file = strdup("/bin/true") else {
+            return -1
         }
-        return status == 0 ? pid : -1
+        defer { free(file) }
+        var argv: [UnsafeMutablePointer<CChar>?] = [file, nil]
+        return posix_spawn(&pid, file, nil, nil, &argv, nil) == 0 ? pid : -1
     }
 }
 """,
     "Sources/nene-wire/main.swift": """\
+import Glibc
 import NeNeWireHost
 import NeNeWireRender
 import NeNeWireTerminal
@@ -443,13 +443,13 @@ PROOFS: list[Proof] = [
 MANUAL: list[dict] = [
     {"id": "P43", "rules": ["GIT-004"],
      "violation": "ruleset が `main` に効いていることを読み戻し、必須 check の失敗した PR がマージできないことを見る"
-                  "（`main` への直接 push と force push の試行は、作業環境の権限で止められたので行っていない）",
+                  "（`main` への直接 push と force push は試していない）",
      "command": "`gh api repos/hideyukiMORI/nene-wire/rules/branches/main`・`gh pr view 2`（2026-10-26）",
-     "evidence": "`main` に効く規則は ruleset 25825059 の `deletion`・`non_fast_forward`・`pull_request`（squash のみ）・`required_status_checks`（`check`）の 4 つ。"
-                 "PR #2 の head 14cd69b は必須 check `check` が FAILURE で `mergeStateStatus` が `BLOCKED`"},
+     "evidence": "`main` に効く規則は ruleset 25851529 の `deletion`・`non_fast_forward`・`pull_request`（squash のみ）・`required_status_checks`（`check`）の 4 つ。"
+                 "PR #2 の head 1b235b9 は必須 check `check` が FAILURE で `mergeStateStatus` が `BLOCKED`"},
     {"id": "P46", "rules": ["QLT-012"],
      "violation": "draft の PR に push する（CI のジョブはスキップでなく失敗し、PR はマージできない）",
-     "command": "GitHub Actions run 40205748916（PR #2・head 14cd69b・2026-10-25T15:11Z）",
+     "command": "GitHub Actions run 40262253912（PR #2・head 1b235b9・2026-10-26T03:04Z）",
      "evidence": "step `eng/ci-require-ready.sh true` が `ci: PR が draft なのでフルゲートを回さない。Ready にすると回る（QLT-012）` で exit 1。"
                  "必須 check `check` は FAILURE・`mergeStateStatus` は `BLOCKED`"},
 ]
