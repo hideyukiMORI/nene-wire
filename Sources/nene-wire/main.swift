@@ -62,16 +62,22 @@ let colors: ColorMode = {
 /// 罫線の文字が 1 桁で描かれる端末だけ罫線の枠を使い、それ以外（2 桁・答えが無い）は ASCII の枠へ落とす（ADR 0006）。
 let traits = TerminalTraits(frame: Console.columnsAdvanced(by: "─") == 1 ? .boxDrawing : .ascii, colors: colors)
 
+// 記事と訳の保存（FR-11・ADR 0014）。`--demo` の架空の記事は読み込まず、保存もしない
+let demo = arguments == ["--demo"]
+let archiveFile =
+    demo ? nil : ArchiveFile(stateHome: getenv("XDG_STATE_HOME").map { String(cString: $0) }, home: home)
+let (archive, archiveNotice) = archiveFile?.load(at: LocalTime.timestamp()) ?? (.empty, nil)
 let fetcher =
-    arguments == ["--demo"]
+    demo
     ? Fetcher(demo: DemoScript(), now: LocalTime.timestamp())
-    : Fetcher(feeds: feeds, environment: environment, now: LocalTime.timestamp())
+    : Fetcher(feeds: feeds, environment: environment, now: LocalTime.timestamp(), archive: archive)
 // 翻訳の手段（Argos Translate）は `install-translator.sh` が HOME の下に入れる。無ければ原文のまま流す（FR-29・ADR 0010）
 let translator = Translator(
     library: Translator.library(home: home), environment: environment, target: settings.display.language)
 var viewer = Viewer(
     fetcher: fetcher, translator: translator, traits: traits, version: Version.current, settings: settings,
-    settingsFile: settingsFile, environment: environment, demo: arguments == ["--demo"], notice: settingsNotice)
+    settingsFile: settingsFile, environment: environment, demo: demo, notice: settingsNotice ?? archiveNotice,
+    archive: (archiveFile, archive))
 viewer.run()
 Console.close()
 exit(0)

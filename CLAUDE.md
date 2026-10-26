@@ -152,5 +152,6 @@ Waivers: none | WVR-NNNN
 - 翻訳（ADR 0010）: Argos Translate を `install-translator.sh` で torch 抜きで入れ、英語の記事を日本語で出す。無ければ原文で流す
 - 翻訳のオン／オフ（ADR 0013）: 帯の表示中の `t` か設定画面。保存する
 - 設定画面（ADR 0011）: `s` で開く。フィードの一覧と編集・表示の言語・時間・テーマ・雨・原文。`~/.config/nene-wire/settings.txt` に版付きで保存
-- 動かないもの: 記事と訳の保存
+- 記事と訳の保存（ADR 0014）: `~/.local/state/nene-wire/archive.txt`。起動したら保存した記事ですぐ流し、訳し直さない。7 日で捨てる
+- 動かないもの: （Phase 3 の段はすべて入った）
 - 施主の決定は [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) にそろっている。決定を覆したくなった点や、要件に無い機能を足したくなった点は、自分で決めずに施主に聞く

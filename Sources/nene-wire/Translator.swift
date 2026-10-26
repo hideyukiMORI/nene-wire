@@ -58,6 +58,16 @@ struct Translator {
         return .ready(route: route, pending: queue.pending, busy: running != nil)
     }
 
+    /// 訳の控えのすべて（保存するため）。
+    var translations: [String: Translation] {
+        queue.translations
+    }
+
+    /// 保存した訳の控えを読み戻す。
+    mutating func remember(_ saved: [String: Translation]) {
+        queue.remember(saved)
+    }
+
     /// 取れた記事を待ち行列に足し、巡りに無くなった記事の控えを捨てる。
     mutating func take(_ articles: [Article], keeping identifiers: Set<String>) {
         queue.enqueue(articles)

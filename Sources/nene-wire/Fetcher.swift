@@ -19,10 +19,15 @@ struct Fetcher {
     private let started: Timestamp
     private var breakingSent = false
 
-    init(feeds: [Feed], environment: [String], now: Timestamp) {
+    /// `archive` は保存した記事と手がかり。あるフィードは条件付きで取り直す（ADR 0014）。
+    init(feeds: [Feed], environment: [String], now: Timestamp, archive: Archive = .empty) {
         self.feeds = feeds
         self.environment = environment
-        schedule = .starting(feeds: feeds.count, at: now)
+        let saved = feeds.map { feed -> (articles: Int, validators: Validators) in
+            let snapshot = archive.snapshot(for: feed.url.text)
+            return (snapshot?.articles.count ?? 0, snapshot?.validators ?? .none)
+        }
+        schedule = .resuming(saved, at: now)
         demo = nil
         started = now
     }

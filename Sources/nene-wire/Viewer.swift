@@ -36,10 +36,15 @@ struct Viewer {
     private var session: SettingsSession?
     /// 読み取りの切れ目で途中まで届いた UTF-8 の文字。
     private var keyCarry: [UInt8] = []
+    /// 記事と訳の保存（ADR 0014）。
+    private var keeper: ArchiveKeeper
+    /// 保存した記事があるとき、接続シーケンスを終えてよい時刻（読み込みの行を打ち終えたら・取得を待たない）。
+    private var restoredBootEnd: Int?
 
     init(
         fetcher: Fetcher, translator: Translator, traits: TerminalTraits, version: String, settings: Settings,
-        settingsFile: SettingsFile, environment: [String], demo: Bool, notice: String?
+        settingsFile: SettingsFile, environment: [String], demo: Bool, notice: String?,
+        archive: (file: ArchiveFile?, saved: Archive)
     ) {
         self.fetcher = fetcher
         self.translator = translator
@@ -50,9 +55,46 @@ struct Viewer {
         self.demo = demo
         rotation = .empty(feeds: fetcher.feeds.count)
         launched = clock.now
+        keeper = ArchiveKeeper(file: archive.file)
         bootLog = BootLog(version: version, size: Console.size(), translator: translator.problem)
         if let notice {
             message = notice
+        }
+        restore(archive.saved)
+    }
+
+    /// 保存した記事で巡りを始め、訳の控えを読み戻し、まだ訳していない記事を待たせる。
+    private mutating func restore(_ saved: Archive) {
+        var count = 0
+        for (index, feed) in fetcher.feeds.enumerated() {
+            let articles = saved.snapshot(for: feed.url.text)?.articles ?? []
+            rotation.restore(feed: index, with: articles)
+            count += articles.count
+        }
+        guard count > 0 else {
+            return
+        }
+        translator.remember(saved.translations[settings.display.language] ?? [:])
+        translator.take(rotation.articles, keeping: rotation.identifiers)
+        bootLog.restored(count, at: 600)
+        restoredBootEnd = bootLog.typedBy
+    }
+
+    /// 変わってから 30 秒たっていれば（`force` なら必ず）保存する。
+    private mutating func saveArchive(force: Bool) {
+        let (feeds, schedule, rotation, translator, language) = (
+            fetcher.feeds, fetcher.schedule, rotation, translator, settings.display.language
+        )
+        let problem = keeper.saveIfDue(force: force) {
+            let snapshots = feeds.enumerated().map { index, feed in
+                FeedSnapshot(
+                    url: feed.url.text, validators: schedule.statuses[index].validators,
+                    articles: rotation.articles(feed: index))
+            }
+            return Archive(feeds: snapshots, translations: [language: translator.translations])
+        }
+        if let problem {
+            message = "\(LocalTime.now().time)  \(problem)"
         }
     }
 
@@ -92,114 +134,12 @@ struct Viewer {
             fetch(at: LocalTime.timestamp())
             translate(at: LocalTime.timestamp())
             session?.poll()
+            saveArchive(force: false)
             finishBootIfReady()
             if session == nil, !moved, !booting, !paused, showtime.milliseconds >= interval {
                 move { $0.advance() }
             }
         }
-    }
-
-    private mutating func stopAll() {
-        fetcher.stop()
-        translator.stop()
-        session?.stop()
-    }
-
-    /// 設定画面を開く（記事の時計は止める）。
-    private mutating func openSettings() {
-        session = SettingsSession(settings: settings, file: settingsFile, environment: environment)
-        if !paused {
-            showtime.pause()
-        }
-        previous = nil
-    }
-
-    /// 設定画面のキーを渡し、保存できた設定を反映し、閉じたら帯に戻る（FR-25: 反映は次の記事から）。
-    private mutating func handleSettings(_ keys: [KeyPress]) {
-        guard var current = session, !keys.isEmpty else {
-            return
-        }
-        let outcome = current.press(keys)
-        session = current
-        switch outcome {
-        case .stay:
-            return
-        case .apply(let saved):
-            adopt(saved)
-        case .applyAndClose(let saved):
-            adopt(saved)
-            closeSettings()
-        case .close:
-            closeSettings()
-        }
-    }
-
-    private mutating func closeSettings() {
-        session = nil
-        if !paused {
-            showtime.resume()
-        }
-        previous = nil
-    }
-
-    /// 保存した設定を反映する。表示の言語が変わったら訳し直し、有効なフィードが変わったら取り直す。
-    private mutating func adopt(_ new: Settings) {
-        let old = settings
-        settings = new
-        if new.display.language != old.display.language {
-            translator.retarget(new.display.language, keeping: rotation.articles)
-        }
-        let feeds = new.feeds.filter(\.enabled)
-        guard feeds != old.feeds.filter(\.enabled) else {
-            return
-        }
-        guard !demo else {
-            message = "デモの間はフィードの変更を反映しない（保存はした）"
-            return
-        }
-        fetcher.stop()
-        fetcher = Fetcher(feeds: feeds, environment: environment, now: LocalTime.timestamp())
-        rotation = .empty(feeds: feeds.count)
-        message = "\(LocalTime.now().time)  フィードを替えた。取り直している"
-    }
-
-    private var uptime: Int {
-        Showtime.milliseconds(clock.now - launched)
-    }
-
-    /// 最初の記事が届き、ブートログを打ち終えたら、枠をなぞって最初の記事を見せ始める。
-    private mutating func finishBootIfReady() {
-        guard booting, rotation.current != nil, uptime >= max(Self.shortestBoot, bootLog.typedBy) else {
-            return
-        }
-        booting = false
-        present()
-        showtime.begin(leaving: nil, first: true)
-    }
-
-    /// いまの記事を、いまある訳で固定して見せる（翻訳しない設定なら原文のまま）。
-    private mutating func present() {
-        guard settings.display.translate else {
-            shown = rotation.current
-            shownUntranslated = false
-            return
-        }
-        shown = rotation.current.map(translator.show)
-        shownUntranslated = rotation.current.map(translator.isUntranslated) ?? false
-    }
-
-    /// `t`: 翻訳のオン／オフを切り替えて保存し、いまの記事もすぐ出し直す（ADR 0013）。
-    private mutating func toggleTranslation() {
-        let new = Settings(feeds: settings.feeds, display: settings.display.togglingTranslation)
-        if let problem = settingsFile.save(new) {
-            message = "\(LocalTime.now().time)  \(problem)"
-            return
-        }
-        settings = new
-        if !booting {
-            present()
-        }
-        message = "\(LocalTime.now().time)  翻訳を" + (new.display.translate ? "オンにした" : "オフにした（原文で流す）") + "  t で切り替え"
     }
 
     /// 記事を動かし、前の記事を切り替えの演出に渡す。
@@ -219,6 +159,7 @@ struct Viewer {
             switch report.outcome {
             case .translated:
                 message = "\(time)  翻訳  \(report.articles) 件"
+                keeper.touch()
             case .unavailable(.notInstalled), .unavailable(.missingModel):
                 message = "\(time)  翻訳の手段が無い。install-translator.sh で入れて起動し直すと訳す"
             case .unavailable(.crashed):
@@ -254,6 +195,7 @@ struct Viewer {
             let before = rotation.pendingFresh
             rotation.replace(feed: arrival.feed, with: arrival.articles)
             translator.take(arrival.articles, keeping: rotation.identifiers)
+            keeper.touch()
             let arrived = rotation.pendingFresh - before
             message = "\(time)  \(name)  \(arrival.articles.count) 件" + (arrived > 0 ? "  新着 \(arrived)" : "")
         case .notModified:
@@ -339,5 +281,113 @@ struct Viewer {
         Console.write(FrameEncoder.encode(grid, previous: previous, colors: traits.colors))
         previous = grid
         return StripRenderer.isBusy(state)
+    }
+}
+
+// 終わり方・設定画面・接続シーケンスの終わり・記事の出し方（同じファイルの extension なので private の状態に触れる）
+extension Viewer {
+    private mutating func stopAll() {
+        saveArchive(force: true)
+        fetcher.stop()
+        translator.stop()
+        session?.stop()
+    }
+
+    /// 設定画面を開く（記事の時計は止める）。
+    private mutating func openSettings() {
+        session = SettingsSession(settings: settings, file: settingsFile, environment: environment)
+        if !paused {
+            showtime.pause()
+        }
+        previous = nil
+    }
+
+    /// 設定画面のキーを渡し、保存できた設定を反映し、閉じたら帯に戻る（FR-25: 反映は次の記事から）。
+    private mutating func handleSettings(_ keys: [KeyPress]) {
+        guard var current = session, !keys.isEmpty else {
+            return
+        }
+        let outcome = current.press(keys)
+        session = current
+        switch outcome {
+        case .stay:
+            return
+        case .apply(let saved):
+            adopt(saved)
+        case .applyAndClose(let saved):
+            adopt(saved)
+            closeSettings()
+        case .close:
+            closeSettings()
+        }
+    }
+
+    private mutating func closeSettings() {
+        session = nil
+        if !paused {
+            showtime.resume()
+        }
+        previous = nil
+    }
+
+    /// 保存した設定を反映する。表示の言語が変わったら訳し直し、有効なフィードが変わったら取り直す。
+    private mutating func adopt(_ new: Settings) {
+        let old = settings
+        settings = new
+        if new.display.language != old.display.language {
+            translator.retarget(new.display.language, keeping: rotation.articles)
+        }
+        let feeds = new.feeds.filter(\.enabled)
+        guard feeds != old.feeds.filter(\.enabled) else {
+            return
+        }
+        guard !demo else {
+            message = "デモの間はフィードの変更を反映しない（保存はした）"
+            return
+        }
+        fetcher.stop()
+        fetcher = Fetcher(feeds: feeds, environment: environment, now: LocalTime.timestamp())
+        rotation = .empty(feeds: feeds.count)
+        message = "\(LocalTime.now().time)  フィードを替えた。取り直している"
+    }
+
+    private var uptime: Int {
+        Showtime.milliseconds(clock.now - launched)
+    }
+
+    /// 最初の記事が届き、ブートログを打ち終えたら、枠をなぞって最初の記事を見せ始める。
+    private mutating func finishBootIfReady() {
+        guard booting, rotation.current != nil, uptime >= max(Self.shortestBoot, restoredBootEnd ?? bootLog.typedBy)
+        else {
+            return
+        }
+        booting = false
+        present()
+        showtime.begin(leaving: nil, first: true)
+    }
+
+    /// いまの記事を、いまある訳で固定して見せる（翻訳しない設定なら原文のまま）。
+    private mutating func present() {
+        guard settings.display.translate else {
+            shown = rotation.current
+            shownUntranslated = false
+            return
+        }
+        shown = rotation.current.map(translator.show)
+        shownUntranslated = rotation.current.map(translator.isUntranslated) ?? false
+    }
+
+    /// `t`: 翻訳のオン／オフを切り替えて保存し、いまの記事もすぐ出し直す（ADR 0013）。
+    private mutating func toggleTranslation() {
+        let new = Settings(feeds: settings.feeds, display: settings.display.togglingTranslation)
+        if let problem = settingsFile.save(new) {
+            message = "\(LocalTime.now().time)  \(problem)"
+            return
+        }
+        settings = new
+        if !booting {
+            present()
+        }
+        message = "\(LocalTime.now().time)  翻訳を" + (new.display.translate ? "オンにした" : "オフにした（原文で流す）") + "  t で切り替え"
     }
 }

@@ -18,7 +18,7 @@ It is the sibling of [NeNe Gambit](https://github.com/hideyukiMORI/nene-gambit) 
 A new story has just arrived on NEON TIMES, and before it cuts the line the strip sounds the intercept alarm: hazard stripes and a crawling `INTERCEPT ■ 緊急傍受 ■ PRIORITY: ALPHA` banner.
 Every feed and story in these screenshots is made up by `--demo`; real articles are never stored in this repository.</sub>
 
-> **Beta.** v0.3.0 adds the settings screen, a translation switch and installing from PowerShell. Saved articles are still to come.
+> **Beta.** v0.3.0 adds the settings screen, a translation switch and installing from PowerShell. On `main`: saved articles (it starts with what it had last time).
 
 ---
 
@@ -106,7 +106,7 @@ curl -fsSL https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install
 - Needs Python 3 and pip (on Ubuntu: `sudo apt install python3-pip`). Takes about 470 MB: the Python packages in `~/.local/share/nene-wire/argos` and the model in `~/.local/share/argos-translate`
 - Argos normally pulls in PyTorch (several hundred MB to a few GB). This installer leaves it out and splits sentences with MiniSBD instead, which is one of Argos's own settings
 - Without it, nothing breaks: stories run in their original language, English ones are marked `未翻訳` (untranslated), and the status line says `TRANS 未導入` (not installed)
-- Translations are kept and not redone while it runs (they are not saved across restarts yet). About 100 stories take roughly 20 seconds, in the background
+- Translations are kept and never redone, across restarts too. About 100 stories take roughly 20 seconds, in the background
 
 ### The effects
 
@@ -142,6 +142,7 @@ Wide characters take two columns. Japanese and English wrap by cell width withou
 - One feed at a time, through `curl`. Each feed waits **15 minutes** after a successful fetch, and after a failure it backs off 2, 4, 8… minutes, up to 60
 - Conditional requests: it sends back the `ETag` / `Last-Modified` it got last time, so an unchanged feed costs a `304` and nothing more
 - It keeps only the latest fetch of each feed, so memory doesn't grow overnight (a 95-minute run stayed at about 12.5 MB)
+- Stories and translations are saved to `~/.local/state/nene-wire/archive.txt` (at most every 30 seconds, and when you quit). The next start begins with them at once, asks the feeds only for what changed, and never translates the same story twice. Stories older than 7 days are dropped
 - When a cycle ends, it is rebuilt from the latest stories, taking turns between feeds and going newest first. New stories don't wait for the cycle: they cut in next, up to 20 queued
 
 ---

@@ -11,6 +11,13 @@ public struct Validators: Sendable, Hashable {
     /// 手がかりが無い（初回・失敗の後）。
     public static let none = Validators(entityTag: nil, lastModified: nil)
 
+    /// 保存した手がかりを読み戻す（空の値は無いものとする）。
+    public static func make(entityTag: String?, lastModified: String?) -> Validators {
+        Validators(
+            entityTag: entityTag.flatMap { $0.isEmpty ? nil : $0 },
+            lastModified: lastModified.flatMap { $0.isEmpty ? nil : $0 })
+    }
+
     /// 応答のヘッダから拾う（名前は小文字にそろっている）。空の値は無いものとする。
     public static func from(_ headers: [HTTPHeader]) -> Validators {
         func value(_ name: String) -> String? {
