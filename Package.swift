@@ -14,18 +14,38 @@ let package = Package(
             swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
         ),
         .target(
+            name: "NeNeWireRender",
+            dependencies: ["NeNeWireCore"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .target(
+            name: "NeNeWireTerminal",
+            dependencies: ["NeNeWireRender"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .target(
             name: "NeNeWireHost",
             dependencies: ["NeNeWireCore"],
             swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
         ),
         .executableTarget(
             name: "nene-wire",
-            dependencies: ["NeNeWireCore", "NeNeWireHost"],
+            dependencies: ["NeNeWireCore", "NeNeWireRender", "NeNeWireTerminal", "NeNeWireHost"],
             swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
         ),
         .testTarget(
             name: "NeNeWireCoreTests",
             dependencies: ["NeNeWireCore"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .testTarget(
+            name: "NeNeWireRenderTests",
+            dependencies: ["NeNeWireCore", "NeNeWireRender"],
+            swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
+        ),
+        .testTarget(
+            name: "NeNeWireTerminalTests",
+            dependencies: ["NeNeWireRender", "NeNeWireTerminal"],
             swiftSettings: [.treatAllWarnings(as: .error), .enableUpcomingFeature("ExistentialAny")]
         ),
         .testTarget(

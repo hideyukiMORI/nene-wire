@@ -1,13 +1,15 @@
-// 合成ルート（ARC-006）。環境・起動オプションを読み（ARC-007）、Core と Host を組み立てる。
-// いまは Phase 3 の手順 1: `--list` で最初のフィードを取り、見出しと出だしを素のまま一覧で出す（ADR 0005）。
+// 合成ルート（ARC-006）。時計・環境・起動オプションを読み（ARC-007）、Core・Render・Terminal・Host を組み立てる。
+// 起動するとフィードを取り（手順 2 では起動時に 1 回だけ・ADR 0006）、端末の幅いっぱい・高さ 15 行の帯に記事を一件ずつ出す。
+// `--list` は取った記事を素のまま一覧で出す（ADR 0005）。
 
 import Glibc
 import NeNeWireCore
+import NeNeWireRender
+import NeNeWireTerminal
 
 let arguments = Array(CommandLine.arguments.dropFirst())
-guard arguments == ["--list"] else {
-    let line = "nene-wire: いまは --list だけ（フィードを取って一覧を出す）。表示画面は次の段で入る\n"
-    _ = write(STDERR_FILENO, line, line.utf8.count)
+guard arguments.isEmpty || arguments == ["--list"] else {
+    Console.reportFailure("nene-wire: 使い方は `nene-wire`（表示）か `nene-wire --list`（一覧）")
     exit(2)
 }
 
@@ -17,8 +19,65 @@ let passedNames: [String] = [
     "SSL_CERT_FILE", "SSL_CERT_DIR", "CURL_CA_BUNDLE",
 ]
 let environment = passedNames.compactMap { name in getenv(name).map { "\(name)=\(String(cString: $0))" } }
+let feeds = Feed.defaults.filter(\.enabled)
 
-for line in Listing.lines(for: Feed.defaults, environment: environment) {
-    print(line)
+if arguments == ["--list"] {
+    for line in Listing.lines(for: feeds, environment: environment) {
+        print(line)
+    }
+    exit(0)
 }
+
+switch Console.open() {
+case .opened:
+    break
+case .notATerminal:
+    Console.reportFailure("nene-wire: 端末の中で起動してください（標準入力と標準出力が端末でない）")
+    exit(1)
+case .failed:
+    Console.reportFailure("nene-wire: 端末の設定を読み書きできない")
+    exit(1)
+}
+
+/// 24 ビットの色を使うか。`COLORTERM` が truecolor / 24bit を名乗るか、Windows Terminal（`WT_SESSION` がある）なら使い、
+/// それ以外は 256 色へ落とす（NeNe Reversi の main.swift と同じ判定）。
+let colors: ColorMode = {
+    if getenv("WT_SESSION") != nil {
+        return .trueColor
+    }
+    guard let raw = getenv("COLORTERM") else {
+        return .palette256
+    }
+    return ["truecolor", "24bit"].contains(String(cString: raw)) ? .trueColor : .palette256
+}()
+
+/// 罫線の文字が 1 桁で描かれる端末だけ罫線の枠を使い、それ以外（2 桁・答えが無い）は ASCII の枠へ落とす（ADR 0006）。
+let traits = TerminalTraits(frame: Console.columnsAdvanced(by: "─") == 1 ? .boxDrawing : .ascii, colors: colors)
+
+// 取得の間はふつうの行として進み具合を出す。帯の上にシェルの履歴と一緒に残る
+var groups: [[Article]] = []
+for feed in feeds {
+    Console.write(Array("  取得中  \(feed.name) …".utf8))
+    let line: String
+    switch FeedFetch.outcome(feed, environment: environment) {
+    case .fetched(let document, _):
+        let articles = document.items.compactMap { Article.from($0, feed: feed) }
+        groups.append(articles)
+        line = " \(articles.count) 件"
+    case .notModified:
+        line = " 更新なし"
+    case .failed(let failure):
+        line = " " + FeedFetch.describe(failure)
+    }
+    Console.writeLine(line)
+    if Console.takeSignals().interrupted {
+        Console.close()
+        exit(130)
+    }
+}
+
+var viewer = Viewer(
+    articles: Lineup.interleaved(groups), feedsFetched: groups.count, feedsTotal: feeds.count, traits: traits)
+viewer.run()
+Console.close()
 exit(0)

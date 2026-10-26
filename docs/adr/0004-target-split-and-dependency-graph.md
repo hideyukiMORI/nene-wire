@@ -1,6 +1,6 @@
 # ADR 0004 — target は Core・Render・Terminal・Host・合成ルートの 5 つに分け、外の世界に触れるのは Terminal と Host だけにする
 
-- 状態: 受理
+- 状態: 受理（Terminal の標準モジュール `Synchronization` の項は ADR 0006 で実行した）
 - 日付: 2026-10-26
 - Issue: #1
 - 影響する規則: ARC-002 / ARC-003 / ARC-006 / ARC-007 / ARC-011 / CNF-010 / CNF-011 / CNF-023
