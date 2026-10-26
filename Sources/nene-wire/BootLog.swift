@@ -39,6 +39,11 @@ struct BootLog {
         }
     }
 
+    /// 保存した記事を読み込んだ。
+    mutating func restored(_ count: Int, at time: Int) {
+        lines.append(LogLine(text: "> 保存した記事を読み込み  …  \(count) 件  [ OK ]", at: max(time, (lines.last?.at ?? 0) + 250)))
+    }
+
     /// すべてのフィードを一度取り終えたら、締めの 2 行を足す。
     mutating func finish(at time: Int) {
         guard !finished else {

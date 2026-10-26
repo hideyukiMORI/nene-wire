@@ -23,6 +23,16 @@ public struct Article: Sendable, Hashable {
         self.originalHeadline = originalHeadline
     }
 
+    /// 保存した記事を読み戻す（ADR 0014）。見出しか識別子が空なら nil。
+    public static func restored(_ fields: ArticleFields) -> Article? {
+        guard !fields.headline.isEmpty, !fields.identifier.isEmpty else {
+            return nil
+        }
+        return Article(
+            feedName: fields.feedName, headline: fields.headline, lede: fields.lede, link: fields.link,
+            published: fields.published, identifier: fields.identifier)
+    }
+
     /// 見出しと出だしを訳したもの（原文の見出しを残す）。
     public func translated(_ translation: Translation) -> Article {
         Article(

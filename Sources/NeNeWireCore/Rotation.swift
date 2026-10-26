@@ -44,6 +44,11 @@ public struct Rotation: Sendable, Hashable {
         fresh.count
     }
 
+    /// `feed` 番目のフィードの、最後に取れた記事（保存するため）。
+    public func articles(feed: Int) -> [Article] {
+        pools.indices.contains(feed) ? pools[feed] : []
+    }
+
     /// いま持っている記事（フィードの順・割り込み待ちの速報を含む）。
     public var articles: [Article] {
         pools.flatMap { $0 } + fresh
@@ -77,6 +82,18 @@ public struct Rotation: Sendable, Hashable {
             rebuild()
         } else if firstTime {
             mergeIntoRemainder()
+        }
+    }
+
+    /// 保存した記事を読み戻す（ADR 0014）。そのフィードの最初の取得は、いつもどおり速報にせず一周の残りに混ぜる
+    /// （前に流していたときから増えた記事を、まとめて速報にしない）。
+    public mutating func restore(feed: Int, with articles: [Article]) {
+        guard pools.indices.contains(feed), !articles.isEmpty else {
+            return
+        }
+        pools[feed] = articles
+        if showing == nil {
+            rebuild()
         }
     }
 

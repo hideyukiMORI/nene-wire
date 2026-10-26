@@ -44,6 +44,9 @@ PowerShell から（WSL が入っていること）
      curl -fsSL https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install-translator.sh | bash
 入れていなければ原文のまま流し、英語の記事に「未翻訳」と出る。
 
+記事と訳は ~/.local/state/nene-wire/archive.txt に保存する。次に起動するとそれですぐ流れ始め、同じ記事を二度訳さない。
+7 日より古い記事は捨てる。
+
 端末は 72x15 以上。
 
 ライセンス: MIT（同梱の LICENSE）

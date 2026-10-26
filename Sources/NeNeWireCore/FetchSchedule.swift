@@ -18,6 +18,13 @@ public struct FetchSchedule: Sendable, Hashable {
         FetchSchedule(statuses: Array(repeating: .pending(at: now), count: count))
     }
 
+    /// 保存した記事の件数と手がかりから再開する（どれもすぐに、条件付きで取りに行ってよい・ADR 0014）。
+    public static func resuming(_ saved: [(articles: Int, validators: Validators)], at now: Timestamp) -> FetchSchedule
+    {
+        FetchSchedule(
+            statuses: saved.map { FeedStatus.resumed(articles: $0.articles, validators: $0.validators, at: now) })
+    }
+
     /// `failures` 回続けて失敗したあとに空ける秒数（2 分から倍々・最大 60 分）。
     public static func backoff(failures: Int) -> Int64 {
         let minutes = Int64(1) << Int64(min(max(failures, 1), 6))

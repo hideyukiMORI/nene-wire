@@ -25,6 +25,17 @@ public struct TranslationQueue: Sendable, Hashable {
         waiting.count
     }
 
+    /// 訳の控えのすべて（保存するため・ADR 0014）。
+    public var translations: [String: Translation] {
+        done
+    }
+
+    /// 保存した訳の控えを読み戻す（待っている記事からは外す）。
+    public mutating func remember(_ saved: [String: Translation]) {
+        done.merge(saved) { current, _ in current }
+        waiting.removeAll { done[$0.identifier] != nil }
+    }
+
     /// 訳してあればその訳。
     public func translation(for identifier: String) -> Translation? {
         done[identifier]

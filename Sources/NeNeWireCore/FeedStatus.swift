@@ -20,6 +20,12 @@ public struct FeedStatus: Sendable, Hashable {
         FeedStatus(health: .pending, nextDue: now, failures: 0, validators: .none)
     }
 
+    /// 保存した記事と手がかりから再開するフィード（すぐに条件付きで取りに行ってよい・ADR 0014）。
+    static func resumed(articles count: Int, validators: Validators, at now: Timestamp) -> FeedStatus {
+        FeedStatus(
+            health: count > 0 ? .unchanged(count: count) : .pending, nextDue: now, failures: 0, validators: validators)
+    }
+
     /// 取得の結果を記録した次の状態。
     static func after(
         _ outcome: FetchOutcome, articles count: Int, previous: FeedStatus, now: Timestamp

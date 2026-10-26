@@ -29,3 +29,4 @@ ADR は「なぜそう決めたか」「何を却下したか」を書く。
 | [0011](0011-settings-screen.md) | 設定画面は帯と同じ 15 行に描き、編集の規則は Core の状態機械、保存は版付きの文字列にする | 受理 |
 | [0012](0012-powershell-installer.md) | PowerShell からは install.ps1 で WSL の中に入れ、Windows 側には wsl.exe で起動する nene-wire.cmd だけを置く | 受理 |
 | [0013](0013-translation-toggle.md) | 翻訳のオン／オフは設定の 1 項目にし、設定画面と帯の表示中の t の両方から切り替える | 受理 |
+| [0014](0014-article-archive.md) | 記事と訳は版付きの素の文字列に保存し、起動したらそれで流し始めて、裏で条件付きで取り直す | 受理 |
