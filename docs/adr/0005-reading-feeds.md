@@ -22,7 +22,7 @@
 ## 決定
 
 1. **HTTP は外部の `curl` を子プロセスで呼ぶ**（Host の `FetchCommand`・`ChildProcess`）。引数は `--silent --show-error --location --max-redirs 5 --max-time 20 --compressed --proto =http,https --proto-redir =http,https --user-agent <名乗り> --dump-header -`。
-   名乗りは `nene-wire/0.1 (+https://github.com/hideyukiMORI/nene-wire)`（提供元が誰の取得か分かるように）。標準出力にヘッダの列とボディが続けて出る
+   名乗りは `nene-wire (+https://github.com/hideyukiMORI/nene-wire)`（提供元が誰の取得か分かるように。当初は `nene-wire/0.1` と版を入れていたが、版の入力を 1 か所にするため v0.2.0 で外した・ADR 0008）。標準出力にヘッダの列とボディが続けて出る
 2. **curl の結果の解釈は Core の `FetchInterpreter` の 1 か所**: 終了コードが 0 でなければ curl の失敗（標準エラーの 1 行目を理由にする）、
    転送を含むヘッダの塊の**最後**が最終の応答（`HTTPResponse`）、304 は更新なし、200 以外は状態の失敗、200 ならボディをフィードとして読む
 3. **XML は Core の自前の字句解析**（`MarkupScanner`）で、開きタグ・閉じタグ・文字列の出来事にする。処理命令・コメント・文書型宣言は読み飛ばし、CDATA の中身はそのまま。
