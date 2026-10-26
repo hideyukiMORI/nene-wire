@@ -1,6 +1,6 @@
 {
   "measured_on": "2026-10-26",
-  "head": "653793e",
+  "head": "2bda6d6",
   "note": "verdict=pass は「意図した規則で落ちた」（対照は exit 0）。作業木の未コミットの変更も複製に含む。",
   "results": [
     {
@@ -16,12 +16,12 @@
       ],
       "missing": [],
       "tail": [
-        "✔ Test run with 47 tests in 8 suites passed after 0.005 seconds.",
+        "✔ Test run with 47 tests in 8 suites passed after 0.004 seconds.",
         "python3 eng/validate-commit-message.py --range \"origin/main..HEAD\"",
         "commits: 0 件・違反 0 件",
         "make check: 緑",
         "----------------------------------------------------------------------",
-        "Ran 105 tests in 0.374s",
+        "Ran 105 tests in 0.388s",
         "",
         "OK"
       ]
@@ -39,12 +39,12 @@
       ],
       "missing": [],
       "tail": [
-        "✔ Test run with 47 tests in 8 suites passed after 0.005 seconds.",
+        "✔ Test run with 47 tests in 8 suites passed after 0.004 seconds.",
         "python3 eng/validate-commit-message.py --range \"origin/main..HEAD\"",
         "commits: 0 件・違反 0 件",
         "make check: 緑",
         "----------------------------------------------------------------------",
-        "Ran 105 tests in 0.370s",
+        "Ran 105 tests in 0.372s",
         "",
         "OK"
       ]
@@ -65,12 +65,12 @@
       ],
       "missing": [],
       "tail": [
+        "1 | import NeNeWireRender",
         "  |        `- error: no such module 'NeNeWireRender'",
         "2 | ",
         "3 | /// 証明用。",
         "Failed frontend command:",
-        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -emit-module -experimental-skip-non-inlinable-function-bodies-without-types Sources/NeNeWireCore/Archive.swift Sources/NeNeWireCore/ArchiveCodec.swift Sources/NeNeWireCore/ArchiveOutcome.swift Sources/NeNeWireCore/ArchiveReader.swift Sources/NeNeWireCore/ArchiveRejection.swift Sources/NeNeWireCore/Article.swift Sources/NeNeWireCore/ArticleFields.swift Sources/NeNeWireCore/CharacterReferences.swift Sources/NeNeWireCore/DateText.swift Sources/NeNeWireCore/DisplayOption.swift Sources/NeNeWireCore/DisplaySettings.swift Sources/NeNeWireCore/DisplaySwitches.swift Sources/NeNeWireCore/EditorCommand.swift Sources/NeNeWireCore/EditorKey.swift Sources/NeNeWireCore/EditorMode.swift Sources/NeNeWireCore/EditorPane.swift Sources/NeNeWireCore/Feed.swift Sources/NeNeWireCore/FeedDocument.swift Sources/NeNeWireCore/FeedForm.swift Sources/NeNeWireCore/FeedFormat.swift Sources/NeNeWireCore/FeedHealth.swift Sources/NeNeWireCore/FeedItem.swift Sources/NeNeWireCore/FeedParseOutcome.swift Sources/NeNeWireCore/FeedParser.swift Sources/NeNeWireCore/FeedRejection.swift Sources/NeNeWireCore/FeedSnapshot.swift Sources/NeNeWireCore/FeedStatus.swift Sources/NeNeWireCore/FeedURL.swift Sources/NeNeWireCore/FetchFailure.swift Sources/NeNeWireCore/FetchInterpreter.swift Sources/NeNeWireCore/FetchOutcome.swift Sources/NeNeWireCore/FetchSchedule.swift Sources/NeNeWireCore/FormField.swift Sources/NeNeWireCore/HTTPHeader.swift Sources/NeNeWireCore/HTTPRejection.swift Sources/NeNeWireCore/HTTPResponse.swift Sources/NeNeWireCore/HTTPResponseOutcome.swift Sources/NeNeWireCore/LanguageGuess.swift Sources/NeNeWireCore/Lede.swift Sources/NeNeWireCore/Lineup.swift Sources/NeNeWireCore/MarkupAttribute.swift Sources/NeNeWireCore/MarkupEvent.swift Sources/NeNeWireCore/MarkupScanner.swift Sources/NeNeWireCore/PlainText.swift Sources/NeNeWireCore/Probe.swift Sources/NeNeWireCore/Rotation.swift Sources/NeNeWireCore/Settings.swift Sources/NeNeWireCore/SettingsCodec.swift Sources/NeNeWireCore/SettingsEditor.swift Sources/NeNeWireCore/SettingsOutcome.swift Sources/NeNeWireCore/SettingsRejection.swift Sources/NeNeWireCore/Square.swift Sources/NeNeWireCore/String+Spaces.swift Sources/NeNeWireCore/Timestamp.swift Sources/NeNeWireCore/Translation.swift Sources/NeNeWireCore/TranslationJob.swift Sources/NeNeWireCore/TranslationOutcome.swift Sources/NeNeWireCore/TranslationQueue.swift Sources/NeNeWireCore/TranslationReply.swift Sources/NeNeWireCore/TranslatorProblem.swift Sources/NeNeWireCore/Validators.swift -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/wire-proof-P01-e5lvthgp -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/wire-proof-P01-e5lvthgp -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeWireCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -emit-module-doc-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Modules/NeNeWireCore.swiftdoc -emit-module-source-info-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Modules/NeNeWireCore.swiftsourceinfo -emit-objc-header-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore-Swift.h -serialize-diagnostics-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore-primary-emit-module.dia -emit-dependencies-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore-primary-emit-module.d -parse-as-library -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Modules/NeNeWireCore.swiftmodule",
-        "[61 / 93] NeNeWireCore",
+        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -emit-module -experimental-skip-non-inlinable-function-bodies-without-types Sources/NeNeWireCore/Archive.swift Sources/NeNeWireCore/ArchiveCodec.swift Sources/NeNeWireCore/ArchiveOutcome.swift Sources/NeNeWireCore/ArchiveReader.swift Sources/NeNeWireCore/ArchiveRejection.swift Sources/NeNeWireCore/Article.swift Sources/NeNeWireCore/ArticleFields.swift Sources/NeNeWireCore/CharacterReferences.swift Sources/NeNeWireCore/DateText.swift Sources/NeNeWireCore/DisplayOption.swift Sources/NeNeWireCore/DisplaySettings.swift Sources/NeNeWireCore/DisplaySwitches.swift Sources/NeNeWireCore/EditorCommand.swift Sources/NeNeWireCore/EditorKey.swift Sources/NeNeWireCore/EditorMode.swift Sources/NeNeWireCore/EditorPane.swift Sources/NeNeWireCore/Feed.swift Sources/NeNeWireCore/FeedDocument.swift Sources/NeNeWireCore/FeedForm.swift Sources/NeNeWireCore/FeedFormat.swift Sources/NeNeWireCore/FeedHealth.swift Sources/NeNeWireCore/FeedItem.swift Sources/NeNeWireCore/FeedParseOutcome.swift Sources/NeNeWireCore/FeedParser.swift Sources/NeNeWireCore/FeedRejection.swift Sources/NeNeWireCore/FeedSnapshot.swift Sources/NeNeWireCore/FeedStatus.swift Sources/NeNeWireCore/FeedURL.swift Sources/NeNeWireCore/FetchFailure.swift Sources/NeNeWireCore/FetchInterpreter.swift Sources/NeNeWireCore/FetchOutcome.swift Sources/NeNeWireCore/FetchSchedule.swift Sources/NeNeWireCore/FormField.swift Sources/NeNeWireCore/HTTPHeader.swift Sources/NeNeWireCore/HTTPRejection.swift Sources/NeNeWireCore/HTTPResponse.swift Sources/NeNeWireCore/HTTPResponseOutcome.swift Sources/NeNeWireCore/LanguageGuess.swift Sources/NeNeWireCore/Lede.swift Sources/NeNeWireCore/Lineup.swift Sources/NeNeWireCore/MarkupAttribute.swift Sources/NeNeWireCore/MarkupEvent.swift Sources/NeNeWireCore/MarkupScanner.swift Sources/NeNeWireCore/PlainText.swift Sources/NeNeWireCore/Probe.swift Sources/NeNeWireCore/Rotation.swift Sources/NeNeWireCore/Settings.swift Sources/NeNeWireCore/SettingsCodec.swift Sources/NeNeWireCore/SettingsEditor.swift Sources/NeNeWireCore/SettingsOutcome.swift Sources/NeNeWireCore/SettingsRejection.swift Sources/NeNeWireCore/Square.swift Sources/NeNeWireCore/String+Spaces.swift Sources/NeNeWireCore/Timestamp.swift Sources/NeNeWireCore/Translation.swift Sources/NeNeWireCore/TranslationJob.swift Sources/NeNeWireCore/TranslationOutcome.swift Sources/NeNeWireCore/TranslationQueue.swift Sources/NeNeWireCore/TranslationReply.swift Sources/NeNeWireCore/TranslatorProblem.swift Sources/NeNeWireCore/Validators.swift -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/wire-proof-P01-ngyera6h -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/wire-proof-P01-ngyera6h -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeWireCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -emit-module-doc-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Modules/NeNeWireCore.swiftdoc -emit-module-source-info-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Modules/NeNeWireCore.swiftsourceinfo -emit-objc-header-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore-Swift.h -serialize-diagnostics-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore-primary-emit-module.dia -emit-dependencies-path .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore-primary-emit-module.d -parse-as-library -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Modules/NeNeWireCore.swiftmodule",
         "error: Build failed",
         "make: *** [Makefile:19: build] Error 1"
       ]
@@ -93,7 +93,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.05 secs)",
+        "Build complete! (8.06 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -121,7 +121,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (8.97 secs)",
+        "Build complete! (9.22 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -147,7 +147,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.68 secs)",
+        "Build complete! (9.03 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -173,7 +173,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.23 secs)",
+        "Build complete! (7.78 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -203,7 +203,7 @@
         "11 |     case .white:",
         "12 |         return 1",
         "Failed frontend command:",
-        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -c Sources/NeNeWireCore/Archive.swift Sources/NeNeWireCore/ArchiveCodec.swift Sources/NeNeWireCore/ArchiveOutcome.swift Sources/NeNeWireCore/ArchiveReader.swift Sources/NeNeWireCore/ArchiveRejection.swift Sources/NeNeWireCore/Article.swift Sources/NeNeWireCore/ArticleFields.swift Sources/NeNeWireCore/CharacterReferences.swift Sources/NeNeWireCore/DateText.swift Sources/NeNeWireCore/DisplayOption.swift Sources/NeNeWireCore/DisplaySettings.swift Sources/NeNeWireCore/DisplaySwitches.swift Sources/NeNeWireCore/EditorCommand.swift Sources/NeNeWireCore/EditorKey.swift Sources/NeNeWireCore/EditorMode.swift Sources/NeNeWireCore/EditorPane.swift Sources/NeNeWireCore/Feed.swift Sources/NeNeWireCore/FeedDocument.swift Sources/NeNeWireCore/FeedForm.swift Sources/NeNeWireCore/FeedFormat.swift Sources/NeNeWireCore/FeedHealth.swift Sources/NeNeWireCore/FeedItem.swift Sources/NeNeWireCore/FeedParseOutcome.swift Sources/NeNeWireCore/FeedParser.swift Sources/NeNeWireCore/FeedRejection.swift Sources/NeNeWireCore/FeedSnapshot.swift Sources/NeNeWireCore/FeedStatus.swift Sources/NeNeWireCore/FeedURL.swift Sources/NeNeWireCore/FetchFailure.swift Sources/NeNeWireCore/FetchInterpreter.swift Sources/NeNeWireCore/FetchOutcome.swift Sources/NeNeWireCore/FetchSchedule.swift Sources/NeNeWireCore/FormField.swift Sources/NeNeWireCore/HTTPHeader.swift Sources/NeNeWireCore/HTTPRejection.swift Sources/NeNeWireCore/HTTPResponse.swift Sources/NeNeWireCore/HTTPResponseOutcome.swift Sources/NeNeWireCore/LanguageGuess.swift Sources/NeNeWireCore/Lede.swift Sources/NeNeWireCore/Lineup.swift Sources/NeNeWireCore/MarkupAttribute.swift Sources/NeNeWireCore/MarkupEvent.swift Sources/NeNeWireCore/MarkupScanner.swift Sources/NeNeWireCore/PlainText.swift Sources/NeNeWireCore/Rotation.swift Sources/NeNeWireCore/Settings.swift Sources/NeNeWireCore/SettingsCodec.swift Sources/NeNeWireCore/SettingsEditor.swift Sources/NeNeWireCore/SettingsOutcome.swift -primary-file Sources/NeNeWireCore/SettingsRejection.swift -primary-file Sources/NeNeWireCore/Side.swift -primary-file Sources/NeNeWireCore/Square.swift Sources/NeNeWireCore/String+Spaces.swift Sources/NeNeWireCore/Timestamp.swift Sources/NeNeWireCore/Translation.swift Sources/NeNeWireCore/TranslationJob.swift Sources/NeNeWireCore/TranslationOutcome.swift Sources/NeNeWireCore/TranslationQueue.swift Sources/NeNeWireCore/TranslationReply.swift Sources/NeNeWireCore/TranslatorProblem.swift Sources/NeNeWireCore/Validators.swift -supplementary-output-file-map .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/supplementaryOutputs-17 -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/wire-proof-P06-86bo3o2e -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/wire-proof-P06-86bo3o2e -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeWireCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -parse-as-library -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/SettingsRejection.o -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Side.o -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Square.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/SettingsRejection.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Side.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Square.o -index-store-path .build/out -index-system-modules",
+        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -c Sources/NeNeWireCore/Archive.swift Sources/NeNeWireCore/ArchiveCodec.swift Sources/NeNeWireCore/ArchiveOutcome.swift Sources/NeNeWireCore/ArchiveReader.swift Sources/NeNeWireCore/ArchiveRejection.swift Sources/NeNeWireCore/Article.swift Sources/NeNeWireCore/ArticleFields.swift Sources/NeNeWireCore/CharacterReferences.swift Sources/NeNeWireCore/DateText.swift Sources/NeNeWireCore/DisplayOption.swift Sources/NeNeWireCore/DisplaySettings.swift Sources/NeNeWireCore/DisplaySwitches.swift Sources/NeNeWireCore/EditorCommand.swift Sources/NeNeWireCore/EditorKey.swift Sources/NeNeWireCore/EditorMode.swift Sources/NeNeWireCore/EditorPane.swift Sources/NeNeWireCore/Feed.swift Sources/NeNeWireCore/FeedDocument.swift Sources/NeNeWireCore/FeedForm.swift Sources/NeNeWireCore/FeedFormat.swift Sources/NeNeWireCore/FeedHealth.swift Sources/NeNeWireCore/FeedItem.swift Sources/NeNeWireCore/FeedParseOutcome.swift Sources/NeNeWireCore/FeedParser.swift Sources/NeNeWireCore/FeedRejection.swift Sources/NeNeWireCore/FeedSnapshot.swift Sources/NeNeWireCore/FeedStatus.swift Sources/NeNeWireCore/FeedURL.swift Sources/NeNeWireCore/FetchFailure.swift Sources/NeNeWireCore/FetchInterpreter.swift Sources/NeNeWireCore/FetchOutcome.swift Sources/NeNeWireCore/FetchSchedule.swift Sources/NeNeWireCore/FormField.swift Sources/NeNeWireCore/HTTPHeader.swift Sources/NeNeWireCore/HTTPRejection.swift Sources/NeNeWireCore/HTTPResponse.swift Sources/NeNeWireCore/HTTPResponseOutcome.swift Sources/NeNeWireCore/LanguageGuess.swift Sources/NeNeWireCore/Lede.swift Sources/NeNeWireCore/Lineup.swift Sources/NeNeWireCore/MarkupAttribute.swift Sources/NeNeWireCore/MarkupEvent.swift Sources/NeNeWireCore/MarkupScanner.swift Sources/NeNeWireCore/PlainText.swift Sources/NeNeWireCore/Rotation.swift Sources/NeNeWireCore/Settings.swift Sources/NeNeWireCore/SettingsCodec.swift Sources/NeNeWireCore/SettingsEditor.swift Sources/NeNeWireCore/SettingsOutcome.swift -primary-file Sources/NeNeWireCore/SettingsRejection.swift -primary-file Sources/NeNeWireCore/Side.swift -primary-file Sources/NeNeWireCore/Square.swift Sources/NeNeWireCore/String+Spaces.swift Sources/NeNeWireCore/Timestamp.swift Sources/NeNeWireCore/Translation.swift Sources/NeNeWireCore/TranslationJob.swift Sources/NeNeWireCore/TranslationOutcome.swift Sources/NeNeWireCore/TranslationQueue.swift Sources/NeNeWireCore/TranslationReply.swift Sources/NeNeWireCore/TranslatorProblem.swift Sources/NeNeWireCore/Validators.swift -supplementary-output-file-map .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/supplementaryOutputs-17 -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/wire-proof-P06-1ec8q4nu -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/wire-proof-P06-1ec8q4nu -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeWireCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -parse-as-library -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/SettingsRejection.o -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Side.o -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Square.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/SettingsRejection.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Side.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Square.o -index-store-path .build/out -index-system-modules",
         "error: Build failed",
         "make: *** [Makefile:19: build] Error 1"
       ]
@@ -225,7 +225,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (8.07 secs)",
+        "Build complete! (8.92 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -250,7 +250,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.50 secs)",
+        "Build complete! (8.74 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -276,7 +276,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (8.13 secs)",
+        "Build complete! (8.67 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -300,10 +300,10 @@
       ],
       "missing": [],
       "tail": [
-        "[156 / 163] nene-wire-product",
+        "[159 / 164] NeNeWireHost",
         "[162 / 165] NeNeWireTerminal",
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.32 secs)",
+        "Build complete! (8.25 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "Sources/nene-wire/main.swift:10:13: error: Force Unwrapping Violation: Force unwrapping should be avoided (force_unwrapping)",
@@ -327,7 +327,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.11 secs)",
+        "Build complete! (7.74 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -353,7 +353,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.03 secs)",
+        "Build complete! (7.71 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -377,10 +377,10 @@
       ],
       "missing": [],
       "tail": [
-        "[159 / 164] NeNeWireTerminal",
+        "[156 / 163] NeNeWireHost",
         "[162 / 165] NeNeWireTerminal",
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.42 secs)",
+        "Build complete! (7.65 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "Sources/NeNeWireCore/Probe.swift:4:29: error: Large Tuple Violation: Tuples should have at most 2 members (large_tuple)",
@@ -404,7 +404,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (6.94 secs)",
+        "Build complete! (7.85 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -430,7 +430,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (6.97 secs)",
+        "Build complete! (7.73 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -456,7 +456,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.38 secs)",
+        "Build complete! (9.39 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -480,10 +480,10 @@
       ],
       "missing": [],
       "tail": [
-        "[159 / 165] nene-wire-product",
+        "[162 / 165] nene-wire-product",
         "[162 / 165] NeNeWireTerminal",
         "[166 / 166] nene-wire-product",
-        "Build complete! (6.75 secs)",
+        "Build complete! (7.95 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "Sources/NeNeWireCore/Probe.swift:4:12: error: Function Parameter Count Violation: Function should have 4 parameters or less: it currently has 5 (function_parameter_count)",
@@ -508,7 +508,7 @@
         "[160 / 165] NeNeWireHost",
         "[162 / 165] NeNeWireTerminal",
         "[166 / 166] nene-wire-product",
-        "Build complete! (6.77 secs)",
+        "Build complete! (8.12 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "Sources/NeNeWireCore/Probe.swift:4:5: error: Cyclomatic Complexity Violation: Function should have complexity 10 or less; currently complexity is 11 (cyclomatic_complexity)",
@@ -532,7 +532,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.20 secs)",
+        "Build complete! (7.62 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -558,7 +558,7 @@
       ],
       "missing": [],
       "tail": [
-        "Build complete! (7.32 secs)",
+        "Build complete! (7.94 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -585,7 +585,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.43 secs)",
+        "Build complete! (8.14 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -611,7 +611,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.28 secs)",
+        "Build complete! (8.07 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -669,7 +669,7 @@
         "",
         "[#NoUsage]: <https://docs.swift.org/compiler/documentation/diagnostics/no-usage>",
         "Failed frontend command:",
-        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -c Sources/NeNeWireCore/Archive.swift Sources/NeNeWireCore/ArchiveCodec.swift Sources/NeNeWireCore/ArchiveOutcome.swift Sources/NeNeWireCore/ArchiveReader.swift Sources/NeNeWireCore/ArchiveRejection.swift Sources/NeNeWireCore/Article.swift Sources/NeNeWireCore/ArticleFields.swift Sources/NeNeWireCore/CharacterReferences.swift Sources/NeNeWireCore/DateText.swift Sources/NeNeWireCore/DisplayOption.swift Sources/NeNeWireCore/DisplaySettings.swift Sources/NeNeWireCore/DisplaySwitches.swift Sources/NeNeWireCore/EditorCommand.swift Sources/NeNeWireCore/EditorKey.swift Sources/NeNeWireCore/EditorMode.swift Sources/NeNeWireCore/EditorPane.swift Sources/NeNeWireCore/Feed.swift Sources/NeNeWireCore/FeedDocument.swift Sources/NeNeWireCore/FeedForm.swift Sources/NeNeWireCore/FeedFormat.swift Sources/NeNeWireCore/FeedHealth.swift Sources/NeNeWireCore/FeedItem.swift Sources/NeNeWireCore/FeedParseOutcome.swift Sources/NeNeWireCore/FeedParser.swift Sources/NeNeWireCore/FeedRejection.swift Sources/NeNeWireCore/FeedSnapshot.swift Sources/NeNeWireCore/FeedStatus.swift Sources/NeNeWireCore/FeedURL.swift Sources/NeNeWireCore/FetchFailure.swift Sources/NeNeWireCore/FetchInterpreter.swift Sources/NeNeWireCore/FetchOutcome.swift Sources/NeNeWireCore/FetchSchedule.swift Sources/NeNeWireCore/FormField.swift Sources/NeNeWireCore/HTTPHeader.swift Sources/NeNeWireCore/HTTPRejection.swift Sources/NeNeWireCore/HTTPResponse.swift Sources/NeNeWireCore/HTTPResponseOutcome.swift Sources/NeNeWireCore/LanguageGuess.swift Sources/NeNeWireCore/Lede.swift Sources/NeNeWireCore/Lineup.swift Sources/NeNeWireCore/MarkupAttribute.swift Sources/NeNeWireCore/MarkupEvent.swift Sources/NeNeWireCore/MarkupScanner.swift -primary-file Sources/NeNeWireCore/PlainText.swift -primary-file Sources/NeNeWireCore/Probe.swift -primary-file Sources/NeNeWireCore/Rotation.swift Sources/NeNeWireCore/Settings.swift Sources/NeNeWireCore/SettingsCodec.swift Sources/NeNeWireCore/SettingsEditor.swift Sources/NeNeWireCore/SettingsOutcome.swift Sources/NeNeWireCore/SettingsRejection.swift Sources/NeNeWireCore/Square.swift Sources/NeNeWireCore/String+Spaces.swift Sources/NeNeWireCore/Timestamp.swift Sources/NeNeWireCore/Translation.swift Sources/NeNeWireCore/TranslationJob.swift Sources/NeNeWireCore/TranslationOutcome.swift Sources/NeNeWireCore/TranslationQueue.swift Sources/NeNeWireCore/TranslationReply.swift Sources/NeNeWireCore/TranslatorProblem.swift Sources/NeNeWireCore/Validators.swift -supplementary-output-file-map .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/supplementaryOutputs-15 -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/wire-proof-P24-vhz_gk93 -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/wire-proof-P24-vhz_gk93 -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeWireCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -parse-as-library -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/PlainText.o -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.o -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Rotation.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/PlainText.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Rotation.o -index-store-path .build/out -index-system-modules",
+        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -c Sources/NeNeWireCore/Archive.swift Sources/NeNeWireCore/ArchiveCodec.swift Sources/NeNeWireCore/ArchiveOutcome.swift Sources/NeNeWireCore/ArchiveReader.swift Sources/NeNeWireCore/ArchiveRejection.swift Sources/NeNeWireCore/Article.swift Sources/NeNeWireCore/ArticleFields.swift Sources/NeNeWireCore/CharacterReferences.swift Sources/NeNeWireCore/DateText.swift Sources/NeNeWireCore/DisplayOption.swift Sources/NeNeWireCore/DisplaySettings.swift Sources/NeNeWireCore/DisplaySwitches.swift Sources/NeNeWireCore/EditorCommand.swift Sources/NeNeWireCore/EditorKey.swift Sources/NeNeWireCore/EditorMode.swift Sources/NeNeWireCore/EditorPane.swift Sources/NeNeWireCore/Feed.swift Sources/NeNeWireCore/FeedDocument.swift Sources/NeNeWireCore/FeedForm.swift Sources/NeNeWireCore/FeedFormat.swift Sources/NeNeWireCore/FeedHealth.swift Sources/NeNeWireCore/FeedItem.swift Sources/NeNeWireCore/FeedParseOutcome.swift Sources/NeNeWireCore/FeedParser.swift Sources/NeNeWireCore/FeedRejection.swift Sources/NeNeWireCore/FeedSnapshot.swift Sources/NeNeWireCore/FeedStatus.swift Sources/NeNeWireCore/FeedURL.swift Sources/NeNeWireCore/FetchFailure.swift Sources/NeNeWireCore/FetchInterpreter.swift Sources/NeNeWireCore/FetchOutcome.swift Sources/NeNeWireCore/FetchSchedule.swift Sources/NeNeWireCore/FormField.swift Sources/NeNeWireCore/HTTPHeader.swift Sources/NeNeWireCore/HTTPRejection.swift Sources/NeNeWireCore/HTTPResponse.swift Sources/NeNeWireCore/HTTPResponseOutcome.swift Sources/NeNeWireCore/LanguageGuess.swift Sources/NeNeWireCore/Lede.swift Sources/NeNeWireCore/Lineup.swift Sources/NeNeWireCore/MarkupAttribute.swift Sources/NeNeWireCore/MarkupEvent.swift Sources/NeNeWireCore/MarkupScanner.swift -primary-file Sources/NeNeWireCore/PlainText.swift -primary-file Sources/NeNeWireCore/Probe.swift -primary-file Sources/NeNeWireCore/Rotation.swift Sources/NeNeWireCore/Settings.swift Sources/NeNeWireCore/SettingsCodec.swift Sources/NeNeWireCore/SettingsEditor.swift Sources/NeNeWireCore/SettingsOutcome.swift Sources/NeNeWireCore/SettingsRejection.swift Sources/NeNeWireCore/Square.swift Sources/NeNeWireCore/String+Spaces.swift Sources/NeNeWireCore/Timestamp.swift Sources/NeNeWireCore/Translation.swift Sources/NeNeWireCore/TranslationJob.swift Sources/NeNeWireCore/TranslationOutcome.swift Sources/NeNeWireCore/TranslationQueue.swift Sources/NeNeWireCore/TranslationReply.swift Sources/NeNeWireCore/TranslatorProblem.swift Sources/NeNeWireCore/Validators.swift -supplementary-output-file-map .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/supplementaryOutputs-15 -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/wire-proof-P24-r3fvn_p0 -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/wire-proof-P24-r3fvn_p0 -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeWireCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -parse-as-library -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/PlainText.o -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.o -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Rotation.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/PlainText.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Rotation.o -index-store-path .build/out -index-system-modules",
         "error: Build failed",
         "make: *** [Makefile:19: build] Error 1"
       ]
@@ -691,7 +691,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.17 secs)",
+        "Build complete! (7.71 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -717,7 +717,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (6.74 secs)",
+        "Build complete! (6.83 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -741,11 +741,11 @@
       ],
       "missing": [],
       "tail": [
-        "[159 / 164] NeNeWireHost",
-        "[159 / 164] nene-wire-product",
+        "[156 / 163] nene-wire-product",
+        "[160 / 165] NeNeWireHost",
         "[162 / 165] NeNeWireTerminal",
         "[166 / 166] nene-wire-product",
-        "Build complete! (6.94 secs)",
+        "Build complete! (7.62 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "Sources/NeNeWireRender/Cell.swift:3:1: error: [Indentation] indent by 2 spaces",
         "make: *** [Makefile:25: format] Error 123"
@@ -768,7 +768,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.22 secs)",
+        "Build complete! (6.72 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -795,7 +795,7 @@
       "tail": [
         "[162 / 165] NeNeWireTerminal",
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.13 secs)",
+        "Build complete! (7.44 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "warning: Skipping enabled rule 'statement_position' because it requires SourceKit and SourceKit access is prohibited.",
@@ -819,7 +819,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.11 secs)",
+        "Build complete! (10.33 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -844,7 +844,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.19 secs)",
+        "Build complete! (8.06 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -869,7 +869,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (6.55 secs)",
+        "Build complete! (8.79 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -894,7 +894,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (6.73 secs)",
+        "Build complete! (8.79 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -936,13 +936,13 @@
       "expected": "(FAILED|did NOT match)",
       "verdict": "pass",
       "evidence": [
-        "/tmp/tmp.QLJHOnWQuO/swiftlint_linux_amd64.zip: FAILED",
+        "/tmp/tmp.E37wYiwefT/swiftlint_linux_amd64.zip: FAILED",
         "sha256sum: WARNING: 1 computed checksum did NOT match"
       ],
       "missing": [],
       "tail": [
         "eng/install-tools.sh",
-        "/tmp/tmp.QLJHOnWQuO/swiftlint_linux_amd64.zip: FAILED",
+        "/tmp/tmp.E37wYiwefT/swiftlint_linux_amd64.zip: FAILED",
         "sha256sum: WARNING: 1 computed checksum did NOT match",
         "make: *** [Makefile:16: tools] Error 1"
       ]
@@ -965,7 +965,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.04 secs)",
+        "Build complete! (7.74 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -990,7 +990,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (6.62 secs)",
+        "Build complete! (7.83 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1016,7 +1016,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (6.78 secs)",
+        "Build complete! (7.77 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1064,7 +1064,7 @@
         "AssertionError: 'CNF-013' not found in [] : CNF-013 が Sources/Core/Board.swift で発火しない",
         "",
         "----------------------------------------------------------------------",
-        "Ran 105 tests in 0.330s",
+        "Ran 105 tests in 0.373s",
         "",
         "FAILED (failures=1)",
         "make: *** [Makefile:34: conformance-test] Error 1"
@@ -1086,7 +1086,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (6.87 secs)",
+        "Build complete! (7.67 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1112,7 +1112,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.23 secs)",
+        "Build complete! (8.12 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1132,17 +1132,17 @@
       "expected": "GIT-003 [0-9a-f]{7}: 件名は",
       "verdict": "pass",
       "evidence": [
-        "GIT-003 04d5693: 件名は `<type>(<scope>): <日本語の説明> (#<issue番号>)` の形（type は feat / fix / docs / refactor / test / build / ci / chore）"
+        "GIT-003 75df0f2: 件名は `<type>(<scope>): <日本語の説明> (#<issue番号>)` の形（type は feat / fix / docs / refactor / test / build / ci / chore）"
       ],
       "missing": [],
       "tail": [
         "python3 eng/validate-commit-message.py --range \"origin/main..HEAD\"",
         "commits: 1 件・違反 1 件",
         "----------------------------------------------------------------------",
-        "Ran 105 tests in 0.327s",
+        "Ran 105 tests in 0.468s",
         "",
         "OK",
-        "GIT-003 04d5693: 件名は `<type>(<scope>): <日本語の説明> (#<issue番号>)` の形（type は feat / fix / docs / refactor / test / build / ci / chore）",
+        "GIT-003 75df0f2: 件名は `<type>(<scope>): <日本語の説明> (#<issue番号>)` の形（type は feat / fix / docs / refactor / test / build / ci / chore）",
         "make: *** [Makefile:37: commits] Error 1"
       ]
     },
@@ -1206,12 +1206,12 @@
       ],
       "missing": [],
       "tail": [
-        "[156 / 163] nene-wire-product",
-        "[156 / 163] NeNeWireHost",
-        "[160 / 165] nene-wire-product",
+        "[156 / 163] NeNeWireTerminal",
+        "[157 / 164] NeNeWireTerminal",
+        "[159 / 164] nene-wire-product",
         "[162 / 165] NeNeWireTerminal",
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.72 secs)",
+        "Build complete! (9.12 secs)",
         "swift-strict: SwiftPM かコンパイラが警告を出した（QLT-002）",
         "make: *** [Makefile:19: build] Error 1"
       ]
@@ -1228,7 +1228,7 @@
       "verdict": "pass",
       "evidence": [
         "✘ Test datesInBothFormats() recorded an issue at FetchTests.swift:8:9: Expectation failed: DateText.parse(\"Mon, 26 Oct 2026 01:07:05 GMT\")?.iso8601 == \"2026-10-26T01:07:06Z\"",
-        "✘ Test datesInBothFormats() failed after 0.002 seconds with 1 issue."
+        "✘ Test datesInBothFormats() failed after 0.003 seconds with 1 issue."
       ],
       "missing": [],
       "tail": [
@@ -1236,7 +1236,7 @@
         "Note: Some test targets reported failures:",
         "  - NeNeWireCoreTests (Swift Testing)",
         "----------------------------------------------------------------------",
-        "Ran 105 tests in 0.351s",
+        "Ran 105 tests in 0.641s",
         "",
         "OK",
         "make: *** [Makefile:22: test] Error 1"
@@ -1263,7 +1263,7 @@
         " 6 |         case \"a\":",
         " 7 |             return 1",
         "Failed frontend command:",
-        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -c Sources/NeNeWireCore/Archive.swift Sources/NeNeWireCore/ArchiveCodec.swift Sources/NeNeWireCore/ArchiveOutcome.swift Sources/NeNeWireCore/ArchiveReader.swift Sources/NeNeWireCore/ArchiveRejection.swift Sources/NeNeWireCore/Article.swift Sources/NeNeWireCore/ArticleFields.swift Sources/NeNeWireCore/CharacterReferences.swift Sources/NeNeWireCore/DateText.swift Sources/NeNeWireCore/DisplayOption.swift Sources/NeNeWireCore/DisplaySettings.swift Sources/NeNeWireCore/DisplaySwitches.swift Sources/NeNeWireCore/EditorCommand.swift Sources/NeNeWireCore/EditorKey.swift Sources/NeNeWireCore/EditorMode.swift Sources/NeNeWireCore/EditorPane.swift Sources/NeNeWireCore/Feed.swift Sources/NeNeWireCore/FeedDocument.swift Sources/NeNeWireCore/FeedForm.swift Sources/NeNeWireCore/FeedFormat.swift Sources/NeNeWireCore/FeedHealth.swift Sources/NeNeWireCore/FeedItem.swift Sources/NeNeWireCore/FeedParseOutcome.swift Sources/NeNeWireCore/FeedParser.swift Sources/NeNeWireCore/FeedRejection.swift Sources/NeNeWireCore/FeedSnapshot.swift Sources/NeNeWireCore/FeedStatus.swift Sources/NeNeWireCore/FeedURL.swift Sources/NeNeWireCore/FetchFailure.swift Sources/NeNeWireCore/FetchInterpreter.swift Sources/NeNeWireCore/FetchOutcome.swift Sources/NeNeWireCore/FetchSchedule.swift Sources/NeNeWireCore/FormField.swift Sources/NeNeWireCore/HTTPHeader.swift Sources/NeNeWireCore/HTTPRejection.swift Sources/NeNeWireCore/HTTPResponse.swift Sources/NeNeWireCore/HTTPResponseOutcome.swift Sources/NeNeWireCore/LanguageGuess.swift Sources/NeNeWireCore/Lede.swift Sources/NeNeWireCore/Lineup.swift Sources/NeNeWireCore/MarkupAttribute.swift Sources/NeNeWireCore/MarkupEvent.swift Sources/NeNeWireCore/MarkupScanner.swift -primary-file Sources/NeNeWireCore/PlainText.swift -primary-file Sources/NeNeWireCore/Probe.swift -primary-file Sources/NeNeWireCore/Rotation.swift Sources/NeNeWireCore/Settings.swift Sources/NeNeWireCore/SettingsCodec.swift Sources/NeNeWireCore/SettingsEditor.swift Sources/NeNeWireCore/SettingsOutcome.swift Sources/NeNeWireCore/SettingsRejection.swift Sources/NeNeWireCore/Square.swift Sources/NeNeWireCore/String+Spaces.swift Sources/NeNeWireCore/Timestamp.swift Sources/NeNeWireCore/Translation.swift Sources/NeNeWireCore/TranslationJob.swift Sources/NeNeWireCore/TranslationOutcome.swift Sources/NeNeWireCore/TranslationQueue.swift Sources/NeNeWireCore/TranslationReply.swift Sources/NeNeWireCore/TranslatorProblem.swift Sources/NeNeWireCore/Validators.swift -supplementary-output-file-map .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/supplementaryOutputs-15 -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/wire-proof-P50-ox74o2nj -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/wire-proof-P50-ox74o2nj -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeWireCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -parse-as-library -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/PlainText.o -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.o -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Rotation.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/PlainText.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Rotation.o -index-store-path .build/out -index-system-modules",
+        "/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-frontend -frontend -c Sources/NeNeWireCore/Archive.swift Sources/NeNeWireCore/ArchiveCodec.swift Sources/NeNeWireCore/ArchiveOutcome.swift Sources/NeNeWireCore/ArchiveReader.swift Sources/NeNeWireCore/ArchiveRejection.swift Sources/NeNeWireCore/Article.swift Sources/NeNeWireCore/ArticleFields.swift Sources/NeNeWireCore/CharacterReferences.swift Sources/NeNeWireCore/DateText.swift Sources/NeNeWireCore/DisplayOption.swift Sources/NeNeWireCore/DisplaySettings.swift Sources/NeNeWireCore/DisplaySwitches.swift Sources/NeNeWireCore/EditorCommand.swift Sources/NeNeWireCore/EditorKey.swift Sources/NeNeWireCore/EditorMode.swift Sources/NeNeWireCore/EditorPane.swift Sources/NeNeWireCore/Feed.swift Sources/NeNeWireCore/FeedDocument.swift Sources/NeNeWireCore/FeedForm.swift Sources/NeNeWireCore/FeedFormat.swift Sources/NeNeWireCore/FeedHealth.swift Sources/NeNeWireCore/FeedItem.swift Sources/NeNeWireCore/FeedParseOutcome.swift Sources/NeNeWireCore/FeedParser.swift Sources/NeNeWireCore/FeedRejection.swift Sources/NeNeWireCore/FeedSnapshot.swift Sources/NeNeWireCore/FeedStatus.swift Sources/NeNeWireCore/FeedURL.swift Sources/NeNeWireCore/FetchFailure.swift Sources/NeNeWireCore/FetchInterpreter.swift Sources/NeNeWireCore/FetchOutcome.swift Sources/NeNeWireCore/FetchSchedule.swift Sources/NeNeWireCore/FormField.swift Sources/NeNeWireCore/HTTPHeader.swift Sources/NeNeWireCore/HTTPRejection.swift Sources/NeNeWireCore/HTTPResponse.swift Sources/NeNeWireCore/HTTPResponseOutcome.swift Sources/NeNeWireCore/LanguageGuess.swift Sources/NeNeWireCore/Lede.swift Sources/NeNeWireCore/Lineup.swift Sources/NeNeWireCore/MarkupAttribute.swift Sources/NeNeWireCore/MarkupEvent.swift Sources/NeNeWireCore/MarkupScanner.swift -primary-file Sources/NeNeWireCore/PlainText.swift -primary-file Sources/NeNeWireCore/Probe.swift -primary-file Sources/NeNeWireCore/Rotation.swift Sources/NeNeWireCore/Settings.swift Sources/NeNeWireCore/SettingsCodec.swift Sources/NeNeWireCore/SettingsEditor.swift Sources/NeNeWireCore/SettingsOutcome.swift Sources/NeNeWireCore/SettingsRejection.swift Sources/NeNeWireCore/Square.swift Sources/NeNeWireCore/String+Spaces.swift Sources/NeNeWireCore/Timestamp.swift Sources/NeNeWireCore/Translation.swift Sources/NeNeWireCore/TranslationJob.swift Sources/NeNeWireCore/TranslationOutcome.swift Sources/NeNeWireCore/TranslationQueue.swift Sources/NeNeWireCore/TranslationReply.swift Sources/NeNeWireCore/TranslatorProblem.swift Sources/NeNeWireCore/Validators.swift -supplementary-output-file-map .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/supplementaryOutputs-15 -target x86_64-unknown-linux-gnu -disable-objc-interop -I .build/out/Products/Debug-linux-x86_64 -module-cache-path .build/out/ModuleCache.noindex -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\\=dwarf -dwarf-version\\=4 -warnings-as-errors -warnings-as-errors -swift-version 6 -Onone -D SWIFT_PACKAGE -D DEBUG -D SWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE -D Xcode -serialize-debugging-options -enable-upcoming-feature ExistentialAny -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -external-plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins/testing\\#/root/.local/share/swiftly/toolchains/6.4.1/usr/bin/swift-plugin-server -validate-clang-modules-once -clang-build-session-file .build/out/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /tmp/wire-proof-P50-oogwf_vg -enable-anonymous-context-mangled-names -file-compilation-dir /tmp/wire-proof-P50-oogwf_vg -Xcc -fno-omit-frame-pointer -Xcc -D_LIBCPP_HARDENING_MODE\\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -fmodules-prune-interval\\=86400 -Xcc -fmodules-prune-after\\=345600 -Xcc -I.build/out/Products/Debug-linux-x86_64/include -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources-normal/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources/x86_64 -Xcc -I.build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/DerivedSources -Xcc -DSWIFT_PACKAGE -Xcc -DDEBUG\\=1 -no-auto-bridging-header-chaining -module-name NeNeWireCore -package-name repo -const-gather-protocols-file .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/NeNeWireCore_const_extract_protocols.json -in-process-plugin-server-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/lib/swift/host/plugins -plugin-path /root/.local/share/swiftly/toolchains/6.4.1/usr/local/lib/swift/host/plugins -parse-as-library -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/PlainText.o -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.o -o .build/out/Intermediates.noindex/NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Rotation.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/PlainText.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Probe.o -index-unit-output-path /NeNeWire.build/Debug-linux-x86_64/NeNeWireCore-t.build/Objects-normal/x86_64/Rotation.o -index-store-path .build/out -index-system-modules",
         "error: Build failed",
         "make: *** [Makefile:19: build] Error 1"
       ]
@@ -1285,7 +1285,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.52 secs)",
+        "Build complete! (9.11 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1311,7 +1311,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.03 secs)",
+        "Build complete! (8.69 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1337,7 +1337,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.16 secs)",
+        "Build complete! (8.58 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1363,7 +1363,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.38 secs)",
+        "Build complete! (7.88 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1389,7 +1389,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.05 secs)",
+        "Build complete! (8.22 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1439,7 +1439,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.19 secs)",
+        "Build complete! (8.02 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1488,7 +1488,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (6.50 secs)",
+        "Build complete! (8.03 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1508,11 +1508,11 @@
       "expected": "package-release: タグ v9\\.9\\.9 が版 v[0-9.]+ と違う",
       "verdict": "pass",
       "evidence": [
-        "package-release: タグ v9.9.9 が版 v0.3.0 と違う"
+        "package-release: タグ v9.9.9 が版 v0.4.0 と違う"
       ],
       "missing": [],
       "tail": [
-        "package-release: タグ v9.9.9 が版 v0.3.0 と違う"
+        "package-release: タグ v9.9.9 が版 v0.4.0 と違う"
       ]
     },
     {
@@ -1536,7 +1536,7 @@
         "[21 / 27] NeNeWireTerminal",
         "[30 / 33] nene-wire-product",
         "[34 / 34] nene-wire-product",
-        "Build complete! (16.43 secs)",
+        "Build complete! (18.30 secs)",
         "package-release: 宣言していない動的依存: libswiftCore.so"
       ]
     },
@@ -1561,7 +1561,7 @@
         "[21 / 27] NeNeWireTerminal",
         "[30 / 33] nene-wire-product",
         "[34 / 34] nene-wire-product",
-        "Build complete! (18.31 secs)",
+        "Build complete! (19.58 secs)",
         "package-release: 同梱物が固定の 3 つと違う: ./LICENSE ./README.txt ./nene-wire ./notes.txt"
       ]
     },
@@ -1576,7 +1576,7 @@
       "expected": "package-release: --version が 'nene-wire 0\\.0\\.0'",
       "verdict": "pass",
       "evidence": [
-        "package-release: --version が 'nene-wire 0.0.0'（版は 0.3.0）"
+        "package-release: --version が 'nene-wire 0.0.0'（版は 0.4.0）"
       ],
       "missing": [],
       "tail": [
@@ -1586,8 +1586,8 @@
         "[21 / 27] NeNeWireTerminal",
         "[30 / 33] nene-wire-product",
         "[34 / 34] nene-wire-product",
-        "Build complete! (17.36 secs)",
-        "package-release: --version が 'nene-wire 0.0.0'（版は 0.3.0）"
+        "Build complete! (19.23 secs)",
+        "package-release: --version が 'nene-wire 0.0.0'（版は 0.4.0）"
       ]
     },
     {
@@ -1609,7 +1609,7 @@
       "missing": [],
       "tail": [
         "[166 / 166] nene-wire-product",
-        "Build complete! (7.64 secs)",
+        "Build complete! (9.22 secs)",
         "eng/swift-sources.sh | xargs -0 swift-format lint --strict --configuration .swift-format",
         "eng/lint.sh .tools/swiftlint --config .swiftlint.yml",
         "python3 eng/conformance.py",
@@ -1637,7 +1637,7 @@
         "AssertionError: 'CNF-013' not found in [] : CNF-013 が Sources/Core/Board.swift で発火しない",
         "",
         "----------------------------------------------------------------------",
-        "Ran 105 tests in 0.405s",
+        "Ran 105 tests in 0.389s",
         "",
         "FAILED (failures=8)",
         "make: *** [Makefile:34: conformance-test] Error 1"
