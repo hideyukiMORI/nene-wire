@@ -37,7 +37,8 @@ public struct Grid: Sendable, Hashable {
                 else {
                     return offset
                 }
-                let colors = Cell(glyph: .narrow(" "), foreground: segment.color, background: background)
+                let colors = Cell(
+                    glyph: .narrow(" "), foreground: segment.color, background: segment.background ?? background)
                 place(character, width: width, at: row * size.columns + column + offset, colors: colors)
                 offset += width
             }

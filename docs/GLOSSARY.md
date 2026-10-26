@@ -31,6 +31,10 @@
 | 帯（strip） | NeNe Wire が描く場所。端末の幅いっぱい・高さ 15 行で、起動したら画面を消して最上部に描く（ADR 0006・0007） | `StripRenderer` |
 | メッセージの行（message line） | 帯の下から 2 行目。取得の様子（取得中・件数と新着・更新なし・失敗と取り直すまで）を 1 行で出す | `StripLayout.drawMessage` |
 | DATA の窓 | 帯の右の窓。フィードごとの様子を 1 行ずつ出す | `DataWindow` |
+| 演出の時計（motion） | 記事を見せ始めてからの時間・起動してからの時間・記事ごとの種。演出はこれだけから決まる | `Motion`・`Choreography` |
+| くるくる確定（spin） | 文字が記号のくるくるを経て正しい文字に止まる演出。止まり方は 1 文字ずつ・左から・ばらばらの 3 種 | `SpinEffect` |
+| 電脳ノイズ（glitch） | 静止中に一瞬だけ信号が乱れる演出 | `GlitchEffect` |
+| 緊急傍受（intercept） | 速報が割り込む前の警告の演出 | `InterceptEffect` |
 | 速報（breaking） | 取り直して新しく現れた記事。次の 1 件に割り込み、受信の行に印が付く | `Rotation` |
 | 状態の行（status line） | 帯の最下行。何件目か・ネット・翻訳・取得の失敗 | `StripLayout` |
 | 全角の幅（cell width） | 文字が端末で占める桁数。Unicode の East Asian Width の W・F は 2 桁、曖昧（A）は 1 桁 | `CellWidth`・`EastAsianWidth`（生成物） |

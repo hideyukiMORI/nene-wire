@@ -17,11 +17,17 @@ public struct StripState: Sendable, Hashable {
     /// HUD のメッセージの行に出す 1 行（取得の進み具合など）。
     let message: String
     let clock: WallClock
+    /// 演出の時計（ADR 0009）。
+    let motion: Motion
+    /// 最初の記事が出るまでのブートログ。
+    let log: [LogLine]
+    /// 割り込み待ちの速報の件数。
+    let pendingFresh: Int
 
     /// 状態を作る。
     public init(
         article: Article?, fresh: Bool, position: Int, count: Int, paused: Bool, feeds: [FeedRow], message: String,
-        clock: WallClock
+        clock: WallClock, motion: Motion = .still, log: [LogLine] = [], pendingFresh: Int = 0
     ) {
         self.article = article
         self.fresh = fresh
@@ -31,6 +37,16 @@ public struct StripState: Sendable, Hashable {
         self.feeds = feeds
         self.message = message
         self.clock = clock
+        self.motion = motion
+        self.log = log
+        self.pendingFresh = pendingFresh
+    }
+
+    /// 記事だけを差し替えた状態（切り替えで消えていく前の記事を描くため）。
+    func showing(_ other: Article) -> StripState {
+        StripState(
+            article: other, fresh: false, position: position, count: count, paused: paused, feeds: feeds,
+            message: message, clock: clock)
     }
 
     /// 記事を出せるフィードの数。

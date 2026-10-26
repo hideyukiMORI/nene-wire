@@ -4,9 +4,9 @@ struct StripLayout {
     let glyphs: FrameGlyphs
     let theme: Theme
 
-    /// DATA の窓の内側の桁数（幅の 18%・11〜35 桁）。
+    /// DATA の窓の内側の桁数（幅の 18%・16〜35 桁）。狭い端末でもフィードの名前が読めるよう 16 桁は取る（#13）。
     var dataWidth: Int {
-        min(max(columns * 18 / 100, 11), 35)
+        min(max(columns * 18 / 100, 16), 35)
     }
 
     /// 記事の枠の内側の桁数。
@@ -19,56 +19,69 @@ struct StripLayout {
         inner - 4
     }
 
-    /// 0 行目: 名前・回線の状態・日時。
-    func drawHeader(_ state: StripState, into grid: inout Grid) {
-        let rule = glyphs.horizontal + glyphs.horizontal
-        let link = state.feedsLive > 0 ? "LINK ESTABLISHED" : state.article == nil ? "LINK PENDING" : "LINK LOST"
+    /// 0 行目: 名前・回線の状態・日時。収まらなければ、飾り（電脳ニュース回線）・日付の順に落とす（#13）。
+    func drawHeader(_ state: StripState, override: Segment?, into grid: inout Grid) {
+        let rule = Segment("  " + glyphs.horizontal + glyphs.horizontal + "  ", theme.faint)
+        let name = [Segment(" " + glyphs.marker, theme.accent), Segment("NENE//WIRE", theme.accent)]
+        let link =
+            override
+            ?? Segment(
+                state.feedsLive > 0 ? "LINK ESTABLISHED" : state.article == nil ? "LINK PENDING" : "LINK LOST",
+                theme.dim)
+        let tagline = [rule, Segment("電脳ニュース回線", theme.text)]
+        let candidates = [
+            name + tagline + [rule, link, rule, Segment(state.clock.stamp, theme.text)],
+            name + [rule, link, rule, Segment(state.clock.stamp, theme.text)],
+            name + [rule, link, rule, Segment(state.clock.time, theme.text)],
+        ]
+        let fitting = candidates.first { $0.reduce(0) { $0 + CellWidth.of($1.text) } <= columns } ?? candidates[2]
         fill(row: 0, with: theme.panel, into: &grid)
-        grid.write(
-            [
-                Segment(" " + glyphs.marker, theme.accent), Segment("NENE//WIRE", theme.accent),
-                Segment("  \(rule)  ", theme.faint), Segment("電脳ニュース回線", theme.text),
-                Segment("  \(rule)  ", theme.faint), Segment(link, theme.dim), Segment("  \(rule)  ", theme.faint),
-                Segment(state.clock.stamp, theme.text),
-            ], column: 0, row: 0, background: theme.panel)
+        grid.write(fitting, column: 0, row: 0, background: theme.panel)
     }
 
-    /// 1 行目〜12 行目: 記事の枠と DATA の窓。
-    func drawFrame(_ state: StripState, into grid: inout Grid) {
-        let name = " " + TextLayout.fit((state.article?.feedName ?? "NO SIGNAL").uppercased(), width: inner - 20) + " "
+    /// 1 行目〜12 行目: 記事の枠と DATA の窓。色とラベルは演出が差し替える。
+    func drawFrame(_ state: StripState, overrides: HudOverrides, into grid: inout Grid) {
+        let frameColor = overrides.frame
+        let label =
+            overrides.label
+            ?? Segment(
+                " " + TextLayout.fit((state.article?.feedName ?? "NO SIGNAL").uppercased(), width: inner - 20) + " ",
+                theme.accent)
+        let name = label.text
         let clock = " " + state.clock.time + " "
         let tag = " DATA "
         let top: [Segment] = [
-            Segment(glyphs.topLeft + glyphs.horizontal + "[", theme.frame), Segment(name, theme.accent),
-            Segment("]" + dashes(inner - 6 - CellWidth.of(name) - CellWidth.of(clock)) + "[", theme.frame),
+            Segment(glyphs.topLeft + glyphs.horizontal + "[", frameColor), label,
+            Segment("]" + dashes(inner - 6 - CellWidth.of(name) - CellWidth.of(clock)) + "[", frameColor),
             Segment(clock, theme.dim),
-            Segment("]" + glyphs.horizontal + glyphs.teeDown + glyphs.horizontal + "[", theme.frame),
+            Segment("]" + glyphs.horizontal + glyphs.teeDown + glyphs.horizontal + "[", frameColor),
             Segment(tag, theme.faint),
-            Segment("]" + dashes(dataWidth - 3 - CellWidth.of(tag)) + glyphs.topRight, theme.frame),
+            Segment("]" + dashes(dataWidth - 3 - CellWidth.of(tag)) + glyphs.topRight, frameColor),
         ]
         grid.write(top, column: 0, row: 1, background: theme.ground)
         for row in 2..<(2 + StripRenderer.bodyRows) {
             for column in [0, inner + 1, columns - 1] {
-                grid.write([Segment(glyphs.vertical, theme.frame)], column: column, row: row, background: theme.ground)
+                grid.write([Segment(glyphs.vertical, frameColor)], column: column, row: row, background: theme.ground)
             }
         }
         let index = " " + Self.counter(state.position, of: state.count) + " "
         let bottom: [Segment] = [
-            Segment(glyphs.bottomLeft + dashes(inner - 6 - CellWidth.of(index)) + "[", theme.frame),
+            Segment(glyphs.bottomLeft + dashes(inner - 6 - CellWidth.of(index)) + "[", frameColor),
             Segment(index, theme.dim),
-            Segment("]" + dashes(4) + glyphs.teeUp + dashes(dataWidth) + glyphs.bottomRight, theme.frame),
+            Segment("]" + dashes(4) + glyphs.teeUp + dashes(dataWidth) + glyphs.bottomRight, frameColor),
         ]
         grid.write(bottom, column: 0, row: 2 + StripRenderer.bodyRows, background: theme.ground)
     }
 
     /// 13 行目: HUD のメッセージの行（取得の進み具合など）。
-    func drawMessage(_ state: StripState, into grid: inout Grid) {
+    func drawMessage(_ state: StripState, override: Segment?, into grid: inout Grid) {
         let label = " MSG "
         let width = columns - CellWidth.of(label) - 3
+        let message = override ?? Segment(state.message, theme.dim)
         grid.write(
             [
                 Segment(label, theme.faint), Segment(glyphs.pointer + " ", theme.accent),
-                Segment(TextLayout.fit(state.message, width: width), theme.dim),
+                Segment(TextLayout.fit(message.text, width: width), message.color),
             ], column: 0, row: StripRenderer.height - 2, background: theme.ground)
     }
 
@@ -85,6 +98,9 @@ struct StripLayout {
         ]
         if failed > 0 {
             segments.append(Segment("  取得失敗 \(failed)", theme.dim))
+        }
+        if state.pendingFresh > 0 {
+            segments.append(Segment("   速報 \(state.pendingFresh)", theme.warn))
         }
         if state.paused {
             segments.append(Segment("   " + glyphs.marker + "停止中", theme.accent))
