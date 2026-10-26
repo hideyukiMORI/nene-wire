@@ -18,7 +18,7 @@ It is the sibling of [NeNe Gambit](https://github.com/hideyukiMORI/nene-gambit) 
 Twenty seconds in, a new story arrives on NEON TIMES and cuts the line with a 速報 mark. The MSG line reports `新着 1` (one new).
 Every feed and story in these screenshots is made up by `--demo`; real articles are never stored in this repository.</sub>
 
-> **Beta.** v0.1.0 is the first release. Effects (decoding headlines, typewriter, scan lines, data rain), translation, saved articles and a settings screen are still to come.
+> **Beta.** Saved articles and a settings screen are still to come. Effects and translation (English → Japanese) are in on `main`.
 
 ---
 
@@ -71,15 +71,40 @@ nene-wire --demo   # offline, with made-up feeds and stories (a breaking one arr
 The feeds are fixed for now: **NHK, BBC World, NPR News and The Guardian World** (a settings screen comes later).
 The terminal needs at least 72×15. The strip stretches to the full width of the window; its height is always 15 rows.
 
+### Translation (English → Japanese)
+
+English stories are shown in Japanese, with the original headline underneath, once the translator is installed.
+It is [Argos Translate](https://github.com/argosopentech/argos-translate): offline, no account, no API key.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install-translator.sh | bash
+```
+
+- Needs Python 3 and pip (on Ubuntu: `sudo apt install python3-pip`). Takes about 470 MB: the Python packages in `~/.local/share/nene-wire/argos` and the model in `~/.local/share/argos-translate`
+- Argos normally pulls in PyTorch (several hundred MB to a few GB). This installer leaves it out and splits sentences with MiniSBD instead, which is one of Argos's own settings
+- Without it, nothing breaks: stories run in their original language, English ones are marked `未翻訳` (untranslated), and the status line says `TRANS 未導入` (not installed)
+- Translations are kept and not redone while it runs (they are not saved across restarts yet). About 100 stories take roughly 20 seconds, in the background
+
+### The effects
+
+Every story gets the full treatment, all drawn with nothing but characters and colors:
+
+- **Decrypt**: `復号中 NN%` with a progress bar while each character spins through katakana and hex before locking in. Three ways to lock: one at a time, left to right, or scattered like a cipher coming apart
+- **Switch**: the old story's characters fall away under gravity, or a scan line wipes it
+- **Ghost in the signal**: twice per story, a burst of noise: the headline splits into cyan and magenta, a line slips sideways, `S1GN4L ▒▒▒▒ L0ST`
+- **Intercept**: breaking news sounds an alarm first: hazard stripes and a crawling `INTERCEPT ■ 緊急傍受 ■ PRIORITY: ALPHA` banner
+- **Boot sequence**: until the first story, the frame types out a boot log built from the real fetch results, with a hex dump running in DATA
+- **HUD**: a light sweeps the header, the frame breathes, data rain falls in DATA with the time to the next sync and the uptime, and the bottom edge of the frame burns down like a fuse until the next story
+
 ### Reading the screen
 
 ![A Japanese story in the strip](docs/images/japanese-demo.png)
 
 - **Header**: the name, the state of the line (`LINK ESTABLISHED` / `LINK PENDING` / `LINK LOST`) and the local date and time
-- **Story frame**: the feed's name and the time on top. Inside: `受信` (received) with the story's number and publication time (UTC), the headline (up to two lines), the lede, and the link. A story that cut in as breaking news is marked `速報`
+- **Story frame**: the feed's name and the time on top. Inside: `受信` (received) with the story's number and publication time (UTC), the headline (up to two lines), the lede, `原文` (the original headline, when translated), and the link. A story that cut in as breaking news is marked `速報`
 - **DATA**: one row per feed. `●` fetched (dim when nothing changed), `~` fetching right now, `!` failed (`ERR`), `·` not fetched yet, and how many stories it has
 - **MSG**: what the fetcher just did: fetching, how many stories and how many new, unchanged, or why it failed and how many minutes until it tries again
-- **Status**: position in the cycle, `NET ● ONLINE` / `OFFLINE`, how many feeds are live, and the keys
+- **Status**: position in the cycle, `NET ● ONLINE` / `OFFLINE`, how many feeds are live, `TRANS en>ja ● 待ち N` (translating, N waiting), breaking stories waiting, and the keys
 
 Wide characters take two columns. Japanese and English wrap by cell width without breaking the frame:
 

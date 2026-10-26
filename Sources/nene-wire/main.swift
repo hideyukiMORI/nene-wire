@@ -63,7 +63,10 @@ let fetcher =
     arguments == ["--demo"]
     ? Fetcher(demo: DemoScript(), now: LocalTime.timestamp())
     : Fetcher(feeds: feeds, environment: environment, now: LocalTime.timestamp())
-var viewer = Viewer(fetcher: fetcher, traits: traits, version: Version.current)
+// 翻訳の手段（Argos Translate）は `install-translator.sh` が HOME の下に入れる。無ければ原文のまま流す（FR-29・ADR 0010）
+let home = getenv("HOME").map { String(cString: $0) } ?? ""
+let translator = Translator(library: Translator.library(home: home), environment: environment)
+var viewer = Viewer(fetcher: fetcher, translator: translator, traits: traits, version: Version.current)
 viewer.run()
 Console.close()
 exit(0)

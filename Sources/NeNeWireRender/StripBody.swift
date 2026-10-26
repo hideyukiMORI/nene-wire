@@ -18,11 +18,16 @@ enum StripBody {
             lines.append([Segment(line, theme.head)])
         }
         lines.append([])
-        let ledeRows = StripRenderer.bodyRows - lines.count - 2
+        let ledeRows = StripRenderer.bodyRows - lines.count - 3
         for line in clipped(TextLayout.wrap(article.lede ?? "", width: width), rows: ledeRows, width: width) {
             lines.append([Segment(line, theme.text)])
         }
-        while lines.count < StripRenderer.bodyRows - 1 {
+        while lines.count < StripRenderer.bodyRows - 2 {
+            lines.append([])
+        }
+        if let original = article.originalHeadline {
+            lines.append([Segment("原文 ", theme.faint), Segment(TextLayout.fit(original, width: width - 5), theme.dim)])
+        } else {
             lines.append([])
         }
         lines.append([
@@ -52,6 +57,9 @@ enum StripBody {
         var text = "受信 " + StripLayout.counter(state.position, of: state.count).prefix { $0 != " " }
         if let published = article.published {
             text += " \(stage.layout.glyphs.separator) " + published.iso8601.dropFirst(11).prefix(5) + " UTC"
+        }
+        if state.untranslated {
+            text += " \(stage.layout.glyphs.separator) 未翻訳"
         }
         return line + [Segment(TextLayout.fit(text, width: width - 6), state.fresh ? theme.warn : theme.dim)]
     }

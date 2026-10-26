@@ -18,7 +18,11 @@ struct Viewer {
     private let clock = ContinuousClock()
     private let launched: ContinuousClock.Instant
     private var fetcher: Fetcher
+    private var translator: Translator
     private var rotation: Rotation
+    /// いま見せている記事（見せ始めたときの訳で固定する。見せている途中で訳が届いても文面を跳ねさせない）。
+    private var shown: Article?
+    private var shownUntranslated = false
     private var showtime = Showtime()
     private var booting = true
     private var bootLog: BootLog
@@ -26,12 +30,13 @@ struct Viewer {
     private var message = "回線を確立中"
     private var previous: Grid?
 
-    init(fetcher: Fetcher, traits: TerminalTraits, version: String) {
+    init(fetcher: Fetcher, translator: Translator, traits: TerminalTraits, version: String) {
         self.fetcher = fetcher
+        self.translator = translator
         self.traits = traits
         rotation = .empty(feeds: fetcher.feeds.count)
         launched = clock.now
-        bootLog = BootLog(version: version, size: Console.size())
+        bootLog = BootLog(version: version, size: Console.size(), translator: translator.problem)
     }
 
     /// `q` か終了のシグナルが来るまで回す。
@@ -40,11 +45,13 @@ struct Viewer {
             fetch(at: LocalTime.timestamp())
             let busy = draw()
             let bytes = Console.waitForInput(
-                milliseconds: busy ? Self.busyFrame : Self.calmFrame, watching: fetcher.descriptors)
+                milliseconds: busy ? Self.busyFrame : Self.calmFrame,
+                watching: fetcher.descriptors + translator.descriptors)
             let intents = KeyIntent.decode(bytes)
             let signals = Console.takeSignals()
             if signals.interrupted || intents.contains(.quit) {
                 fetcher.stop()
+                translator.stop()
                 return
             }
             if signals.resized {
@@ -52,6 +59,7 @@ struct Viewer {
                 previous = nil
             }
             fetch(at: LocalTime.timestamp())
+            translate(at: LocalTime.timestamp())
             finishBootIfReady()
             if !apply(intents), !booting, !paused, showtime.milliseconds >= Self.interval {
                 move { $0.advance() }
@@ -69,14 +77,37 @@ struct Viewer {
             return
         }
         booting = false
+        present()
         showtime.begin(leaving: nil, first: true)
+    }
+
+    /// いまの記事を、いまある訳で固定して見せる。
+    private mutating func present() {
+        shown = rotation.current.map(translator.show)
+        shownUntranslated = rotation.current.map(translator.isUntranslated) ?? false
     }
 
     /// 記事を動かし、前の記事を切り替えの演出に渡す。
     private mutating func move(_ step: (inout Rotation) -> Void) {
-        let before = rotation.current
+        let before = shown
         step(&rotation)
+        present()
         showtime.begin(leaving: before, first: false)
+    }
+
+    /// 翻訳を進める: 終わった翻訳の結果を受け取り、訳してよい記事があれば訳しに行く。
+    private mutating func translate(at now: Timestamp) {
+        for report in [translator.collect(at: now), translator.startIfDue(at: now)].compactMap({ $0 }) {
+            let time = LocalTime.now().time
+            switch report.outcome {
+            case .translated:
+                message = "\(time)  翻訳  \(report.articles) 件  en>ja"
+            case .unavailable(.notInstalled), .unavailable(.missingModel):
+                message = "\(time)  翻訳の手段が無い。install-translator.sh で入れて起動し直すと訳す"
+            case .unavailable(.crashed):
+                message = "\(time)  翻訳に失敗  \(TranslationQueue.retry / 60) 分後に取り直す"
+            }
+        }
     }
 
     /// 取得を進める: 終わった curl の結果を受け取り、予定の来たフィードを取りに行く。
@@ -105,6 +136,7 @@ struct Viewer {
         case .fetched:
             let before = rotation.pendingFresh
             rotation.replace(feed: arrival.feed, with: arrival.articles)
+            translator.take(arrival.articles, keeping: rotation.identifiers)
             let arrived = rotation.pendingFresh - before
             message = "\(time)  \(name)  \(arrival.articles.count) 件" + (arrived > 0 ? "  新着 \(arrived)" : "")
         case .notModified:
@@ -167,9 +199,10 @@ struct Viewer {
             article: showtime.milliseconds, global: uptime, seed: showtime.seed, leaving: showtime.leaving,
             firstEntry: showtime.firstEntry, interval: Self.interval, uptime: uptime / 1_000, syncIn: syncIn)
         let state = StripState(
-            article: booting ? nil : rotation.current, fresh: !booting && rotation.isFresh, position: rotation.position,
+            article: booting ? nil : shown, fresh: !booting && rotation.isFresh, position: rotation.position,
             count: rotation.count, paused: paused, feeds: rows, message: message, clock: LocalTime.now(),
-            motion: motion, log: booting ? bootLog.lines : [], pendingFresh: rotation.pendingFresh)
+            motion: motion, log: booting ? bootLog.lines : [], pendingFresh: rotation.pendingFresh,
+            untranslated: !booting && shownUntranslated, translator: translator.status)
         let grid = StripRenderer.render(state, size: Console.size(), theme: .phosphor, traits: traits)
         Console.write(FrameEncoder.encode(grid, previous: previous, colors: traits.colors))
         previous = grid

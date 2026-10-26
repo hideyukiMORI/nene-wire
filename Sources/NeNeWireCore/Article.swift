@@ -7,9 +7,12 @@ public struct Article: Sendable, Hashable {
     public let link: String
     public let published: Timestamp?
     public let identifier: String
+    /// 翻訳したときだけ、原文の見出し（FR-14）。
+    public let originalHeadline: String?
 
     private init(
-        feedName: String, headline: String, lede: String?, link: String, published: Timestamp?, identifier: String
+        feedName: String, headline: String, lede: String?, link: String, published: Timestamp?, identifier: String,
+        originalHeadline: String? = nil
     ) {
         self.feedName = feedName
         self.headline = headline
@@ -17,6 +20,14 @@ public struct Article: Sendable, Hashable {
         self.link = link
         self.published = published
         self.identifier = identifier
+        self.originalHeadline = originalHeadline
+    }
+
+    /// 見出しと出だしを訳したもの（原文の見出しを残す）。
+    public func translated(_ translation: Translation) -> Article {
+        Article(
+            feedName: feedName, headline: translation.headline, lede: translation.lede ?? lede, link: link,
+            published: published, identifier: identifier, originalHeadline: headline)
     }
 
     /// フィードの 1 項目から作る。見出しが空なら nil。
