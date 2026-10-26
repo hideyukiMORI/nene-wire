@@ -12,13 +12,13 @@ It is the sibling of [NeNe Gambit](https://github.com/hideyukiMORI/nene-gambit) 
 
 **English** · [日本語](README.ja.md)
 
-![A breaking story cuts in on NEON TIMES](docs/images/breaking-demo.png)
+![A breaking story sounds the intercept alarm](docs/images/intercept.png)
 
-<sub>A real screenshot: the v0.1.0 binary running in Windows Terminal on WSL2 (`--demo`, 120×16).
-Twenty seconds in, a new story arrives on NEON TIMES and cuts the line with a 速報 mark. The MSG line reports `新着 1` (one new).
+<sub>A real screenshot: the v0.2.0 binary running in Windows Terminal on WSL2 (`--demo`, 120×16).
+A new story has just arrived on NEON TIMES, and before it cuts the line the strip sounds the intercept alarm: hazard stripes and a crawling `INTERCEPT ■ 緊急傍受 ■ PRIORITY: ALPHA` banner.
 Every feed and story in these screenshots is made up by `--demo`; real articles are never stored in this repository.</sub>
 
-> **Beta.** Saved articles and a settings screen are still to come. Effects and translation (English → Japanese) are in on `main`.
+> **Beta.** v0.2.0 brings the effects and translation (English → Japanese). Saved articles and a settings screen are still to come.
 
 ---
 
@@ -40,7 +40,7 @@ The whole script is [install.sh](install.sh), about 45 lines. Reading it before 
 <summary>Install by hand</summary>
 
 ```bash
-v=0.1.0
+v=0.2.0
 curl -fsSL -O https://github.com/hideyukiMORI/nene-wire/releases/download/v$v/nene-wire-$v-linux-x86_64.tar.gz \
            -O https://github.com/hideyukiMORI/nene-wire/releases/download/v$v/SHA256SUMS
 sha256sum --check SHA256SUMS
@@ -89,6 +89,12 @@ curl -fsSL https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install
 
 Every story gets the full treatment, all drawn with nothing but characters and colors:
 
+| Boot sequence | Decrypt |
+| --- | --- |
+| ![The boot log](docs/images/boot.png) | ![Characters spinning before they lock](docs/images/decrypt.png) |
+| **Ghost in the signal** | **Switch** |
+| ![A glitch burst](docs/images/glitch.png) | ![The old story falling away](docs/images/drop.png) |
+
 - **Decrypt**: `復号中 NN%` with a progress bar while each character spins through katakana and hex before locking in. Three ways to lock: one at a time, left to right, or scattered like a cipher coming apart
 - **Switch**: the old story's characters fall away under gravity, or a scan line wipes it
 - **Ghost in the signal**: twice per story, a burst of noise: the headline splits into cyan and magenta, a line slips sideways, `S1GN4L ▒▒▒▒ L0ST`
@@ -98,7 +104,7 @@ Every story gets the full treatment, all drawn with nothing but characters and c
 
 ### Reading the screen
 
-![A Japanese story in the strip](docs/images/japanese-demo.png)
+![An English story shown in Japanese, with the original headline](docs/images/translation.png)
 
 - **Header**: the name, the state of the line (`LINK ESTABLISHED` / `LINK PENDING` / `LINK LOST`) and the local date and time
 - **Story frame**: the feed's name and the time on top. Inside: `受信` (received) with the story's number and publication time (UTC), the headline (up to two lines), the lede, `原文` (the original headline, when translated), and the link. A story that cut in as breaking news is marked `速報`
@@ -106,9 +112,7 @@ Every story gets the full treatment, all drawn with nothing but characters and c
 - **MSG**: what the fetcher just did: fetching, how many stories and how many new, unchanged, or why it failed and how many minutes until it tries again
 - **Status**: position in the cycle, `NET ● ONLINE` / `OFFLINE`, how many feeds are live, `TRANS en>ja ● 待ち N` (translating, N waiting), breaking stories waiting, and the keys
 
-Wide characters take two columns. Japanese and English wrap by cell width without breaking the frame:
-
-![An English story in the strip](docs/images/english-demo.png)
+Wide characters take two columns. Japanese and English wrap by cell width without breaking the frame.
 
 ### How it fetches
 
@@ -122,7 +126,7 @@ Wide characters take two columns. Japanese and English wrap by cell width withou
 ## Under the hood (a story in six parts)
 
 NeNe Wire wears the face of a news ticker, but like its siblings it is also **an experiment in having machines enforce the rules**.
-Everything from the first commit to the v0.1.0 release happened in a single day, 2026-10-26. Every number below is in the repository's records (ADRs, tests, gate proofs).
+Everything from the first commit to the v0.2.0 release happened in a single day, 2026-10-26. Every number below is in the repository's records (ADRs, tests, gate proofs).
 
 ### 1. The design was argued over in a mock-up, three times
 
@@ -163,7 +167,7 @@ The release itself is one of them: drop static linking from the packaging script
 
 This is a personal viewing tool, and real headlines and ledes are never stored in or redistributed from this repository.
 That rules out screenshots of the real thing. So `--demo` runs the same fetch → schedule → rotation path on four made-up feeds, and a made-up breaking story arrives after 20 seconds.
-Every screenshot on this page was taken from the released v0.1.0 binary that way ([ADR 0008](docs/adr/0008-release-pipeline-and-demo.md)).
+Every screenshot on this page was taken from the released v0.2.0 binary that way ([ADR 0008](docs/adr/0008-release-pipeline-and-demo.md)).
 
 ---
 

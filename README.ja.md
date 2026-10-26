@@ -12,13 +12,13 @@
 
 [English](README.md) · **日本語**
 
-![NEON TIMES に速報が割り込んだところ](docs/images/breaking-demo.png)
+![速報の緊急傍受](docs/images/intercept.png)
 
-<sub>実機の画面写真: v0.1.0 の配布物を WSL2 の Windows Terminal で動かしたもの（`--demo`・120×16）。
-起動から 20 秒で NEON TIMES に新しい記事が届き、`速報` の印を付けて割り込んだ。MSG の行には `新着 1`。
+<sub>実機の画面写真: v0.2.0 の配布物を WSL2 の Windows Terminal で動かしたもの（`--demo`・120×16）。
+NEON TIMES に新しい記事が届き、割り込む前に緊急傍受の警告が鳴っている。警告の縞と、流れる帯 `INTERCEPT ■ 緊急傍受 ■ PRIORITY: ALPHA`。
 この写真のフィードと記事はすべて `--demo` の架空のもの。実際の記事はこのリポジトリに入れない。</sub>
 
-> **ベータ版。** 記事の保存と設定画面はこれから。演出と翻訳（英語→日本語）は `main` に入っている。
+> **ベータ版。** v0.2.0 で演出と翻訳（英語→日本語）が入った。記事の保存と設定画面はこれから。
 
 ---
 
@@ -39,7 +39,7 @@ curl -fsSL https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install
 <summary>手で入れる</summary>
 
 ```bash
-v=0.1.0
+v=0.2.0
 curl -fsSL -O https://github.com/hideyukiMORI/nene-wire/releases/download/v$v/nene-wire-$v-linux-x86_64.tar.gz \
            -O https://github.com/hideyukiMORI/nene-wire/releases/download/v$v/SHA256SUMS
 sha256sum --check SHA256SUMS
@@ -88,6 +88,12 @@ curl -fsSL https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install
 
 どの記事にも全部入る。どれも文字と色だけで描いている。
 
+| 接続シーケンス | 復号 |
+| --- | --- |
+| ![ブートログ](docs/images/boot.png) | ![くるくる回ってから止まる文字](docs/images/decrypt.png) |
+| **電脳ノイズ** | **切り替え** |
+| ![信号の乱れ](docs/images/glitch.png) | ![パラパラ落ちていく前の記事](docs/images/drop.png) |
+
 - **復号**: `復号中 NN%` と進み具合の棒。文字はカタカナと 16 進の記号でくるくる回ってから止まる。止まり方は 1 文字ずつ・左から・ばらばら（暗号が解けていく感じ）の 3 種
 - **切り替え**: 前の記事の文字が重力でパラパラ落ちる、または走査線が消していく
 - **電脳ノイズ**: 1 件に 2 回、信号が乱れる。見出しがシアンとマゼンタにずれ、行が横に滑り、`S1GN4L ▒▒▒▒ L0ST`
@@ -97,7 +103,7 @@ curl -fsSL https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install
 
 ### 画面の読み方
 
-![日本語の記事](docs/images/japanese-demo.png)
+![英語の記事を日本語で出し、原文の見出しを添えたところ](docs/images/translation.png)
 
 - **見出しの行**: 名前・回線の状態（`LINK ESTABLISHED` / `LINK PENDING` / `LINK LOST`）・現地の日時
 - **記事の枠**: 上辺にフィード名と時刻。中は、`受信` と記事の番号・公開時刻（UTC）、見出し（2 行まで）、出だし、`原文`（訳したときの原文の見出し）、リンク。速報として割り込んだ記事には `速報` の印
@@ -106,8 +112,6 @@ curl -fsSL https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install
 - **状態の行**: 一周の中の位置・`NET ● ONLINE` / `OFFLINE`・記事を出せるフィードの数・`TRANS en>ja ● 待ち N`（訳している・N 件待ち）・待っている速報・キー
 
 全角は 2 桁として数える。日本語も英語も、枠を崩さずに桁数で折り返す。
-
-![英語の記事](docs/images/english-demo.png)
 
 ### 取り方
 
@@ -121,7 +125,7 @@ curl -fsSL https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install
 ## 中身の話（6 話）
 
 NeNe Wire はニュースティッカーの顔をしているが、兄弟と同じく **規約を機械に守らせる実験** でもある。
-最初のコミットから v0.1.0 の公開まで、すべて 2026-10-26 の 1 日のうちに起きた。以下の数字はどれもリポジトリの記録（ADR・テスト・ゲートの証明）にある。
+最初のコミットから v0.2.0 の公開まで、すべて 2026-10-26 の 1 日のうちに起きた。以下の数字はどれもリポジトリの記録（ADR・テスト・ゲートの証明）にある。
 
 ### 1. 見た目は、デザインの叩き台の上で 3 回やり直した
 
@@ -163,7 +167,7 @@ Swift の標準ライブラリは、結合文字か文字かは分かっても�
 
 これは個人で眺めるための道具で、実際の見出しや出だしをこのリポジトリに入れたり、再配布したりしない。
 だから本物の画面写真は撮れない。`--demo` は、取得 → 予定 → 巡りの同じ経路を架空のフィード 4 本で動かし、20 秒後に架空の速報を 1 件届ける。
-このページの写真は、すべて公開した v0.1.0 の配布物をそうやって動かして撮った（[ADR 0008](docs/adr/0008-release-pipeline-and-demo.md)）。
+このページの写真は、すべて公開した v0.2.0 の配布物をそうやって動かして撮った（[ADR 0008](docs/adr/0008-release-pipeline-and-demo.md)）。
 
 ---
 

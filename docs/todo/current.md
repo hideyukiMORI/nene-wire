@@ -30,6 +30,9 @@
 - v0.1.0（ベータ・2026-10-26）: タグ `v0.1.0` は `a4967fa`。配布物 `nene-wire-0.1.0-linux-x86_64.tar.gz` の SHA-256 は `c4ca1d6e2d0d40fbeecfa5a6a575bc23d84f2d77fa712a368af33d53b2eaf6ed`。
   再ダウンロードして照合し、`install.sh` を `curl … | bash` で通した。https://github.com/hideyukiMORI/nene-wire/releases/tag/v0.1.0
 
+- v0.2.0（ベータ・2026-10-26・演出と翻訳）: タグ `v0.2.0` は `edebf35`。配布物 `nene-wire-0.2.0-linux-x86_64.tar.gz` の SHA-256 は `abd8d63daa84b312aa8405a2daea7911e195f943b244e3532b71938630b61e43`。
+  再ダウンロードして照合し、`install.sh` を `curl … | bash` で通した。https://github.com/hideyukiMORI/nene-wire/releases/tag/v0.2.0
+
 ## 動かないもの
 
 - 記事の保存・設定画面（表示の言語・テーマ・フィードの編集）
