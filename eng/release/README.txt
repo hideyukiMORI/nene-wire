@@ -23,6 +23,8 @@ NeNe Wire @VERSION@ (Linux x86_64)
   q       終了（Ctrl+C でもよい。どう終わっても端末は元に戻る）
   空白    一時停止 / 再開
   → / ←   次の記事 / 前の記事
+  s       設定画面（フィードの追加・有効／無効・直す・消す・試す、表示の言語・時間・テーマ・文字の雨・原文の見出し）。
+          設定画面の中は ↑↓ 選ぶ・Tab 欄を替える・w 保存・Esc 閉じる（キーの行に出る）。~/.config/nene-wire/settings.txt に保存する
 
 起動オプション
 --------------
@@ -30,7 +32,7 @@ NeNe Wire @VERSION@ (Linux x86_64)
   --list      フィードを取って、見出しと出だしを素のまま一覧で出して終わる
   --version   版を出して終わる
 
-フィード: NHK・BBC World・NPR News・The Guardian World（いまは固定。設定画面は今後の版で入る）。
+最初のフィード: NHK・BBC World・NPR News・The Guardian World（設定画面で足したり外したりできる）。
 演出（記号から確定する見出し・電脳ノイズ・速報の割り込み・パラパラ落ちる切り替え など）が入っている。
 
 翻訳: 英語の記事を日本語で出すには、翻訳の手段（Argos Translate）を入れる（Python 3 と pip が要る・470 MB ほど）。

@@ -24,7 +24,10 @@ let passedNames: [String] = [
     "SSL_CERT_FILE", "SSL_CERT_DIR", "CURL_CA_BUNDLE",
 ]
 let environment = passedNames.compactMap { name in getenv(name).map { "\(name)=\(String(cString: $0))" } }
-let feeds = Feed.defaults.filter(\.enabled)
+let home = getenv("HOME").map { String(cString: $0) } ?? ""
+let settingsFile = SettingsFile(configHome: getenv("XDG_CONFIG_HOME").map { String(cString: $0) }, home: home)
+let (settings, settingsNotice) = settingsFile.load()
+let feeds = settings.feeds.filter(\.enabled)
 
 if arguments == ["--list"] {
     for line in Listing.lines(for: feeds, environment: environment) {
@@ -64,9 +67,11 @@ let fetcher =
     ? Fetcher(demo: DemoScript(), now: LocalTime.timestamp())
     : Fetcher(feeds: feeds, environment: environment, now: LocalTime.timestamp())
 // 翻訳の手段（Argos Translate）は `install-translator.sh` が HOME の下に入れる。無ければ原文のまま流す（FR-29・ADR 0010）
-let home = getenv("HOME").map { String(cString: $0) } ?? ""
-let translator = Translator(library: Translator.library(home: home), environment: environment)
-var viewer = Viewer(fetcher: fetcher, translator: translator, traits: traits, version: Version.current)
+let translator = Translator(
+    library: Translator.library(home: home), environment: environment, target: settings.display.language)
+var viewer = Viewer(
+    fetcher: fetcher, translator: translator, traits: traits, version: Version.current, settings: settings,
+    settingsFile: settingsFile, environment: environment, demo: arguments == ["--demo"], notice: settingsNotice)
 viewer.run()
 Console.close()
 exit(0)

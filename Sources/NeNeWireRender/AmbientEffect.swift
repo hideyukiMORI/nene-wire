@@ -46,12 +46,14 @@ enum AmbientEffect {
     }
 
     /// DATA の窓の、フィードの行より下: 文字の雨と、同期までの残りと稼働時間。
-    static func dataWindow(_ grid: inout Grid, stage: Stage, feeds: Int, motion: Motion) {
+    static func dataWindow(_ grid: inout Grid, stage: Stage, state: StripState) {
+        let motion = state.motion
+        let feeds = min(state.feeds.count, StripRenderer.bodyRows)
         let left = stage.inner + 2
         let width = stage.layout.dataWidth
         let last = BodyCanvas.rows.upperBound
         let firstRain = BodyCanvas.rows.lowerBound + feeds + 1
-        if firstRain <= last - 2 {
+        if state.rain, firstRain <= last - 2 {
             DataRain.draw(&grid, stage: stage, rows: firstRain...(last - 2), global: motion.global)
         }
         let spinner = stage.fx.spinner[(motion.global / 160) % stage.fx.spinner.count]

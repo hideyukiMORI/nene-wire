@@ -146,7 +146,7 @@ public enum StripRenderer {
             BootView.hexStream(&grid, stage: stage, feeds: feeds, global: motion.global)
             return
         }
-        AmbientEffect.dataWindow(&grid, stage: stage, feeds: feeds, motion: motion)
+        AmbientEffect.dataWindow(&grid, stage: stage, state: state)
         guard let entry, entry >= Choreography.entry else {
             return
         }

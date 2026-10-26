@@ -145,10 +145,15 @@ struct StripTests {
     }
 
     @Test func readableColorsMeetContrastOnGroundAndPanel() {
-        let theme = Theme.phosphor
-        for color in [theme.text, theme.head, theme.accent, theme.dim] {
-            #expect(Contrast.ratio(color, theme.ground) >= 4.5)
-            #expect(Contrast.ratio(color, theme.panel) >= 4.5)
+        #expect(Theme.catalog.map(\.name) == ["PHOSPHOR", "AMBER", "CYAN", "MAGENTA"])
+        #expect(Theme.named("CYAN").name == "CYAN")
+        #expect(Theme.named("nope").name == "PHOSPHOR")
+        for theme in Theme.catalog {
+            for color in [theme.text, theme.head, theme.accent, theme.dim, theme.warn] {
+                #expect(Contrast.ratio(color, theme.ground) >= 4.5, "\(theme.name)")
+                #expect(Contrast.ratio(color, theme.panel) >= 4.5, "\(theme.name)")
+            }
+            #expect(Contrast.ratio(theme.ground, theme.warn) >= 4.5, "\(theme.name) の速報の印")
         }
     }
 }

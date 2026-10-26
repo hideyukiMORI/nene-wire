@@ -24,10 +24,24 @@ struct Translator {
     private let environment: [String]
     private var running: (jobs: [TranslationJob], child: RunningChild)?
 
-    init(library: String, environment: [String]) {
+    init(library: String, environment: [String], target: String) {
         self.library = library
         self.environment = environment
+        queue = .empty(target: target)
         problem = access(library, F_OK) == 0 ? nil : .notInstalled
+    }
+
+    /// 表示の言語を替える（設定画面・FR-24）。訳の控えは捨てて、新しい言語で訳し直す。
+    mutating func retarget(_ language: String, keeping articles: [Article]) {
+        guard language != queue.target else {
+            return
+        }
+        stop()
+        queue = .empty(target: language)
+        if problem == .missingModel {
+            problem = nil
+        }
+        queue.enqueue(articles)
     }
 
     /// 表示のループが一緒に待つ読み口。

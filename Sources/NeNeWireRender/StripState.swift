@@ -27,12 +27,16 @@ public struct StripState: Sendable, Hashable {
     let untranslated: Bool
     /// 翻訳の様子。
     let translator: TranslatorStatus
+    /// 文字の雨を降らせるか（設定・FR-18）。
+    let rain: Bool
+    /// 訳したときに原文の見出しを添えるか（設定・FR-14）。
+    let showOriginal: Bool
 
     /// 状態を作る。
     public init(
         article: Article?, fresh: Bool, position: Int, count: Int, paused: Bool, feeds: [FeedRow], message: String,
         clock: WallClock, motion: Motion = .still, log: [LogLine] = [], pendingFresh: Int = 0,
-        untranslated: Bool = false, translator: TranslatorStatus = .off
+        untranslated: Bool = false, translator: TranslatorStatus = .off, rain: Bool = true, showOriginal: Bool = true
     ) {
         self.article = article
         self.fresh = fresh
@@ -47,13 +51,15 @@ public struct StripState: Sendable, Hashable {
         self.pendingFresh = pendingFresh
         self.untranslated = untranslated
         self.translator = translator
+        self.rain = rain
+        self.showOriginal = showOriginal
     }
 
     /// 記事だけを差し替えた状態（切り替えで消えていく前の記事を描くため）。
     func showing(_ other: Article) -> StripState {
         StripState(
             article: other, fresh: false, position: position, count: count, paused: paused, feeds: feeds,
-            message: message, clock: clock, translator: translator)
+            message: message, clock: clock, translator: translator, rain: rain, showOriginal: showOriginal)
     }
 
     /// 記事を出せるフィードの数。

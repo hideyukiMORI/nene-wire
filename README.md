@@ -18,7 +18,7 @@ It is the sibling of [NeNe Gambit](https://github.com/hideyukiMORI/nene-gambit) 
 A new story has just arrived on NEON TIMES, and before it cuts the line the strip sounds the intercept alarm: hazard stripes and a crawling `INTERCEPT ■ 緊急傍受 ■ PRIORITY: ALPHA` banner.
 Every feed and story in these screenshots is made up by `--demo`; real articles are never stored in this repository.</sub>
 
-> **Beta.** v0.2.0 brings the effects and translation (English → Japanese). Saved articles and a settings screen are still to come.
+> **Beta.** v0.2.0 brings the effects and translation (English → Japanese). On `main`: the settings screen. Saved articles are still to come.
 
 ---
 
@@ -61,6 +61,7 @@ nene-wire --demo   # offline, with made-up feeds and stories (a breaking one arr
 | `q` | Quit (Ctrl+C works too; however it ends, your terminal comes back exactly as it was) |
 | Space | Pause / resume |
 | `→` / `←` | Next / previous story |
+| `s` | Settings (see below) |
 
 | Option | |
 | --- | --- |
@@ -68,8 +69,19 @@ nene-wire --demo   # offline, with made-up feeds and stories (a breaking one arr
 | `--list` | Fetch the feeds, print headlines and ledes as plain text, and exit |
 | `--version` | Print the version and exit |
 
-The feeds are fixed for now: **NHK, BBC World, NPR News and The Guardian World** (a settings screen comes later).
+It starts with **NHK, BBC World, NPR News and The Guardian World**. Add your own in the settings screen.
 The terminal needs at least 72×15. The strip stretches to the full width of the window; its height is always 15 rows.
+
+### Settings
+
+Press `s`. The strip turns into the settings screen, in the same 15 rows:
+
+![The settings screen in the AMBER theme](docs/images/settings.png)
+
+- **FEEDS**: `↑↓` select · `Space` on/off · `a` add (type a name and a URL; Japanese works) · `e` edit · `d` delete (asks first) · `t` test it right now (how many stories, what language, how long)
+- **DISPLAY** (`Tab` to switch): `←→` change the display language, seconds per story, theme (`PHOSPHOR` `AMBER` `CYAN` `MAGENTA`), data rain on/off, and whether to show the original headline
+- `w` saves, `Esc` closes. Close with unsaved changes and it asks: `w` save and close, `x` discard, `Esc` go back. Inside settings, `q` is just a letter
+- Saved as plain text with a version line in `~/.config/nene-wire/settings.txt` (or under `$XDG_CONFIG_HOME`). If the file can't be read, it starts with the defaults, says why, and leaves your file alone
 
 ### Translation (English → Japanese)
 
