@@ -44,7 +44,8 @@ struct SettingsScreenTests {
         #expect(text(grid, row: 2).contains("› [x] NHK") && text(grid, row: 2).contains("www.nhk.or.jp"))
         #expect(text(grid, row: 3).contains("[ ] BBC World"))
         #expect(text(grid, row: 2).contains("表示する言語") && text(grid, row: 2).contains("‹ 日本語 ›"))
-        #expect(text(grid, row: 3).contains("‹ 12 秒 ›"))
+        #expect(text(grid, row: 3).contains("翻訳") && text(grid, row: 3).contains("‹ する ›"))
+        #expect(text(grid, row: 4).contains("‹ 12 秒 ›"))
         #expect(text(grid, row: 14).contains("SPC 有効/無効"))
     }
 

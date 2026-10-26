@@ -215,5 +215,11 @@ struct EffectTests {
         #expect(text(raw, row: 2).contains("未翻訳"))
         #expect(!text(raw, row: 10).contains("原文"))
         #expect(text(raw, row: 14).contains("TRANS 未導入"))
+        let off = render(
+            StripState(
+                article: english, fresh: false, position: 1, count: 6, paused: false, feeds: feeds, message: "m",
+                clock: clock, translator: .disabled))
+        #expect(text(off, row: 14).contains("TRANS オフ"))
+        #expect(text(off, row: 14).contains("t 翻訳"))
     }
 }

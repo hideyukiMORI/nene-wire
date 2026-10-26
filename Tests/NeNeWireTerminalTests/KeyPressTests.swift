@@ -31,5 +31,6 @@ struct KeyPressTests {
 
     @Test func theTickerOpensSettingsWithS() {
         #expect(KeyIntent.decode(Array("s".utf8)) == [.settings])
+        #expect(KeyIntent.decode(Array("tT".utf8)) == [.toggleTranslation, .toggleTranslation])
     }
 }

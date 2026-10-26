@@ -71,6 +71,7 @@ nene-wire --demo   # offline, with made-up feeds and stories (a breaking one arr
 | `q` | Quit (Ctrl+C works too; however it ends, your terminal comes back exactly as it was) |
 | Space | Pause / resume |
 | `→` / `←` | Next / previous story |
+| `t` | Translation on/off (saved; the current story switches at once) |
 | `s` | Settings (see below) |
 
 | Option | |
@@ -89,7 +90,7 @@ Press `s`. The strip turns into the settings screen, in the same 15 rows:
 ![The settings screen in the AMBER theme](docs/images/settings.png)
 
 - **FEEDS**: `↑↓` select · `Space` on/off · `a` add (type a name and a URL; Japanese works) · `e` edit · `d` delete (asks first) · `t` test it right now (how many stories, what language, how long)
-- **DISPLAY** (`Tab` to switch): `←→` change the display language, seconds per story, theme (`PHOSPHOR` `AMBER` `CYAN` `MAGENTA`), data rain on/off, and whether to show the original headline
+- **DISPLAY** (`Tab` to switch): `←→` change the display language, translation on/off, seconds per story, theme (`PHOSPHOR` `AMBER` `CYAN` `MAGENTA`), data rain on/off, and whether to show the original headline
 - `w` saves, `Esc` closes. Close with unsaved changes and it asks: `w` save and close, `x` discard, `Esc` go back. Inside settings, `q` is just a letter
 - Saved as plain text with a version line in `~/.config/nene-wire/settings.txt` (or under `$XDG_CONFIG_HOME`). If the file can't be read, it starts with the defaults, says why, and leaves your file alone
 

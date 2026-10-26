@@ -102,6 +102,8 @@ struct StripLayout {
         switch state.translator {
         case .off:
             segments += [Segment("   TRANS ", theme.faint), Segment("未導入", theme.dim)]
+        case .disabled:
+            segments += [Segment("   TRANS ", theme.faint), Segment("オフ", theme.dim)]
         case .ready(let route, let pending, let busy):
             segments += [Segment("   TRANS ", theme.faint), Segment(route, theme.text)]
             segments.append(Segment(busy ? " " + glyphs.lamp : "", theme.accent))
@@ -118,7 +120,9 @@ struct StripLayout {
         segments += [
             Segment("   \(glyphs.vertical) ", theme.faint), Segment("SPC", theme.accent),
             Segment(state.paused ? " 再開  " : " 停止  ", theme.dim), Segment(glyphs.arrows, theme.accent),
-            Segment(" 前後  ", theme.dim), Segment("q", theme.accent), Segment(" 終了", theme.dim),
+            Segment(" 前後  ", theme.dim), Segment("t", theme.accent), Segment(" 翻訳  ", theme.dim),
+            Segment("s", theme.accent), Segment(" 設定  ", theme.dim), Segment("q", theme.accent),
+            Segment(" 終了", theme.dim),
         ]
         fill(row: row, with: theme.panel, into: &grid)
         grid.write(segments, column: 0, row: row, background: theme.panel)
