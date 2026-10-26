@@ -16,7 +16,7 @@
 | Phase 3-3 演出（全部入れる・Q13） | ✅ 2026-10-26（Issue #16・ADR 0009） |
 | Phase 3-4 記事の保存（裏での取得は 3-2b で前倒し） | 🔲 別 Issue |
 | Phase 3-5 翻訳（Argos Translate・Q5） | ✅ 2026-10-26（Issue #18・ADR 0010） |
-| Phase 3-6 設定画面 | 🔄 Issue #23（ADR 0011） |
+| Phase 3-6 設定画面 | ✅ 2026-10-26（Issue #23・#27・ADR 0011・0013） |
 | Phase 4 公開（v0.1.0 ベータを施主の指示で前倒し・Q12） | ✅ 2026-10-26 v0.1.0（Issue #11・#14・ADR 0008） |
 
 ## 動くもの
@@ -34,6 +34,10 @@
   再ダウンロードして照合し、`install.sh` を `curl … | bash` で通した。https://github.com/hideyukiMORI/nene-wire/releases/tag/v0.2.0
 
 - `install.ps1`: PowerShell から WSL の中に入れ、`nene-wire.cmd` で PowerShell・cmd から起動（ADR 0012）
+
+- v0.3.0（ベータ・2026-10-26・設定画面・翻訳のオン／オフ・install.ps1）: タグ `v0.3.0` は `b8e60b7`。配布物 `nene-wire-0.3.0-linux-x86_64.tar.gz` の SHA-256 は `96d8cc0dfed56188f3eff277c818b20b68125a7fb7e13b4827cec29df859480a`。
+  タグの push と Release の作成は施主が実行した（このセッションの自動モードが公開を止めたため）。再ダウンロードして照合し、`install.sh` と `install.ps1` の両方で 0.3.0 が入ることを確かめた。
+  https://github.com/hideyukiMORI/nene-wire/releases/tag/v0.3.0
 
 ## 動かないもの
 

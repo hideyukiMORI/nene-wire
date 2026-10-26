@@ -18,7 +18,7 @@
 NEON TIMES に新しい記事が届き、割り込む前に緊急傍受の警告が鳴っている。警告の縞と、流れる帯 `INTERCEPT ■ 緊急傍受 ■ PRIORITY: ALPHA`。
 この写真のフィードと記事はすべて `--demo` の架空のもの。実際の記事はこのリポジトリに入れない。</sub>
 
-> **ベータ版。** v0.2.0 で演出と翻訳（英語→日本語）が入った。`main` には設定画面も入っている。記事の保存はこれから。
+> **ベータ版。** v0.3.0 で設定画面・翻訳のオン／オフ・PowerShell からのインストールが入った。記事の保存はこれから。
 
 ---
 
@@ -49,7 +49,7 @@ irm https://raw.githubusercontent.com/hideyukiMORI/nene-wire/main/install.ps1 | 
 <summary>手で入れる</summary>
 
 ```bash
-v=0.2.0
+v=0.3.0
 curl -fsSL -O https://github.com/hideyukiMORI/nene-wire/releases/download/v$v/nene-wire-$v-linux-x86_64.tar.gz \
            -O https://github.com/hideyukiMORI/nene-wire/releases/download/v$v/SHA256SUMS
 sha256sum --check SHA256SUMS
