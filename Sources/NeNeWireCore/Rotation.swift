@@ -44,6 +44,11 @@ public struct Rotation: Sendable, Hashable {
         fresh.count
     }
 
+    /// いま持っている記事（フィードの順・割り込み待ちの速報を含む）。
+    public var articles: [Article] {
+        pools.flatMap { $0 } + fresh
+    }
+
     /// いま持っている記事の識別子（一周と、割り込み待ちの速報）。
     public var identifiers: Set<String> {
         Set(pools.flatMap { $0.map(\.identifier) } + fresh.map(\.identifier))

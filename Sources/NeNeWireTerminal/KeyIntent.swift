@@ -9,6 +9,8 @@ public enum KeyIntent: Sendable, Hashable {
     case next
     /// ←: 前の記事。
     case previous
+    /// `s`: 設定画面を開く（FR-22）。
+    case settings
 
     /// 読み取ったバイト列の中の意図（順番どおり）。知らないキーとエスケープ列は捨てる。
     public static func decode(_ bytes: [UInt8]) -> [KeyIntent] {
@@ -28,6 +30,8 @@ public enum KeyIntent: Sendable, Hashable {
                 intents.append(.quit)
             } else if byte == UInt8(ascii: " ") {
                 intents.append(.togglePause)
+            } else if byte == UInt8(ascii: "s") || byte == UInt8(ascii: "S") {
+                intents.append(.settings)
             }
             index += 1
         }

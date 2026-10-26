@@ -36,6 +36,8 @@
 | 電脳ノイズ（glitch） | 静止中に一瞬だけ信号が乱れる演出 | `GlitchEffect` |
 | 緊急傍受（intercept） | 速報が割り込む前の警告の演出 | `InterceptEffect` |
 | 速報（breaking） | 取り直して新しく現れた記事。次の 1 件に割り込み、受信の行に印が付く | `Rotation` |
+| 設定画面（settings） | `s` で開く、フィードの一覧と表示の設定を直す画面。帯と同じ 15 行 | `SettingsEditor`（規則）・`SettingsRenderer`（描画） |
+| 下書き（draft） | 設定画面で直している、まだ保存していない設定 | `SettingsEditor.settings` |
 | 状態の行（status line） | 帯の最下行。何件目か・ネット・翻訳・取得の失敗 | `StripLayout` |
 | 全角の幅（cell width） | 文字が端末で占める桁数。Unicode の East Asian Width の W・F は 2 桁、曖昧（A）は 1 桁 | `CellWidth`・`EastAsianWidth`（生成物） |
 | 表示画面・設定画面 | 画面は 2 つ。表示画面は起動直後から、設定画面は表示画面から開く | `NeNeWireRender` |

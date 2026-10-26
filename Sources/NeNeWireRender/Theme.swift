@@ -1,5 +1,5 @@
-/// 配色。色の値を持つのはここだけ。いまは既定の PHOSPHOR（黒地に緑の燐光・FR-19）の 1 つで、ほかのテーマは設定画面の段で足す。
-/// 値はデザインのキャンバス（施主が方向性を承認・2026-10-26）から写した。
+/// 配色。色の値を持つのはここだけ（FR-19）。PHOSPHOR（黒地に緑の燐光・既定）・AMBER・CYAN・MAGENTA の 4 つで、設定画面で選ぶ（ADR 0011）。
+/// 値はデザインのキャンバス（施主が方向性を承認・2026-10-26）から写した。警告と色ずれの色は、強調の色とぶつからないものをテーマごとに選んだ。
 /// 読ませる文字（本文・見出し・強調・控えめ）は地と帯に対して 4.5:1 以上（テストで確かめる）。`faint` は飾りの線と札だけに使う。
 public struct Theme: Sendable, Hashable {
     public let name: String
@@ -41,6 +41,38 @@ public struct Theme: Sendable, Hashable {
         split = [rgb(hex[11]), rgb(hex[12])]
         rain = hex[13...17].map(rgb)
     }
+
+    /// テーマの一覧（設定画面の並び）。
+    public static let catalog = [phosphor, amber, cyan, magenta]
+
+    /// 名前のテーマ。知らない名前なら既定。
+    public static func named(_ name: String) -> Theme {
+        catalog.first { $0.name == name } ?? phosphor
+    }
+
+    static let amber = Theme(
+        name: "AMBER",
+        hex: [
+            0x080502, 0x140C04, 0x6B4A1A, 0xFFD9A0, 0xFFF3DD, 0xFFB000, 0xB0834A, 0x5E4320, 0xFFFFFF, 0xFF5A36,
+            0x3A1205,
+            0x2EE6FF, 0xFF4FD8, 0x1D1205, 0x3A240A, 0x634012, 0xD08A20, 0xFFE2B0,
+        ])
+
+    static let cyan = Theme(
+        name: "CYAN",
+        hex: [
+            0x01070B, 0x04121A, 0x1A5A74, 0xBDEAF7, 0xEEFBFF, 0x2EE6FF, 0x5B9BB0, 0x2B5568, 0xFFFFFF, 0xFFB000,
+            0x3A2600,
+            0xFF4FD8, 0xFFE14F, 0x031A24, 0x063346, 0x0B5A78, 0x26B8D8, 0xD2F6FF,
+        ])
+
+    static let magenta = Theme(
+        name: "MAGENTA",
+        hex: [
+            0x08020A, 0x140518, 0x6A2A7A, 0xF3C7F7, 0xFFF0FF, 0xFF4FD8, 0xB07AB8, 0x5C3466, 0xFFFFFF, 0xFFD166,
+            0x3A2E05,
+            0x2EE6FF, 0x3DFF7F, 0x1C0620, 0x370C40, 0x5E1A6C, 0xD04AD0, 0xFFD6FB,
+        ])
 
     /// 既定のテーマ。
     public static let phosphor = Theme(

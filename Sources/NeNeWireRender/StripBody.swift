@@ -25,7 +25,7 @@ enum StripBody {
         while lines.count < StripRenderer.bodyRows - 2 {
             lines.append([])
         }
-        if let original = article.originalHeadline {
+        if state.showOriginal, let original = article.originalHeadline {
             lines.append([Segment("原文 ", theme.faint), Segment(TextLayout.fit(original, width: width - 5), theme.dim)])
         } else {
             lines.append([])

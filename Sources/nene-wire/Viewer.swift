@@ -2,12 +2,10 @@ import NeNeWireCore
 import NeNeWireRender
 import NeNeWireTerminal
 
-/// 常駐して記事を流し続ける 1 本のループ（FR-01・FR-07・FR-12・FR-13・FR-22・ADR 0007・0009）。状態はすべてこの値の中にあり、ループの外へ出ない（ARC-005）。
+/// 常駐して記事を流し続ける 1 本のループ（FR-01・FR-07・FR-12・FR-13・FR-22・ADR 0007・0009・0011）。状態はすべてこの値の中にあり、ループの外へ出ない（ARC-005）。
 /// キー入力・取得の curl の出力・次の描画の時刻を、`Console.waitForInput` の 1 か所で待つ。
 /// 移植元: NeNe Reversi `Sources/nene-reversi/Screensaver.swift`（コミット dc418eb）の形。
 struct Viewer {
-    /// 1 件を見せる時間（切り替えの演出を含む・ADR 0006）。
-    static let interval = 12_000
     /// 演出の最中に描き直す間隔（毎秒 30 回）と、静かなときの間隔（毎秒 15 回）。
     static let busyFrame: Int32 = 33
     static let calmFrame: Int32 = 66
@@ -29,14 +27,38 @@ struct Viewer {
     private var paused = false
     private var message = "回線を確立中"
     private var previous: Grid?
+    private var settings: Settings
+    private let settingsFile: SettingsFile
+    private let environment: [String]
+    /// `--demo` か（フィードの変更は反映しない）。
+    private let demo: Bool
+    /// 開いている設定画面。表示の帯なら nil。
+    private var session: SettingsSession?
+    /// 読み取りの切れ目で途中まで届いた UTF-8 の文字。
+    private var keyCarry: [UInt8] = []
 
-    init(fetcher: Fetcher, translator: Translator, traits: TerminalTraits, version: String) {
+    init(
+        fetcher: Fetcher, translator: Translator, traits: TerminalTraits, version: String, settings: Settings,
+        settingsFile: SettingsFile, environment: [String], demo: Bool, notice: String?
+    ) {
         self.fetcher = fetcher
         self.translator = translator
         self.traits = traits
+        self.settings = settings
+        self.settingsFile = settingsFile
+        self.environment = environment
+        self.demo = demo
         rotation = .empty(feeds: fetcher.feeds.count)
         launched = clock.now
         bootLog = BootLog(version: version, size: Console.size(), translator: translator.problem)
+        if let notice {
+            message = notice
+        }
+    }
+
+    /// 1 件を見せる時間（切り替えの演出を含む・設定）。
+    private var interval: Int {
+        settings.display.interval * 1_000
     }
 
     /// `q` か終了のシグナルが来るまで回す。
@@ -46,12 +68,21 @@ struct Viewer {
             let busy = draw()
             let bytes = Console.waitForInput(
                 milliseconds: busy ? Self.busyFrame : Self.calmFrame,
-                watching: fetcher.descriptors + translator.descriptors)
-            let intents = KeyIntent.decode(bytes)
+                watching: fetcher.descriptors + translator.descriptors + (session?.descriptors ?? []))
             let signals = Console.takeSignals()
-            if signals.interrupted || intents.contains(.quit) {
-                fetcher.stop()
-                translator.stop()
+            var moved = false
+            if session != nil {
+                handleSettings(KeyPress.decode(bytes, carry: &keyCarry))
+            } else {
+                let intents = KeyIntent.decode(bytes)
+                if intents.contains(.quit) {
+                    stopAll()
+                    return
+                }
+                moved = apply(intents)
+            }
+            if signals.interrupted {
+                stopAll()
                 return
             }
             if signals.resized {
@@ -60,11 +91,76 @@ struct Viewer {
             }
             fetch(at: LocalTime.timestamp())
             translate(at: LocalTime.timestamp())
+            session?.poll()
             finishBootIfReady()
-            if !apply(intents), !booting, !paused, showtime.milliseconds >= Self.interval {
+            if session == nil, !moved, !booting, !paused, showtime.milliseconds >= interval {
                 move { $0.advance() }
             }
         }
+    }
+
+    private mutating func stopAll() {
+        fetcher.stop()
+        translator.stop()
+        session?.stop()
+    }
+
+    /// 設定画面を開く（記事の時計は止める）。
+    private mutating func openSettings() {
+        session = SettingsSession(settings: settings, file: settingsFile, environment: environment)
+        if !paused {
+            showtime.pause()
+        }
+        previous = nil
+    }
+
+    /// 設定画面のキーを渡し、保存できた設定を反映し、閉じたら帯に戻る（FR-25: 反映は次の記事から）。
+    private mutating func handleSettings(_ keys: [KeyPress]) {
+        guard var current = session, !keys.isEmpty else {
+            return
+        }
+        let outcome = current.press(keys)
+        session = current
+        switch outcome {
+        case .stay:
+            return
+        case .apply(let saved):
+            adopt(saved)
+        case .applyAndClose(let saved):
+            adopt(saved)
+            closeSettings()
+        case .close:
+            closeSettings()
+        }
+    }
+
+    private mutating func closeSettings() {
+        session = nil
+        if !paused {
+            showtime.resume()
+        }
+        previous = nil
+    }
+
+    /// 保存した設定を反映する。表示の言語が変わったら訳し直し、有効なフィードが変わったら取り直す。
+    private mutating func adopt(_ new: Settings) {
+        let old = settings
+        settings = new
+        if new.display.language != old.display.language {
+            translator.retarget(new.display.language, keeping: rotation.articles)
+        }
+        let feeds = new.feeds.filter(\.enabled)
+        guard feeds != old.feeds.filter(\.enabled) else {
+            return
+        }
+        guard !demo else {
+            message = "デモの間はフィードの変更を反映しない（保存はした）"
+            return
+        }
+        fetcher.stop()
+        fetcher = Fetcher(feeds: feeds, environment: environment, now: LocalTime.timestamp())
+        rotation = .empty(feeds: feeds.count)
+        message = "\(LocalTime.now().time)  フィードを替えた。取り直している"
     }
 
     private var uptime: Int {
@@ -101,7 +197,7 @@ struct Viewer {
             let time = LocalTime.now().time
             switch report.outcome {
             case .translated:
-                message = "\(time)  翻訳  \(report.articles) 件  en>ja"
+                message = "\(time)  翻訳  \(report.articles) 件"
             case .unavailable(.notInstalled), .unavailable(.missingModel):
                 message = "\(time)  翻訳の手段が無い。install-translator.sh で入れて起動し直すと訳す"
             case .unavailable(.crashed):
@@ -180,6 +276,9 @@ struct Viewer {
                 }
                 move { $0.goBack() }
                 moved = true
+            case .settings:
+                openSettings()
+                return moved
             }
         }
         return moved
@@ -187,6 +286,14 @@ struct Viewer {
 
     /// いまの状態を描き、前のフレームと違う行だけを 1 回で書く。演出の最中なら true。
     private mutating func draw() -> Bool {
+        let theme = Theme.named(settings.display.theme)
+        if let session {
+            let grid = SettingsRenderer.render(
+                session.editor, clock: LocalTime.now(), size: Console.size(), style: (theme, traits))
+            Console.write(FrameEncoder.encode(grid, previous: previous, colors: traits.colors))
+            previous = grid
+            return false
+        }
         let rows = fetcher.feeds.indices.map { index in
             FeedRow(
                 name: fetcher.feeds[index].name, health: fetcher.schedule.statuses[index].health,
@@ -197,13 +304,14 @@ struct Viewer {
             ? fetcher.schedule.nextDue.map { max(Int($0.seconds - LocalTime.timestamp().seconds), 0) } : nil
         let motion = Motion(
             article: showtime.milliseconds, global: uptime, seed: showtime.seed, leaving: showtime.leaving,
-            firstEntry: showtime.firstEntry, interval: Self.interval, uptime: uptime / 1_000, syncIn: syncIn)
+            firstEntry: showtime.firstEntry, interval: interval, uptime: uptime / 1_000, syncIn: syncIn)
         let state = StripState(
             article: booting ? nil : shown, fresh: !booting && rotation.isFresh, position: rotation.position,
             count: rotation.count, paused: paused, feeds: rows, message: message, clock: LocalTime.now(),
             motion: motion, log: booting ? bootLog.lines : [], pendingFresh: rotation.pendingFresh,
-            untranslated: !booting && shownUntranslated, translator: translator.status)
-        let grid = StripRenderer.render(state, size: Console.size(), theme: .phosphor, traits: traits)
+            untranslated: !booting && shownUntranslated, translator: translator.status, rain: settings.display.rain,
+            showOriginal: settings.display.original)
+        let grid = StripRenderer.render(state, size: Console.size(), theme: theme, traits: traits)
         Console.write(FrameEncoder.encode(grid, previous: previous, colors: traits.colors))
         previous = grid
         return StripRenderer.isBusy(state)
